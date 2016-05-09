@@ -86,14 +86,16 @@ abstract class payment_abstract
 	 * 获取插件配置信息
 	 */
 	abstract public function configure_config();
-	
-
-	public function set_config($config) 
+	public function set_config(array $config) 
 	{
 		foreach ($config as $key => $value) {
 		    $this->configure[$key] = $value;
 		}
 		return $this;
+	}
+	public function get_config() 
+	{
+	    return $this->configure;
 	}
 
 	public function set_productinfo($product_info)
@@ -236,6 +238,62 @@ abstract class payment_abstract
 	     
 	    $code .= '<input type="submit"' . $button_attr . ' />';
 	    $code .= '</form>';
+	    return $code;
+	}
+	
+	/**
+	 * 获取外部支付使用的订单号
+	 */
+	public function get_out_trade_no() {
+	    $app = 'ecjia.payment';
+	    $group = 'paylog';
+	    
+	    $order_sn = $this->order_info['order_sn'];
+	    $log_id = $this->order_info['log_id'];
+	    $out_trade_no = $order_sn . $log_id;
+	    
+	    $relationship_db = RC_Loader::load_model('term_relationship_model');
+	    
+	    $data = array(
+	    	'object_type' => $app,
+	        'object_group' => $group,
+	        'object_id' => $log_id,
+	        'item_key1' => 'order_sn',
+	        'item_value1' => $order_sn,
+	        'item_key2' => 'out_trade_no',
+	        'item_value2' => $out_trade_no,
+	    );
+	    $count = $relationship_db->where($data)->count();
+	    if (!$count) {
+	        $relationship_db->insert($data);
+	    }
+	    return $out_trade_no;
+	}
+	
+	/**
+	 * 解析支付使用的外部订单号
+	 */
+	public function parse_out_trade_no($out_trade_no) {
+	    $app = 'ecjia.payment';
+	    $group = 'paylog';
+	    
+	    if (empty($out_trade_no)) {
+	        return false;
+	    }
+	    
+	    $data = array(
+	        'object_type' => $app,
+	        'object_group' => $group,
+	        'item_key1' => 'order_sn',
+	        'item_key2' => 'out_trade_no',
+	        'item_value2' => $out_trade_no,
+	    );
+	    $relationship_db = RC_Loader::load_model('term_relationship_model');
+	    $item = $relationship_db->where($data)->find();
+	    if ($item) {
+	       return array('order_sn' => $item['item_value1'], 'log_id' => $item['object_id']);
+	    } 
+	    return false;
 	}
 }
 

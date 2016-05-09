@@ -9,7 +9,7 @@ class payment_module implements ecjia_interface
     	$is_cod = _POST('is_cod', true);
     	$cod_fee = _POST('cod_fee', 0);
     	$device = _POST('device', array());
-    	$device_code = $device['code'];
+    	$device_code = isset($device['code']) ? $device['code'] : '';
         $payment_method = RC_Loader::load_app_class('payment_method','payment');
         $payment_list = $payment_method->available_payment_list($is_cod, $cod_fee);
         foreach ($payment_list as $key => $val) {

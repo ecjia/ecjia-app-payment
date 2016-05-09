@@ -35,6 +35,17 @@ class payment_factory
 		return $this->adapter_instance;
 	}
 	
+	/**
+	 * 检查适配器实例是否生成
+	 */
+	public function has_adapter() {
+	     if (is_object($this->adapter_instance) && $this->adapter_instance instanceof payment_abstract) {
+	         return true;
+	     }
+	     
+	     return false;
+	}
+	
 	public function __call($method_name, $method_args) 
 	{
 		if (method_exists($this, $method_name))
@@ -46,6 +57,7 @@ class payment_factory
 		) 
 		  return call_user_func_array(array(& $this->adapter_instance, $method_name), $method_args);
 	}	
+
 }
 
 // end

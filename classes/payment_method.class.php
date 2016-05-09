@@ -47,7 +47,7 @@ class payment_method
                         $row['pay_fee'] = $cod_fee;
                     }
                     
-                    $row['format_pay_fee'] = strpos($row['pay_fee'], '%') !== false ? $row['pay_fee'] :
+                    $row['format_pay_fee'] = strpos($row['pay_fee'], '%') !== false ? $row['pay_fee'] : price_format($row['pay_fee'], false);
                     $pay_list[] = $row;
                 }
             }

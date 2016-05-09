@@ -161,13 +161,12 @@ function order_paid($log_id, $pay_status = PS_PAYED, $note = '')
                 $db_order->where('order_id = '.$order_id.'')->update($data);
 
                 /* 记录订单操作记录 */
-                order_action($order_sn, OS_CONFIRMED, SS_UNSHIPPED, $pay_status, $note, RC_Lang::lang('buyer'));
+                order_action($order_sn, OS_CONFIRMED, SS_UNSHIPPED, $pay_status, $note, RC_Lang::get('payment::payment.buyer'));
 
                 /* 如果需要，发短信 */
 //                 if ($GLOBALS['_CFG']['sms_order_payed'] == '1' && $GLOBALS['_CFG']['sms_shop_mobile'] != '')
 //                 {
 // 					//include_once(ROOT_PATH.'includes/cls_sms.php');                
-//                     RC_Loader::load_sys_class('sms');
 //                     $sms = new sms();
 //                     $sms->send($GLOBALS['_CFG']['sms_shop_mobile'],
 //                     sprintf($GLOBALS['_LANG']['order_payed_sms'], $order_sn, $order['consignee'], $order['tel']),'', 13,1);
@@ -196,13 +195,13 @@ function order_paid($log_id, $pay_status = PS_PAYED, $note = '')
                     		$db_order->where('order_id = '.$order_id.'')->update($data);
 
                          /* 记录订单操作记录 */
-                        order_action($order_sn, OS_CONFIRMED, SS_SHIPPED, $pay_status, $note, RC_Lang::lang('buyer'));
+                        order_action($order_sn, OS_CONFIRMED, SS_SHIPPED, $pay_status, $note, RC_Lang::get('payment::payment.buyer'));
                         $integral = integral_to_give($order);
                         $options = array(
                         		'user_id'		=> $order['user_id'],
                         		'rank_points'	=> intval($integral['rank_points']),
                         		'pay_points'	=> intval($integral['custom_points']),
-                        		'change_desc'	=> sprintf(RC_Lang::lang('order_gift_integral'), $order['order_sn'])
+                        		'change_desc'	=> sprintf(RC_Lang::get('payment::payment.order_gift_integral'), $order['order_sn'])
                         );
                         RC_Api::api('user', 'account_change_log',$options);
 //                         log_account_change($order['user_id'], 0, 0, intval($integral['rank_points']), intval($integral['custom_points']), sprintf($GLOBALS['_LANG']['order_gift_integral'], $order['order_sn']));
@@ -237,12 +236,12 @@ function order_paid($log_id, $pay_status = PS_PAYED, $note = '')
                     $options = array(
                     		'user_id'		=> $arr['user_id'],
                     		'user_money'	=> $arr['amount'],
-                    		'change_desc'	=> RC_Lang::lang('surplus_type_0'),
+                    		'change_desc'	=> RC_Lang::get('payment::payment.surplus_type_0'),
                     		'change_type'	=> ACT_SAVING
                     );
                     RC_Api::api('user', 'account_change_log',$options);
                     
-//                     log_account_change($arr['user_id'], $arr['amount'], 0, 0, 0, RC_Lang::lang('surplus_type_0'), ACT_SAVING);
+//                     log_account_change($arr['user_id'], $arr['amount'], 0, 0, 0, RC_Lang::get('payment::payment.surplus_type_0'), ACT_SAVING);
                 }
             }
         } else {
@@ -271,7 +270,7 @@ function order_paid($log_id, $pay_status = PS_PAYED, $note = '')
                         }
                     }
                 } else {
-                    $msg = '<div>' .  RC_Lang::lang('please_view_order_detail') . '</div>';
+                    $msg = '<div>' .  RC_Lang::get('payment::payment.please_view_order_detail') . '</div>';
                 }
                 $GLOBALS['_LANG']['pay_success'] .= $msg;
 			}

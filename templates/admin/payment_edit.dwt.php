@@ -21,14 +21,14 @@ ecjia.admin.payment_list.editFormSubmit();
 		<form id="form-privilege"  class="form-horizontal"  name="editForm" action="{$form_action}" method="post" enctype="multipart/form-data" >
 			<fieldset>
 				<div class="control-group formSep">
-					<label class="control-label">{$lang.payment_name}：</label>
+					<label class="control-label">{lang key='payment::payment.payment_name'}：</label>
 					<div class="controls">
 						<input class="w350" name="pay_name" type="text" id="pay_name" value="{$pay.pay_name|escape}" size="40" />
-						<span class="input-must">{$lang.require_field}</span>
+						<span class="input-must">{lang key='system::system.require_field'}</span>
 					</div>
 				</div>
 				<div class="control-group formSep">
-					<label class="control-label">{$lang.payment_desc}：</label>
+					<label class="control-label">{lang key='payment::payment.payment_desc'}：</label>
 					<div class="controls">
 						<textarea class="w350" id="pay_desc" name="pay_desc"  cols="10" rows="6">{$pay.pay_desc|escape}</textarea>
 					</div>
@@ -55,8 +55,8 @@ ecjia.admin.payment_list.editFormSubmit();
 						{/if}
 						<!--the tenpay code -->
 						{if $key eq "0"}
-						{if $smarty.get.code eq "tenpay"}<input type="button" value="{$lang.ctenpay}" onclick="javascript:window.open('{$lang.ctenpay_url}')"/>
-						{elseif $smarty.get.code eq "tenpayc2c"} <input type="button" value="{$lang.ctenpay}" onclick="javascript:window.open('{$lang.ctenpayc2c_url}')"/>
+						{if $smarty.get.code eq "tenpay"}<input type="button" value="{lang key='payment::payment.ctenpay'}" onclick="javascript:window.open('{lang key='payment::payment.ctenpay_url'}')"/>
+						{elseif $smarty.get.code eq "tenpayc2c"} <input type="button" value="{lang key='payment::payment.ctenpay'}" onclick="javascript:window.open('{lang key='payment::payment.ctenpayc2c_url'}')"/>
 						{/if}
 						{/if}
 						<!--the tenpay code -->
@@ -65,10 +65,10 @@ ecjia.admin.payment_list.editFormSubmit();
 				<!-- {/foreach} -->
 				<!-- 支付手续费 -->
 				<div class="control-group formSep">
-					<label class="control-label">{$lang.pay_fee}：</label>
+					<label class="control-label">{lang key='payment::payment.pay_fee'}：</label>
 					<div class="controls">
 						{if $pay.is_cod }
-						<label class="p_t5">{$lang.decide_by_ship}</label>
+						<label class="p_t5">{lang key='payment::payment.decide_by_ship'}</label>
 						<input class="w350" name="pay_fee" type="hidden" value="{$pay.pay_fee|default:0}" />
 						{else}
 						<input class="w350" name="pay_fee" type="text" value="{$pay.pay_fee|default:0}" />
@@ -77,21 +77,21 @@ ecjia.admin.payment_list.editFormSubmit();
 				</div>
 				<!-- 货到付款 -->
 				<div class="control-group formSep">
-					<label  class="control-label">{$lang.payment_is_cod}</label>
+					<label  class="control-label">{lang key='payment::payment.payment_is_cod'}</label>
 					<div class="controls">
-						<label class="p_t5">{if $pay.is_cod == "1"}{$lang.yes}{else}{$lang.no}{/if}</label>
+						<label class="p_t5">{if $pay.is_cod == "1"}{lang key='system::system.yes'}{else}{lang key='system::system.no'}{/if}</label>
 					</div>
 				</div>
 				<!-- 在线支付 -->
 				<div class="control-group formSep">
-					<label  class="control-label">{$lang.payment_is_online}</label>
+					<label  class="control-label">{lang key='payment::payment.payment_is_online'}</label>
 					<div class="controls">
-						<label class="p_t5">{if $pay.is_online == "1"}{$lang.yes}{else}{$lang.no}{/if}</label>
+						<label class="p_t5">{if $pay.is_online == "1"}{lang key='system::system.yes'}{else}{lang key='system::system.no'}{/if}</label>
 					</div>
 				</div>
 				<div class="control-group">
 					<div class="controls">
-						<button class="btn btn-gebo" type="submit">{$lang.button_submit}</button>
+						<button class="btn btn-gebo" type="submit">{lang key='system::system.button_submit'}</button>
 						<input type="hidden" name="pay_id" value="{$pay.pay_id}" />
 						<input type="hidden" name="pay_code" value="{$pay.pay_code}" />
 						<input type="hidden" name="is_cod" value="{$pay.is_cod}" />

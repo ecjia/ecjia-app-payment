@@ -21,10 +21,10 @@ ecjia.admin.payment_list.initList();
 		<table class="table table-striped table-hide-edit" data-rowlink="a">
 			<thead>
 				<tr>
-					<th class="w100">{$lang.payment_name}</th>
-					<th class="w600">{$lang.payment_desc}</th>
-					<th class="w50">{$lang.sort_order}</th>
-					<th class="w50">{$lang.short_pay_fee}</th>
+					<th class="w100">{lang key='payment::payment.payment_name'}</th>
+					<th class="w600">{lang key='payment::payment.payment_desc'}</th>
+					<th class="w50">{lang key='system::system.sort_order'}</th>
+					<th class="w50">{lang key='payment::payment.short_pay_fee'}</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -43,15 +43,15 @@ ecjia.admin.payment_list.initList();
 							{$module.desc|nl2br}
 							<div class="edit-list">
 								{assign var=payment_edit value=RC_Uri::url('payment/admin/edit',"code={$module.code}")}
-								<a class="data-pjax" href="{$payment_edit}" title="{$lang.edit}">{t}编辑{/t}</a>&nbsp;|&nbsp;
+								<a class="data-pjax" href="{$payment_edit}" title="{lang key='system::system.edit'}">{t}编辑{/t}</a>&nbsp;|&nbsp;
 								{assign var=payment_disable value=RC_Uri::url('payment/admin/disable',"code={$module.code}")}
-								<a class="switch ecjiafc-red" href="javascript:;" data-url="{$payment_disable}" title="{$lang.disable}">{t}禁用{/t}</a>
+								<a class="switch ecjiafc-red" href="javascript:;" data-url="{$payment_disable}" title="{lang key='payment::payment.disable'}">{t}禁用{/t}</a>
 							</div>
 						<!-- {else} -->
 							{$module.desc|nl2br}
 							<div class="edit-list">
 								{assign var=payment_enable value=RC_Uri::url('payment/admin/enable',"code={$module.code}")}
-								<a class="switch" href="javascript:;" data-url="{$payment_enable}" title="{$lang.enable}">{t}启用{/t}</a>
+								<a class="switch" href="javascript:;" data-url="{$payment_enable}" title="{lang key='payment::payment.enable'}">{t}启用{/t}</a>
 							</div>
 						<!-- {/if} -->
 					</td>
@@ -64,7 +64,7 @@ ecjia.admin.payment_list.initList();
 					</td>
 					<td>
 						<!-- {if $module.is_cod} -->
-							{$lang.decide_by_ship}
+							{lang key='payment::payment.decide_by_ship'}
 						<!-- {else} -->
 							{$module.pay_fee}
 						<!-- {/if} -->
