@@ -286,10 +286,11 @@ abstract class payment_abstract
 	        'object_group' => $group,
 	        'item_key1' => 'order_sn',
 	        'item_key2' => 'out_trade_no',
-	        'item_value2' => $out_trade_no,
+	        "item_value2 = '$out_trade_no'",
 	    );
 	    $relationship_db = RC_Loader::load_model('term_relationship_model');
 	    $item = $relationship_db->where($data)->find();
+	    RC_Logger::getLogger('pay')->info($item);
 	    if ($item) {
 	       return array('order_sn' => $item['item_value1'], 'log_id' => $item['object_id']);
 	    } 
