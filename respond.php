@@ -45,8 +45,8 @@ class respond extends ecjia_front {
 			}
 
 		}
-		$touch_url = RC_Config::system('CUSTOM_TOUCH_SITE_URL');
-		
+// 		$touch_url = RC_Config::system('CUSTOM_TOUCH_SITE_URL');
+		$touch_url = RC_Config::load_config('site', 'CUSTOM_TOUCH_URL');
         $respond =<<<RESPOND
         <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
         <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">

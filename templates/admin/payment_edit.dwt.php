@@ -3,7 +3,7 @@
 
 <!-- {block name="footer"} -->
 <script type="text/javascript">
-ecjia.admin.payment_list.editFormSubmit();
+	ecjia.admin.payment_list.editFormSubmit();
 </script>
 <!-- {/block} -->
 
@@ -21,16 +21,17 @@ ecjia.admin.payment_list.editFormSubmit();
 		<form id="form-privilege"  class="form-horizontal"  name="editForm" action="{$form_action}" method="post" enctype="multipart/form-data" >
 			<fieldset>
 				<div class="control-group formSep">
-					<label class="control-label">{lang key='payment::payment.payment_name'}：</label>
+					<label class="control-label">{lang key='payment::payment.label_payment_name'}</label>
 					<div class="controls">
 						<input class="w350" name="pay_name" type="text" id="pay_name" value="{$pay.pay_name|escape}" size="40" />
 						<span class="input-must">{lang key='system::system.require_field'}</span>
 					</div>
 				</div>
 				<div class="control-group formSep">
-					<label class="control-label">{lang key='payment::payment.payment_desc'}：</label>
+					<label class="control-label">{lang key='payment::payment.label_payment_desc'}</label>
 					<div class="controls">
 						<textarea class="w350" id="pay_desc" name="pay_desc"  cols="10" rows="6">{$pay.pay_desc|escape}</textarea>
+						<span class="input-must">{lang key='system::system.require_field'}</span>
 					</div>
 				</div>
 				<!-- {foreach from=$pay.pay_config item=config key=key} -->
@@ -65,7 +66,7 @@ ecjia.admin.payment_list.editFormSubmit();
 				<!-- {/foreach} -->
 				<!-- 支付手续费 -->
 				<div class="control-group formSep">
-					<label class="control-label">{lang key='payment::payment.pay_fee'}：</label>
+					<label class="control-label">{lang key='payment::payment.label_pay_fee'}</label>
 					<div class="controls">
 						{if $pay.is_cod }
 						<label class="p_t5">{lang key='payment::payment.decide_by_ship'}</label>

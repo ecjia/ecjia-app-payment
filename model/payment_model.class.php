@@ -9,9 +9,6 @@ class payment_model extends Component_Model_Model {
 		$this->table_name = 'payment';
 		parent::__construct();
 	}
-
-
-
 }
 
 // end

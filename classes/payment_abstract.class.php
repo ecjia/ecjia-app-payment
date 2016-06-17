@@ -261,7 +261,7 @@ abstract class payment_abstract
 	        'item_key1' => 'order_sn',
 	        'item_value1' => $order_sn,
 	        'item_key2' => 'out_trade_no',
-	        'item_value2' => $out_trade_no,
+	        "item_value2 = '$out_trade_no'" ,
 	    );
 	    $count = $relationship_db->where($data)->count();
 	    if (!$count) {
@@ -282,11 +282,11 @@ abstract class payment_abstract
 	    }
 	    
 	    $data = array(
-	        'object_type' => $app,
-	        'object_group' => $group,
-	        'item_key1' => 'order_sn',
-	        'item_key2' => 'out_trade_no',
-	        "item_value2 = '$out_trade_no'",
+	        'object_type'	=> $app,
+	        'object_group'	=> $group,
+	        'item_key1'		=> 'order_sn',
+	        'item_key2'		=> 'out_trade_no',
+	    	"item_value2 = '$out_trade_no'" ,
 	    );
 	    $relationship_db = RC_Loader::load_model('term_relationship_model');
 	    $item = $relationship_db->where($data)->find();

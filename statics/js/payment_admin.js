@@ -12,25 +12,25 @@
 				},
 				messages:{
 					pay_name : {
-						required : "请输入支付名称",
-						minlength : "支付名称长度不能小于3"
+						required : js_lang.pay_name_required,
+						minlength : js_lang.pay_name_minlength,
 					},
 					pay_desc : {
-						required : "请输入支付描述",
-						minlength : "支付描述长度不能小于6"
+						required : js_lang.pay_desc_required,
+						minlength : js_lang.pay_desc_minlength,
 					}
 				},	
 				submitHandler : function() {
 					$form.ajaxSubmit({
 						dataType : "json",
 						success : function(data) {
-							if(data.state == "success") {
-								if(data.refresh_url!=undefined) {
+							if (data.state == "success") {
+								if (data.refresh_url!=undefined) {
 									var pjaxurl = data.refresh_url;
 									ecjia.pjax(pjaxurl, function(){
 										ecjia.admin.showmessage(data);
 									});
-								}else{
+								} else {
 									ecjia.admin.showmessage(data);
 								}
 							} else {
@@ -52,13 +52,13 @@
 					data: '',
 					dataType: "json",
 					success: function(data){
-						if(data.state == "success") {
-							if(data.refresh_url!=undefined) {
+						if (data.state == "success") {
+							if (data.refresh_url != undefined) {
 								var pjaxurl = data.refresh_url;
 								ecjia.pjax(pjaxurl, function(){
 									ecjia.admin.showmessage(data);
 								});
-							}else{
+							} else {
 								ecjia.admin.showmessage(data);
 							}
 						} else {

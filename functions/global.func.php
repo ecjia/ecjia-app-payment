@@ -1,5 +1,4 @@
 <?php
-
 /**
  * ECJia 支付接口函数库
  */
@@ -10,8 +9,7 @@ defined('IN_ECJIA') or exit('No permission resources.');
  * 取得返回信息地址
  * @param   string  $code   支付方式代码
  */
-function return_url($code)
-{
+function return_url($code) {
     return $GLOBALS['ecs']->url() . 'respond.php?code=' . $code;
 }
 
@@ -19,8 +17,7 @@ function return_url($code)
  *  取得某支付方式信息
  *  @param  string  $code   支付方式代码
  */
-function get_payment($code)
-{
+function get_payment($code) {
 	$db = RC_Loader::load_app_model('payment_model', 'payment');
 	$payment = $db->find('pay_code = "'. $code. '" AND enabled = "1"');
 
@@ -38,8 +35,7 @@ function get_payment($code)
  *  @param  string  $order_sn   订单sn
  *  @param  blob    $voucher    是否为会员充值
  */
-function get_order_id_by_sn($order_sn, $voucher = 'false')
-{
+function get_order_id_by_sn($order_sn, $voucher = 'false') {
 	$db_pay = RC_Loader::load_app_model('pay_log_model','orders');
 	$db_order = RC_Loader::load_app_model('order_info_model', 'orders');
     if ($voucher == 'true') {
@@ -65,8 +61,7 @@ function get_order_id_by_sn($order_sn, $voucher = 'false')
  *  通过订单ID取得订单商品名称
  *  @param  string  $order_id   订单ID
  */
-function get_goods_name_by_id($order_id)
-{
+function get_goods_name_by_id($order_id) {
 	$db = RC_Loader::load_app_model('order_goods_model', 'orders');
 	$goods_name = $db->field('goods_name')->find('order_id = "'. $order_id .'"');
 	return implode(',', $goods_name);
@@ -80,8 +75,7 @@ function get_goods_name_by_id($order_id)
  * @param   float    $money       支付接口返回的金额
  * @return  true
  */
-function check_money($log_id, $money)
-{
+function check_money($log_id, $money) {
 	$db_pay = RC_Loader::load_app_model('pay_log_model','orders');
     if(is_numeric($log_id)) {
     		$amount = $db_pay->field('order_amount')->find('log_id = "'. $log_id .'"');
@@ -104,8 +98,7 @@ function check_money($log_id, $money)
  * @param   string  $note       备注
  * @return  void
  */
-function order_paid($log_id, $pay_status = PS_PAYED, $note = '')
-{
+function order_paid($log_id, $pay_status = PS_PAYED, $note = '') {
 	$db_pay = RC_Loader::load_app_model('pay_log_model','orders');
 	$db_order = RC_Loader::load_app_model('order_info_model','orders');
 	$db_user = RC_Loader::load_app_model('user_account_model','user');
@@ -113,49 +106,27 @@ function order_paid($log_id, $pay_status = PS_PAYED, $note = '')
     $log_id = intval($log_id);
     if ($log_id > 0) {
         /* 取得要修改的支付记录信息 */
-		//         $sql = "SELECT * FROM " . $GLOBALS['ecs']->table('pay_log') .
-		//                 " WHERE log_id = '$log_id'";
-		//         $pay_log = $GLOBALS['db']->getRow($sql);
-         
         $pay_log = $db_pay->find('log_id = '.$log_id.'');
         if ($pay_log && $pay_log['is_paid'] == 0) {
             /* 修改此次支付操作的状态为已付款 */
-			//             $sql = 'UPDATE ' . $GLOBALS['ecs']->table('pay_log') .
-			//                     " SET is_paid = '1' WHERE log_id = '$log_id'";
-			//             $GLOBALS['db']->query($sql);
-
 	        $data = array( 'is_paid' => '1' );
 			$db_pay->where('log_id = '.$log_id.'')->update($data);
 
             /* 根据记录类型做相应处理 */
             if ($pay_log['order_type'] == PAY_ORDER) {
                 /* 取得订单信息 */
-				//                 $sql = 'SELECT order_id, user_id, order_sn, consignee, address, tel, shipping_id, extension_code, extension_id, goods_amount ' .
-				//                         'FROM ' . $GLOBALS['ecs']->table('order_info') .
-				//                        " WHERE order_id = '$pay_log[order_id]'";
-				//                 $order    = $GLOBALS['db']->getRow($sql);
                 $order = $db_order->field('order_id, user_id, order_sn, consignee, address, tel, shipping_id, extension_code, extension_id, goods_amount')->find('order_id = '. $pay_log['order_id']. '');
                 $order_id = $order['order_id'];
                 $order_sn = $order['order_sn'];
 
                 /* 修改订单状态为已付款 */
-				//                 $sql = 'UPDATE ' . $GLOBALS['ecs']->table('order_info') .
-				//                             " SET order_status = '" . OS_CONFIRMED . "', " .
-				//                                 " confirm_time = '" . gmtime() . "', " .
-				//                                 " pay_status = '$pay_status', " .
-				//                                 " pay_time = '".gmtime()."', " .
-				//                                 " money_paid = order_amount," .
-				//                                 " order_amount = 0 ".
-				//                        "WHERE order_id = '$order_id'";
-				//                 $GLOBALS['db']->query($sql);
-
                 $data = array(
-                		'order_status' => OS_CONFIRMED,
-                		'confirm_time' => RC_Time::gmtime(),
-                		'pay_status'   => $pay_status,
-                		'pay_time'     => RC_Time::gmtime(),
-                		'money_paid'   => order_amount,
-                		'order_amount' => 0,
+                	'order_status' => OS_CONFIRMED,
+                	'confirm_time' => RC_Time::gmtime(),
+                	'pay_status'   => $pay_status,
+                	'pay_time'     => RC_Time::gmtime(),
+                	'money_paid'   => order_amount,
+                	'order_amount' => 0,
                 );
                 
                 $db_order->where('order_id = '.$order_id.'')->update($data);
@@ -183,14 +154,9 @@ function order_paid($log_id, $pay_status = PS_PAYED, $note = '')
                     /* 如果订单没有配送方式，自动完成发货操作 */
                     if ($order['shipping_id'] == -1) {
                         /* 将订单标识为已发货状态，并记录发货记录 */
-						//                         $sql = 'UPDATE ' . $GLOBALS['ecs']->table('order_info') .
-						//                                " SET shipping_status = '" . SS_SHIPPED . "', shipping_time = '" . gmtime() . "'" .
-						//                                " WHERE order_id = '$order_id'";
-						//                         $GLOBALS['db']->query($sql);
-
 	                    	$data = array(
-	                    			'shipping_status' => SS_SHIPPED,
-	                    			'shipping_time' => RC_Time::gmtime(),
+	                    		'shipping_status' => SS_SHIPPED,
+	                    		'shipping_time' => RC_Time::gmtime(),
 	                    	);
                     		$db_order->where('order_id = '.$order_id.'')->update($data);
 
@@ -198,10 +164,10 @@ function order_paid($log_id, $pay_status = PS_PAYED, $note = '')
                         order_action($order_sn, OS_CONFIRMED, SS_SHIPPED, $pay_status, $note, RC_Lang::get('payment::payment.buyer'));
                         $integral = integral_to_give($order);
                         $options = array(
-                        		'user_id'		=> $order['user_id'],
-                        		'rank_points'	=> intval($integral['rank_points']),
-                        		'pay_points'	=> intval($integral['custom_points']),
-                        		'change_desc'	=> sprintf(RC_Lang::get('payment::payment.order_gift_integral'), $order['order_sn'])
+                        	'user_id'		=> $order['user_id'],
+                        	'rank_points'	=> intval($integral['rank_points']),
+                        	'pay_points'	=> intval($integral['custom_points']),
+                        	'change_desc'	=> sprintf(RC_Lang::get('payment::payment.order_gift_integral'), $order['order_sn'])
                         );
                         RC_Api::api('user', 'account_change_log',$options);
 //                         log_account_change($order['user_id'], 0, 0, intval($integral['rank_points']), intval($integral['custom_points']), sprintf($GLOBALS['_LANG']['order_gift_integral'], $order['order_sn']));
@@ -209,38 +175,27 @@ function order_paid($log_id, $pay_status = PS_PAYED, $note = '')
                 }
 
             } elseif ($pay_log['order_type'] == PAY_SURPLUS) {
-				//                 $sql = 'SELECT `id` FROM ' . $GLOBALS['ecs']->table('user_account') .  " WHERE `id` = '$pay_log[order_id]' AND `is_paid` = 1  LIMIT 1";
-				//                 $res_id=$GLOBALS['db']->getOne($sql);
             		$res_id = $db_user -> field('`id`')->find('`id` = '.$pay_log['order_id'].' AND `is_paid` = 1');
                 if (empty($res_id)) {
 					/* 更新会员预付款的到款状态 */
-					//                     $sql = 'UPDATE ' . $GLOBALS['ecs']->table('user_account') .
-					//                            " SET paid_time = '" .gmtime(). "', is_paid = 1" .
-					//                            " WHERE id = '$pay_log[order_id]' LIMIT 1";
-					//                     $GLOBALS['db']->query($sql);
 	                	$data = array(
-	                			'paid_time' => RC_Time::gmtime(),
-	                			'is_paid'   => 1
-	                	);
+                			'paid_time' => RC_Time::gmtime(),
+                			'is_paid'   => 1
+                		);
                 	
                 		$db_user->where('`id` = '.$pay_log['order_id'].'')->update($data);
                     /* 取得添加预付款的用户以及金额 */
-					//                     $sql = "SELECT user_id, amount FROM " . $GLOBALS['ecs']->table('user_account') .
-					//                             " WHERE id = '$pay_log[order_id]'";
-					//                     $arr = $GLOBALS['db']->getRow($sql);
-
                 		$arr = $db_user->field('user_id, amount')->find('`id` = '. $pay_log['order_id'].'');
                     /* 修改会员帐户金额 */
 //                     $_LANG = array();
 //                     include_once(ROOT_PATH . 'languages/' . $GLOBALS['_CFG']['lang'] . '/user.php');
                     $options = array(
-                    		'user_id'		=> $arr['user_id'],
-                    		'user_money'	=> $arr['amount'],
-                    		'change_desc'	=> RC_Lang::get('payment::payment.surplus_type_0'),
-                    		'change_type'	=> ACT_SAVING
+                    	'user_id'		=> $arr['user_id'],
+                    	'user_money'	=> $arr['amount'],
+                    	'change_desc'	=> RC_Lang::get('payment::payment.surplus_type_0'),
+                    	'change_type'	=> ACT_SAVING
                     );
                     RC_Api::api('user', 'account_change_log',$options);
-                    
 //                     log_account_change($arr['user_id'], $arr['amount'], 0, 0, 0, RC_Lang::get('payment::payment.surplus_type_0'), ACT_SAVING);
                 }
             }
@@ -252,8 +207,6 @@ function order_paid($log_id, $pay_status = PS_PAYED, $note = '')
             if (!empty($post_virtual_goods)) {
                 $msg = '';
                 /* 检查两次刷新时间有无超过12小时 */
-				//                 $sql = 'SELECT pay_time, order_sn FROM ' . $GLOBALS['ecs']->table('order_info') . " WHERE order_id = '$pay_log[order_id]'";
-				//                 $row = $GLOBALS['db']->getRow($sql);
                 $row = $db_order->field('pay_time, order_sn')->find('`order_id` = '. $pay_log['order_id'].'');
                 $intval_time = RC_Time::gmtime() - $row['pay_time'];
                 if ($intval_time >= 0 && $intval_time < 3600 * 12) {
@@ -283,15 +236,12 @@ function order_paid($log_id, $pay_status = PS_PAYED, $note = '')
 		}
     }
 }
-	
-
 
 /**
  * 取得货到付款和非货到付款的支付方式
  * @return  array('is_cod' => '', 'is_not_cod' => '')
  */
-function get_pay_ids()
-{
+function get_pay_ids() {
 	$db = RC_Loader::load_app_model('payment_model', 'payment');
 	$ids = array('is_cod' => '0', 'is_not_cod' => '0');
 	$data = $db->field('pay_id, is_cod')->where('enabled = 1')->select();

@@ -3,7 +3,7 @@
 
 <!-- {block name="footer"} -->
 <script type="text/javascript">
-ecjia.admin.payment_list.initList();
+	ecjia.admin.payment_list.initList();
 </script>
 <!-- {/block} -->
 
@@ -33,7 +33,7 @@ ecjia.admin.payment_list.initList();
 				<tr>
 					<td >
 						<!-- {if $module.enabled == 1} -->
-							<span class="pay_name cursor_pointer" data-trigger="editable" data-url="{RC_Uri::url('payment/admin/edit_name')}" data-name="title" data-pk="{$module.id}"  data-title="编辑支付方式名称">{$module.name}</span>
+							<span class="pay_name cursor_pointer" data-trigger="editable" data-url="{RC_Uri::url('payment/admin/edit_name')}" data-name="title" data-pk="{$module.id}"  data-title="{lang key='payment::payment.edit_payment_name'}">{$module.name}</span>
 						<!-- {else} -->
 							{$module.name}
 						<!-- {/if} -->
@@ -42,22 +42,19 @@ ecjia.admin.payment_list.initList();
 						<!-- {if $module.enabled == 1} -->
 							{$module.desc|nl2br}
 							<div class="edit-list">
-								{assign var=payment_edit value=RC_Uri::url('payment/admin/edit',"code={$module.code}")}
-								<a class="data-pjax" href="{$payment_edit}" title="{lang key='system::system.edit'}">{t}编辑{/t}</a>&nbsp;|&nbsp;
-								{assign var=payment_disable value=RC_Uri::url('payment/admin/disable',"code={$module.code}")}
-								<a class="switch ecjiafc-red" href="javascript:;" data-url="{$payment_disable}" title="{lang key='payment::payment.disable'}">{t}禁用{/t}</a>
+								<a class="data-pjax" href='{RC_Uri::url("payment/admin/edit", "code={$module.code}")}' title="{lang key='system::system.edit'}">{lang key='system::system.edit'}</a>&nbsp;|&nbsp;
+								<a class="switch ecjiafc-red" href="javascript:;" data-url='{RC_Uri::url("payment/admin/disable", "code={$module.code}")}' title="{lang key='payment::payment.disable'}">{lang key='payment::payment.disable'}</a>
 							</div>
 						<!-- {else} -->
 							{$module.desc|nl2br}
 							<div class="edit-list">
-								{assign var=payment_enable value=RC_Uri::url('payment/admin/enable',"code={$module.code}")}
-								<a class="switch" href="javascript:;" data-url="{$payment_enable}" title="{lang key='payment::payment.enable'}">{t}启用{/t}</a>
+								<a class="switch" href="javascript:;" data-url='{RC_Uri::url("payment/admin/enable", "code={$module.code}")}' title="{lang key='payment::payment.enable'}">{lang key='payment::payment.enable'}</a>
 							</div>
 						<!-- {/if} -->
 					</td>
 					<td>
 						<!-- {if $module.enabled == 1} -->
-						<span class="pay_order cursor_pointer" data-trigger="editable" data-url="{RC_Uri::url('payment/admin/edit_order')}" data-name="title" data-pk="{$module.id}" data-title="编辑支付方式排序">{$module.pay_order}</span>
+						<span class="pay_order cursor_pointer" data-trigger="editable" data-url="{RC_Uri::url('payment/admin/edit_order')}" data-name="title" data-pk="{$module.id}" data-title="{lang key='payment::payment.edit_payment_order'}">{$module.pay_order}</span>
 						<!-- {else} -->
 						{$module.pay_order}
 						<!-- {/if} -->
@@ -72,7 +69,7 @@ ecjia.admin.payment_list.initList();
 				</tr>
 				<!-- {/if} -->
 				<!-- {foreachelse} -->
-				   <tr><td class="no-records" colspan="10">{t}没有找到任何记录{/t}</td></tr>
+				   <tr><td class="no-records" colspan="10">{lang key='system::system.no_records'}}</td></tr>
 				<!-- {/foreach} -->
 			</tbody>
 		</table>	
