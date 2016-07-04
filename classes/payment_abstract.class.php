@@ -254,17 +254,26 @@ abstract class payment_abstract
 	    
 	    $relationship_db = RC_Loader::load_model('term_relationship_model');
 	    
-	    $data = array(
-	    	'object_type' => $app,
-	        'object_group' => $group,
-	        'object_id' => $log_id,
-	        'item_key1' => 'order_sn',
-	        'item_value1' => $order_sn,
-	        'item_key2' => 'out_trade_no',
-	        "item_value2 = '$out_trade_no'" ,
+		$data = array(
+	    	'object_type' 	=> $app,
+	        'object_group' 	=> $group,
+	        'object_id' 	=> $log_id,
+	        'item_key1' 	=> 'order_sn',
+	        'item_value1' 	=> $order_sn,
+	        'item_key2' 	=> 'out_trade_no',
+	        "item_value2 	= '$out_trade_no'" ,
 	    );
 	    $count = $relationship_db->where($data)->count();
 	    if (!$count) {
+	    	$data = array(
+	    			'object_type' 	=> $app,
+	    			'object_group' 	=> $group,
+	    			'object_id' 	=> $log_id,
+	    			'item_key1' 	=> 'order_sn',
+	    			'item_value1' 	=> $order_sn,
+	    			'item_key2' 	=> 'out_trade_no',
+	    			'item_value2' 	=> $out_trade_no,
+	    	);
 	        $relationship_db->insert($data);
 	    }
 	    return $out_trade_no;
