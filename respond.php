@@ -45,8 +45,9 @@ class respond extends ecjia_front {
 			}
 
 		}
-// 		$touch_url = RC_Config::system('CUSTOM_TOUCH_SITE_URL');
-		$touch_url = RC_Config::load_config('site', 'CUSTOM_TOUCH_URL');
+		
+		$touch_url = ecjia::config('shop_touch_url');
+		
         $respond =<<<RESPOND
         <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
         <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
@@ -63,17 +64,14 @@ class respond extends ecjia_front {
             </style>
             <script type="text/javascript">
             	function goback() {
-            		if (/android/i.test(navigator.userAgent)){
-        			    // todo : android
-        			    window.ecmoban.back();
-        			}
-        			
-        			if (/ipad|iphone|mac/i.test(navigator.userAgent)){
-        			    // todo : ios
-        			    window.location.href="objc://payback";
-        			}
+            		var useragent = navigator.userAgent;
+            		if (useragent.indexOf("ECJiaBrowse") >= 0) {
+						var url="ecjiaopen://app?open_type=main";  
+    					document.location = url;
+					} else {
+						window.history.go(-1);
+					}  
             	}
-            	window.onload = goback;
             </script>
         </head>
         <body >
@@ -81,7 +79,12 @@ class respond extends ecjia_front {
 				<h2 style="background:#18B0EF;line-height:2.5em;height:2.5em;color: #fff;">提示信息</h2>
 				<p style="font-size:1.5em; line-height:25px;min-height:100px;padding-top:2em;">{$msg}</p>
 				<div class="two-btn" style="margin:1em">
-					<a class="btn btn-info" href="{$touch_url}" style="display: inline-block;background:#4AB9EE;width: 48%;padding: 1em 0;border-radius: 6px;color: #fff;text-decoration: blink;margin-right: 2%;">去微商城购物</a>
+RESPOND;
+        if (!empty($touch_url)) {
+        	$respond .= '<a class="btn btn-info" href="'.$touch_url.'" style="display: inline-block;background:#4AB9EE;width: 48%;padding: 1em 0;border-radius: 6px;color: #fff;text-decoration: blink;margin-right: 2%;">去微商城购物</a>';
+        }
+		$respond.=<<<RESPOND
+					
 					<a class="btn btn-info" href="javascript:goback()" style="display: inline-block;background:#4AB9EE;width: 48%;padding: 1em 0;border-radius: 6px;color: #fff;text-decoration: blink;">返回APP</a>
 				</div>
 			</div>

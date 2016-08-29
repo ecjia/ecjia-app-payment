@@ -9,6 +9,29 @@ class payment_model extends Component_Model_Model {
 		$this->table_name = 'payment';
 		parent::__construct();
 	}
+	
+	public function payment_select($order) {
+		return $this->order($order)->select();
+	}
+	
+	public function payment_manage($data, $where=array()) {
+		if (empty($where)) {
+			return $this->insert($data);
+		}
+		return $this->where($where)->update($data);
+	}
+	
+	public function payment_field($where, $field) {
+		return $this->where($where)->get_field($field);
+	}
+	
+	public function payment_find($where) {
+		return $this->where($where)->find();
+	}
+	
+	public function is_only($where) {
+		return $this->where($where)->count();
+	}
 }
 
 // end

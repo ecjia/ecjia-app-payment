@@ -13,10 +13,10 @@ class payment_order_viewmodel extends Component_Model_View {
 		
 		$this->view = array(
 			'order_info' => array(
-				'type' =>Component_Model_View::TYPE_LEFT_JOIN,
-				'alias'=> 'i',
-				'field'=> 'i.pay_id, p.pay_name, i.pay_time, COUNT(i.order_id) AS order_num',
-				'on' => 'p.pay_id = i.pay_id',
+				'type' 	=> Component_Model_View::TYPE_LEFT_JOIN,
+				'alias'	=> 'i',
+				'field'	=> 'i.pay_id, p.pay_name, i.pay_time, COUNT(i.order_id) AS order_num',
+				'on' 	=> 'p.pay_id = i.pay_id',
 			)
 		);
 		parent::__construct();

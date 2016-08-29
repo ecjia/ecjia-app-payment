@@ -36,7 +36,7 @@ function get_payment($code) {
  *  @param  blob    $voucher    是否为会员充值
  */
 function get_order_id_by_sn($order_sn, $voucher = 'false') {
-	$db_pay = RC_Loader::load_app_model('pay_log_model','orders');
+	$db_pay = RC_Loader::load_app_model('pay_log_model', 'orders');
 	$db_order = RC_Loader::load_app_model('order_info_model', 'orders');
     if ($voucher == 'true') {
         if(is_numeric($order_sn)) {
@@ -45,12 +45,12 @@ function get_order_id_by_sn($order_sn, $voucher = 'false') {
             return "";
         }
     } else {
-        if(is_numeric($order_sn)) {
-        		$order_id = $db_order->field('order_id')->find('order_sn = "'. $order_sn .'"');
+        if (is_numeric($order_sn)) {
+        	$order_id = $db_order->field('order_id')->find('order_sn = "'. $order_sn .'"');
         } 
         if (!empty($order_id)) {
-        		$pay_log_id = $db_pay->field('log_id')->find('order_id = "'. $order_id .'"');
-        		return $pay_log_id;       	
+        	$pay_log_id = $db_pay->field('log_id')->find('order_id = "'. $order_id .'"');
+        	return $pay_log_id;       	
         } else {
             return "";
         }
@@ -76,7 +76,7 @@ function get_goods_name_by_id($order_id) {
  * @return  true
  */
 function check_money($log_id, $money) {
-	$db_pay = RC_Loader::load_app_model('pay_log_model','orders');
+	$db_pay = RC_Loader::load_app_model('pay_log_model', 'orders');
     if(is_numeric($log_id)) {
     		$amount = $db_pay->field('order_amount')->find('log_id = "'. $log_id .'"');
     } else {
@@ -99,9 +99,9 @@ function check_money($log_id, $money) {
  * @return  void
  */
 function order_paid($log_id, $pay_status = PS_PAYED, $note = '') {
-	$db_pay = RC_Loader::load_app_model('pay_log_model','orders');
-	$db_order = RC_Loader::load_app_model('order_info_model','orders');
-	$db_user = RC_Loader::load_app_model('user_account_model','user');
+	$db_pay = RC_Loader::load_app_model('pay_log_model', 'orders');
+	$db_order = RC_Loader::load_app_model('order_info_model', 'orders');
+	$db_user = RC_Loader::load_app_model('user_account_model', 'user');
     /* 取得支付编号 */
     $log_id = intval($log_id);
     if ($log_id > 0) {
@@ -155,8 +155,8 @@ function order_paid($log_id, $pay_status = PS_PAYED, $note = '') {
                     if ($order['shipping_id'] == -1) {
                         /* 将订单标识为已发货状态，并记录发货记录 */
 	                    	$data = array(
-	                    		'shipping_status' => SS_SHIPPED,
-	                    		'shipping_time' => RC_Time::gmtime(),
+	                    		'shipping_status' 	=> SS_SHIPPED,
+	                    		'shipping_time' 	=> RC_Time::gmtime(),
 	                    	);
                     		$db_order->where('order_id = '.$order_id.'')->update($data);
 
@@ -216,10 +216,10 @@ function order_paid($log_id, $pay_status = PS_PAYED, $note = '') {
                         if ($code == 'virtual_card') {
                             foreach ($goods_list as $goods) {
                                 if ($info = virtual_card_result($row['order_sn'], $goods)) {
-                                    $virtual_card[] = array('goods_id'=>$goods['goods_id'], 'goods_name'=>$goods['goods_name'], 'info'=>$info);
+                                    $virtual_card[] = array('goods_id' => $goods['goods_id'], 'goods_name' => $goods['goods_name'], 'info'=>$info);
                                 }
                             }
-                            ecjia::$view_object->assign('virtual_card', $virtual_card);
+                            ecjia_front::$controller->assign('virtual_card', $virtual_card);
                         }
                     }
                 } else {

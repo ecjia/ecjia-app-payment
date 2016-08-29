@@ -32,7 +32,7 @@ class admin extends ecjia_admin {
 	/**
 	 * 支付方式列表
 	 */
-	public function init () {
+	public function init() {
 		$this->admin_priv('payment_manage', ecjia::MSGTYPE_JSON);
 		
 		ecjia_screen::get_current_screen()->remove_last_nav_here();
@@ -50,7 +50,7 @@ class admin extends ecjia_admin {
 		$this->assign('ur_here', RC_Lang::get('payment::payment.payment'));
 		
 		$plugins = ecjia_config::instance()->get_addon_config('payment_plugins', true, true);
-		$data = $this->db->order('pay_order')->select();
+		$data = $this->db->payment_select('pay_order');
 		$data or $data = array();
 		$modules = array();
 		foreach($data as $_key => $_value) {
@@ -65,8 +65,6 @@ class admin extends ecjia_admin {
 				$modules[$_key]['enabled'] 	= $_value['enabled'];
 			}
 		}
-		
-		
 		$this->assign('modules', $modules);
 		
 		$this->display('payment_list.dwt');
@@ -82,9 +80,8 @@ class admin extends ecjia_admin {
 		$data = array(
 			'enabled' => 0
 		);
-		$this->db->where(array('pay_code' => $code))->update($data);
-		
-		$pay_name = $this->db->where(array('pay_code' => $code))->get_field('pay_name');
+		$this->db->payment_manage($data, array('pay_code' => $code));
+		$pay_name = $this->db->payment_field(array('pay_code' => $code), 'pay_name');
 		
 		ecjia_admin::admin_log($pay_name, 'stop', 'payment');
 		
@@ -103,9 +100,8 @@ class admin extends ecjia_admin {
 			'enabled' => 1
 		);
 		
-		$this->db->where(array('pay_code' => $code))->update($data);
-		
-		$pay_name = $this->db->where(array('pay_code' => $code))->get_field('pay_name');
+		$this->db->payment_manage($data, array('pay_code' => $code));
+		$pay_name = $this->db->payment_field(array('pay_code' => $code), 'pay_name');
 		
 		ecjia_admin::admin_log($pay_name, 'use', 'payment');
 		
@@ -129,7 +125,7 @@ class admin extends ecjia_admin {
 		    $this->showmessage(__('invalid parameter'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
 		}
 		/* 查询该支付方式内容 */
-		$pay = $this->db->where(array('pay_code' => $pay_code, 'enabled' => 1))->find();
+		$pay = $this->db->payment_find(array('pay_code' => $pay_code, 'enabled' => 1));
 		if (empty($pay)) {
 		    $this->showmessage(RC_Lang::get('payment::payment.payment_not_available'), ecjia::MSGTYPE_HTML | ecjia::MSGSTAT_ERROR);
 		}
@@ -172,7 +168,7 @@ class admin extends ecjia_admin {
 			$this->showmessage(RC_Lang::get('payment::payment.payment_name') . RC_Lang::get('system::system.empty'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
 		}
 		
-		$data = $this->db->where(array('pay_name' => $name, 'pay_code' => array('neq' => $code)))->count();
+		$data = $this->db->is_only(array('pay_name' => $name, 'pay_code' => array('neq' => $code)));
 		if ($data > 0) {
 			$this->showmessage(RC_Lang::get('payment::payment.payment_name'). RC_Lang::get('payment::payment.repeat'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
 		}
@@ -202,13 +198,13 @@ class admin extends ecjia_admin {
 				'pay_config' => $pay_config,
 				'pay_fee'    => $pay_fee
 			);
-			$this->db->where(array('pay_code' => $code))->update($array);
+			$this->db->payment_manage($array, array('pay_code' => $code));
 			 
 			/* 记录日志 */
 			ecjia_admin::admin_log($name, 'edit', 'payment');
 			$this->showmessage(RC_Lang::get('payment::payment.edit_ok'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS);
 		} else {
-			$data_one = $this->db->where(array('pay_code' => $code))->count();
+			$data_one = $this->db->is_only(array('pay_code' => $code));
 			
 			if ($data_one > 0) {
 				/* 该支付方式已经安装过, 将该支付方式的状态设置为 enable */
@@ -219,7 +215,7 @@ class admin extends ecjia_admin {
 					'pay_fee'    => $pay_fee,
 					'enabled'    => '1'						
 				);
-			    $this->db->where(array('pay_code' => $code))->update($data);
+			    $this->db->payment_manage($data, array('pay_code' => $code));
 			} else {
 				/* 该支付方式没有安装过, 将该支付方式的信息添加到数据库 */				
 				$data =array(
@@ -233,7 +229,7 @@ class admin extends ecjia_admin {
 					'is_online' 	=> intval($_POST['is_online'])
 				);
 				
-	            $this->db->insert($data);
+	            $this->db->payment_manage($data);
 			}
 			ecjia_admin::admin_log($name, 'edit', 'payment');
 			$refresh_url = RC_Uri::url('payment/admin/edit', array('code' => $code));
@@ -256,10 +252,10 @@ class admin extends ecjia_admin {
 			$this->showmessage(RC_Lang::get('payment::payment.name_is_null'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
 		} else {
 			/* 检查名称是否重复 */
-			if( $this->db->where(array('pay_name' => $pay_name, 'pay_id' => array('neq' => $pay_id)))->count() > 0) {
+			if( $this->db->is_only(array('pay_name' => $pay_name, 'pay_id' => array('neq' => $pay_id))) > 0) {
 				$this->showmessage(RC_Lang::get('payment::payment.name_exists') , ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR );
 			} else {
-				$this->db->where(array('pay_id' => $pay_id ))->update(array('pay_name' => stripcslashes($pay_name)));
+				$this->db->payment_manage(array('pay_name' => stripcslashes($pay_name)), array('pay_id' => $pay_id));
 				
 				ecjia_admin::admin_log(stripcslashes($pay_name), 'edit', 'payment');
 				$this->showmessage(RC_Lang::get('payment::payment.edit_ok'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS);
@@ -280,7 +276,7 @@ class admin extends ecjia_admin {
 			$pay_id    = intval($_POST['pk']);
 			$pay_order = intval($_POST['value']);
 		
-			$this->db->where(array('pay_id' => $pay_id))->update(array('pay_order' => $pay_order));
+			$this->db->payment_manage(array('pay_order' => $pay_order), array('pay_id' => $pay_id));
 			
 			$this->showmessage(RC_Lang::get('payment::payment.edit_ok'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => RC_uri::url('payment/admin/init')) );
 		}
@@ -310,9 +306,9 @@ class admin extends ecjia_admin {
 			else {
 				$pay_fee = floatval($pay_insure) . '%';
 			}
-			$pay_name = $this->db->where(array('pay_id' => $pay_id))->get_field('pay_name');
+			$pay_name = $this->db->payment_field(array('pay_id' => $pay_id), 'pay_name');
 			
-			$this->db->where(array('pay_id' => $pay_id))->update(array('pay_fee' => stripcslashes($pay_fee)));
+			$this->db->payment_manage(array('pay_fee' => stripcslashes($pay_fee)), array('pay_id' => $pay_id));
 			
 			ecjia_admin::admin_log($pay_name.'，'.sprintf(RC_Lang::get('payment::payment.edit_free_as'), $pay_fee), 'setup', 'payment');
 			$this->showmessage(RC_Lang::get('payment::payment.edit_ok'), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS);

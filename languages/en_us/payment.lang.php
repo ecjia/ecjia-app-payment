@@ -81,8 +81,8 @@ return array(
 	'label_payment_desc'		=> 'Description:',
 	'label_pay_fee'				=> 'Money:',
 	
-	'payment_manage'		=> 'Payment method management',
-	'payment_update'		=> 'Update payment method',
+	'payment_manage'		=> 'Payment Method Management',
+	'payment_update'		=> 'Update Payment Method',
 	'plugin_install_error'	=> 'The name of the payment method or pay_code cannot be empty',
 	'plugin_uninstall_error'=> 'Payment name can not be empty',
 	
