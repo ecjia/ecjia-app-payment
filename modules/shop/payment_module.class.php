@@ -3,11 +3,11 @@ defined('IN_ECJIA') or exit('No permission resources.');
 
 class payment_module extends api_front implements api_interface {
     public function handleRequest(\Royalcms\Component\HttpKernel\Request $request) {	
-    	$this->authSession();
     	
-    	$is_cod = _POST('is_cod', true);
-    	$cod_fee = _POST('cod_fee', 0);
-    	$device = _POST('device', array());
+    	$this->authSession();
+    	$is_cod = $this->requestdata('is_cod', true);
+    	$cod_fee = $this->requestdata('cod_fee', 0);
+    	$device = $this->requestdata('device', array());
     	$device_code = isset($device['code']) ? $device['code'] : '';
         $payment_method = RC_Loader::load_app_class('payment_method','payment');
         $payment_list = $payment_method->available_payment_list($is_cod, $cod_fee);
