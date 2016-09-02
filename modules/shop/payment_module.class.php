@@ -1,11 +1,10 @@
 <?php
 defined('IN_ECJIA') or exit('No permission resources.');
 
-class payment_module implements ecjia_interface
-{
-
-    public function run(ecjia_api & $api)
-    {
+class payment_module extends api_front implements api_interface {
+    public function handleRequest(\Royalcms\Component\HttpKernel\Request $request) {	
+    	$this->authSession();
+    	
     	$is_cod = _POST('is_cod', true);
     	$cod_fee = _POST('cod_fee', 0);
     	$device = _POST('device', array());
