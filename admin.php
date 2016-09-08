@@ -10,7 +10,7 @@ class admin extends ecjia_admin {
 	public function __construct() {
 		parent::__construct();
 		
-		$this->db = RC_Loader::load_app_model('payment_model');	
+		$this->db = RC_Model::model('payment/payment_model');	
 		
 		/* 加载全局 js/css */
 		RC_Script::enqueue_script('jquery-validate');
