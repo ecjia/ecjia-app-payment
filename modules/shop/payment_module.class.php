@@ -26,7 +26,7 @@ class payment_module extends api_front implements api_interface {
         if (!empty($payment_list)) {
         	return array('payment' => $payment_list);
         } else {
-        	EM_Api::outPut(8);
+        	return new ecjia_error(8, 'fail');
         }
     }
 }
