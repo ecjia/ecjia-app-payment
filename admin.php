@@ -38,7 +38,7 @@ class admin extends ecjia_admin {
 	 * 支付方式列表
 	 */
 	public function init() {
-		$this->admin_priv('payment_manage',ecjia::MSGTYPE_JSON);
+		$this->admin_priv('payment_manage', ecjia::MSGTYPE_JSON);
 		
 		ecjia_screen::get_current_screen()->remove_last_nav_here();
 		ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here(RC_Lang::get('payment::payment.payment')));
@@ -83,7 +83,7 @@ class admin extends ecjia_admin {
 	 * 禁用支付方式
 	 */
 	public function disable() {
-		$this->admin_priv('payment_update',ecjia::MSGTYPE_JSON);
+		$this->admin_priv('payment_update', ecjia::MSGTYPE_JSON);
 				
 		$code = trim($_GET['code']);
 		$data = array(
@@ -105,7 +105,7 @@ class admin extends ecjia_admin {
 	 * 启用支付方式
 	 */
 	public function enable() {
-		$this->admin_priv('payment_update',ecjia::MSGTYPE_JSON);
+		$this->admin_priv('payment_update', ecjia::MSGTYPE_JSON);
 		
 		$code = trim($_GET['code']);
 		$data = array(
@@ -130,7 +130,7 @@ class admin extends ecjia_admin {
 	 * 编辑支付方式 code={$code}
 	 */
 	public function edit() {
-		$this->admin_priv('payment_update',ecjia::MSGTYPE_JSON);
+		$this->admin_priv('payment_update', ecjia::MSGTYPE_JSON);
 		
 		ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here(RC_Lang::get('payment::payment.edit_payment')));
 		$this->assign('action_link', array('text' => RC_Lang::get('payment::payment.payment'), 'href' => RC_Uri::url('payment/admin/init')));
@@ -179,7 +179,7 @@ class admin extends ecjia_admin {
 	 * 提交支付方式 post
 	 */
 	public function save() {	
-		$this->admin_priv('payment_update',ecjia::MSGTYPE_JSON);
+		$this->admin_priv('payment_update', ecjia::MSGTYPE_JSON);
 		
 		$name = trim($_POST['pay_name']);
 		$code = trim($_POST['pay_code']);
@@ -269,7 +269,7 @@ class admin extends ecjia_admin {
 	 * 修改支付方式名称
 	 */
 	public function edit_name() {
-		$this->admin_priv('payment_update',ecjia::MSGTYPE_JSON);
+		$this->admin_priv('payment_update', ecjia::MSGTYPE_JSON);
 		
 		/* 取得参数 */
 		$pay_id  = intval($_POST['pk']);
@@ -300,7 +300,7 @@ class admin extends ecjia_admin {
 	 * 修改支付方式排序
 	 */
 	public function edit_order() {
-		$this->admin_priv('payment_update',ecjia::MSGTYPE_JSON);
+		$this->admin_priv('payment_update', ecjia::MSGTYPE_JSON);
 		
 		if ( !is_numeric($_POST['value']) ) {
 			$this->showmessage('请输入合法数字', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
@@ -320,7 +320,7 @@ class admin extends ecjia_admin {
 	 * 修改支付方式费用
 	 */
 	public function edit_pay_fee() {
-		$this->admin_priv('payment_update',ecjia::MSGTYPE_JSON);
+		$this->admin_priv('payment_update', ecjia::MSGTYPE_JSON);
 		
 		/* 取得参数 */
 		$pay_id  = intval($_POST['pk']);
