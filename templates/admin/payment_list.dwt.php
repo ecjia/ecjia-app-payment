@@ -24,7 +24,7 @@
 					<th class="w100">{lang key='payment::payment.payment_name'}</th>
 					<th>{lang key='payment::payment.payment_desc'}</th>
 					<th class="w50">{lang key='system::system.sort_order'}</th>
-					<th class="w50">{lang key='payment::payment.short_pay_fee'}</th>
+					<th class="w80">{lang key='payment::payment.short_pay_fee'}</th>
 				</tr>
 			</thead>
 			<tbody>

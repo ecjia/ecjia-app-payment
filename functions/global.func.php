@@ -18,8 +18,9 @@ function return_url($code) {
  *  @param  string  $code   支付方式代码
  */
 function get_payment($code) {
-	$db = RC_Loader::load_app_model('payment_model', 'payment');
-	$payment = $db->find('pay_code = "'. $code. '" AND enabled = "1"');
+	// $db = RC_Loader::load_app_model('payment_model', 'payment');
+	// $payment = $db->find('pay_code = "'. $code. '" AND enabled = "1"');
+    $payment = RC_DB::table('payment')->where('pay_code', $code)->where('enabled', 1)->first();
 
     if ($payment) {
         $config_list = unserialize($payment['pay_config']);

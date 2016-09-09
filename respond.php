@@ -15,7 +15,6 @@ class respond extends ecjia_front {
 	    
 	}
 	
-	
 	public function response() {
 	    RC_Logger::getLogger('pay')->debug('GET: ' . json_encode($_GET));
 	    

@@ -34,8 +34,9 @@ class payment_plugin_uninstall_api extends Component_Event_Api
 	        }
 	        
 	        /* 从数据库中删除支付方式 */
-	        $db = RC_Loader::load_app_model('payment_model', 'payment');
-	        $db->where("`pay_code` = '" . $options['config']['pay_code'] . "'")->delete();
+	        // $db = RC_Loader::load_app_model('payment_model', 'payment');
+	        // $db->where("`pay_code` = '" . $options['config']['pay_code'] . "'")->delete();
+	        RC_DB::table('payment')->where('payment', $options['config']['pay_code'])->delete();
 	        
 	        /* 记录日志 */
 	        ecjia_admin::admin_log($format_name, 'uninstall', 'payment');

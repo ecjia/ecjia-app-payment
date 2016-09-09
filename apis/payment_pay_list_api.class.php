@@ -23,11 +23,12 @@ class payment_pay_list_api extends Component_Event_Api {
 	 * 获取支付方式列表
 	 */
 	private function get_pay_list() {
-		$db_payment = RC_Loader::load_app_model('payment_model', 'payment');
+// 		$db_payment = RC_Loader::load_app_model('payment_model', 'payment');
 		
 		$plugins = ecjia_config::instance()->get_addon_config('payment_plugins', true, true);
 
-		$data = $db_payment->payment_select('pay_order');
+// 		$data = $db_payment->payment_select('pay_order');
+		$data = RC_DB::table('payment')->orderby('pay_order')->get();
 		$data or $data = array();
 		$modules = array();
 		if (!empty($data)) {

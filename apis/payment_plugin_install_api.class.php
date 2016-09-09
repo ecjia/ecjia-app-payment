@@ -32,10 +32,12 @@ class payment_plugin_install_api extends Component_Event_Api
 	            return ecjia_plugin::add_error('plugin_install_error', RC_Lang::get('payment::payment.plugin_install_error'));
 	        }
 	       
-	        $db = RC_Loader::load_app_model('payment_model', 'payment');
+// 	        $db = RC_Loader::load_app_model('payment_model', 'payment');
 	        
 	        /* 检测支付名称重复 */
-	        $data = $db->where("`pay_name` = '" . $format_name . "' and `pay_code` = '" . $options['config']['pay_code'] . "'")->count();
+// 	        $data = $db->where("`pay_name` = '" . $format_name . "' and `pay_code` = '" . $options['config']['pay_code'] . "'")->count();
+	        $data = RC_DB::table('payment')->where('pay_name', $format_name)->where('pay_code', $options['config']['pay_code'])->count();
+	        
 	        if (!$data) {
 	            /* 取得配置信息 */
 	            $pay_config = serialize($options['config']['forms']);
@@ -44,8 +46,9 @@ class payment_plugin_install_api extends Component_Event_Api
 	            $pay_fee    = empty($options['config']['pay_fee']) ? 0 : $options['config']['pay_fee'];
 	             
 	            /* 安装，检查该支付方式是否曾经安装过 */
-	            $count = $db->where("`pay_code` = '" . $options['config']['pay_code'] . "'")->count();
-	             
+// 	            $count = $db->where("`pay_code` = '" . $options['config']['pay_code'] . "'")->count();
+	         	$count = RC_DB::table('payment')->where('pay_code', $options['config']['pay_code'])->count();
+	         	
 	            if ($count > 0) {
 	                /* 该支付方式已经安装过, 将该支付方式的状态设置为 enable */
 	                $data = array(
@@ -56,7 +59,8 @@ class payment_plugin_install_api extends Component_Event_Api
 	                    'enabled' 		=> 1
 	                );
 	                 
-	                $db->where("`pay_code` = '" . $options['config']['pay_code'] . "'")->update($data);
+// 	                $db->where("`pay_code` = '" . $options['config']['pay_code'] . "'")->update($data);
+	                RC_DB::table('payment')->where('pay_code', $options['config']['pay_code'])->update($data);
 	                 
 	            } else {
 	                /* 该支付方式没有安装过, 将该支付方式的信息添加到数据库 */
@@ -70,7 +74,8 @@ class payment_plugin_install_api extends Component_Event_Api
 	                    'is_online' 	=> $options['config']['is_online'],
 	                    'is_cod' 		=> $options['config']['is_cod'],
 	                );
-	                $db->insert($data);
+// 	                $db->insert($data);
+	                RC_DB::table('payment')->insert($data);
 	            }
 	        } 
 	        /* 支付名称重复不处理
@@ -83,7 +88,6 @@ class payment_plugin_install_api extends Component_Event_Api
 	        return true;
 	    }
 	}
-	
 }
 
 // end

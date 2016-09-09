@@ -12,7 +12,7 @@ class payment_method
 	
 	public function __construct() 
 	{
-		$this->db = RC_Loader::load_app_model('payment_model', 'payment');
+		$this->db = RC_Model::model('payment/payment_model');
 		RC_Loader::load_app_class('payment_factory', 'payment', false);
 	}
 	
@@ -26,18 +26,23 @@ class payment_method
 	 */
 	public function available_payment_list($support_cod = true, $cod_fee = 0, $is_online = false) 
 	{
+		$db_payment = RC_DB::table('payment');
         $where = array();
         if (!$support_cod) {
-            $where['is_cod'] = 0;
+            // $where['is_cod'] = 0;
+            $db_payment->where('is_cod', 0);
         }
         if ($is_online) {
-            $where['is_online'] = 1;
+            // $where['is_online'] = 1;
+            $db_payment->where('is_online', 1);
         }
         
         $where['enabled'] = 1;
         $plugins = $this->available_payment_plugins();
 
-        $data = $this->db->field('pay_id, pay_code, pay_name, pay_fee, pay_desc, pay_config, is_cod, is_online')->where($where)->order(array('pay_order' => 'asc'))->select();
+        // $data = $this->db->field('pay_id, pay_code, pay_name, pay_fee, pay_desc, pay_config, is_cod, is_online')->where($where)->order(array('pay_order' => 'asc'))->select();
+        $data = $db_payment->select('pay_id', 'pay_code', 'pay_name', 'pay_fee', 'pay_desc', 'pay_config', 'is_cod', 'is_online')->orderby('pay_order', 'asc')->get();
+
         $pay_list = array();
          
         if (!empty($data)) {
@@ -113,12 +118,18 @@ class payment_method
 	 */
 	public function payment_id_list($is_cod) 
 	{
+		$db_payment = RC_DB::table('payment');
 	    if ($is_cod) {
-	        $where = "is_cod = 1" ;
+	        // $where = "is_cod = 1" ;
+	        $db_payment->where('is_cod', 1);
+
 	    } else {
-	        $where = "is_cod = 0" ;
+	        // $where = "is_cod = 0" ;
+	        $db_payment->where('is_cod', 0);
 	    }
-	    $row = $this->db->field('pay_id')->where($where)->select();
+	    // $row = $this->db->field('pay_id')->where($where)->select();
+	    $row = $db_payment->select('pay_id')->get();
+
 	    $arr = array();
 	    if(!empty($row) && is_array($row)) {
 	    	foreach ($row as $val) {
@@ -147,7 +158,7 @@ class payment_method
 	 */
 	public function insert_pay_log($id, $amount, $type = PAY_SURPLUS, $is_paid = 0) 
 	{
-	    $db = RC_Loader::load_app_model('pay_log_model', 'orders');
+	    // $db = RC_Loader::load_app_model('pay_log_model', 'orders');
 	    $data = array (
 	        'order_id'     => $id,
 	        'order_amount' => $amount,
@@ -155,7 +166,9 @@ class payment_method
 	        'is_paid'      => $is_paid
 	    );
 	
-	    $insert_id = $db->insert($data);
+	    // $insert_id = $db->insert($data);
+		$insert_id = RC_DB::table('pay_log')->insertGetId($data);    	
+
 	    return $insert_id;
 	}
 	
@@ -173,8 +186,10 @@ class payment_method
 	 */
 	public function get_paylog_id($surplus_id, $pay_type = PAY_SURPLUS) 
 	{
-	    $db = RC_Loader::load_app_model('pay_log_model', 'orders');
-	    $log_id = $db->where(array('order_id' => $surplus_id, 'order_type' => $pay_type, 'is_paid' => 0))->get_field('log_id');
+	    // $db = RC_Loader::load_app_model('pay_log_model', 'orders');
+	    // $log_id = $db->where(array('order_id' => $surplus_id, 'order_type' => $pay_type, 'is_paid' => 0))->get_field('log_id');
+
+	   	$log_id = RC_DB::table('pay_log')->where('order_id', $surplus_id)->where('order_type', $pay_type)->where('is_paid', 0)->pluck('log_id');
 		return $log_id;
 	}
 
@@ -195,11 +210,11 @@ class payment_method
 	 */
 	public function update_pay_log($id, $amount, $type = PAY_SURPLUS, $is_paid = 0)
 	{
-		$db = RC_Loader::load_app_model('pay_log_model', 'orders');
-		
-		$row = $db->where(array('order_id' => $id, 'order_type'=> $type, 'is_paid' => 0))->update(array('order_amount' => $amount));
-		
-		return $row;
+		// $db = RC_Loader::load_app_model('pay_log_model', 'orders');
+		// $row = $db->where(array('order_id' => $id, 'order_type'=> $type, 'is_paid' => 0))->update(array('order_amount' => $amount));
+		// return $row;
+		RC_DB::table('pay_log')->where('order_id', $id)->where('order_type', $type)->where('is_paid', 0)->update(array('order_amount' => $amount));
+		return true;
 	}
 	
 	/**
@@ -230,15 +245,20 @@ class payment_method
 	 */
 	public function get_online_payment_list($include_balance = true)
 	{
-		$where = array();
-		$where['enabled'] = '1';
-		$where['is_cod'] = array('neq' => '1');
+		// $where = array();
+		// $where['enabled'] = '1';
+		// $where['is_cod'] = array('neq' => '1');
+
+		$db_payment = RC_DB::table('payment')->where('enabled', 1)->where('is_cod', '!=', 1);
+
 		if (!$include_balance) {
-			$where['pay_code'] = array('neq' => 'balance');
+			// $where['pay_code'] = array('neq' => 'balance');
+			$db_payment->where('pay_code', '!=', 'balance');
 		}
 		$plugins = $this->available_payment_plugins();
 		
-		$data = $this->db->field('pay_id, pay_code, pay_name, pay_fee, pay_desc')->where($where)->select();
+		// $data = $this->db->field('pay_id, pay_code, pay_name, pay_fee, pay_desc')->where($where)->select();
+		$data = $db_payment->select('pay_id', 'pay_code', 'pay_name', 'pay_fee', 'pay_desc')->get();
 		
 		$pay_list = array();
 		 

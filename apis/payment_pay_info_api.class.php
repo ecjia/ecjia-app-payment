@@ -26,10 +26,11 @@ class payment_pay_info_api extends Component_Event_Api {
 	 * 获取支付方式信息
 	 */
 	private function get_pay_info($code) {
-		$db_payment = RC_Loader::load_app_model('payment_model', 'payment');
+// 		$db_payment = RC_Loader::load_app_model('payment_model', 'payment');
 		
 		/* 查询该支付方式内容 */
-		$pay = $db_payment->payment_find(array('pay_code' => $code, 'enabled' => 1));
+// 		$pay = $db_payment->payment_find(array('pay_code' => $code, 'enabled' => 1));
+		$pay = RC_DB::table('payment')->where('pay_code', $code)->where('enabled', 1)->first();
 		
 		if (empty($pay)) {
 			return new ecjia_error('invalid_parameter', RC_Lang::get('payment::payment.payment_not_available'));
