@@ -37,8 +37,9 @@ function get_payment($code) {
  *  @param  blob    $voucher    是否为会员充值
  */
 function get_order_id_by_sn($order_sn, $voucher = 'false') {
-	$db_pay = RC_Loader::load_app_model('pay_log_model', 'orders');
-	$db_order = RC_Loader::load_app_model('order_info_model', 'orders');
+    $db_pay = RC_Model::model('orders/pay_log_model');
+    $db_order = RC_Model::model('orders/order_info_model');
+    
     if ($voucher == 'true') {
         if(is_numeric($order_sn)) {
 			return $db_pay->field('log_id')->find('order_id = "'. $order_sn .'" AND order_type = 1');
@@ -63,7 +64,8 @@ function get_order_id_by_sn($order_sn, $voucher = 'false') {
  *  @param  string  $order_id   订单ID
  */
 function get_goods_name_by_id($order_id) {
-	$db = RC_Loader::load_app_model('order_goods_model', 'orders');
+    $db = RC_Model::model('orders/order_goods_model');
+
 	$goods_name = $db->field('goods_name')->find('order_id = "'. $order_id .'"');
 	return implode(',', $goods_name);
 }
@@ -77,8 +79,9 @@ function get_goods_name_by_id($order_id) {
  * @return  true
  */
 function check_money($log_id, $money) {
-	$db_pay = RC_Loader::load_app_model('pay_log_model', 'orders');
-    if(is_numeric($log_id)) {
+    $db_pay = RC_Model::model('orders/pay_log_model');
+    
+    if (is_numeric($log_id)) {
     		$amount = $db_pay->field('order_amount')->find('log_id = "'. $log_id .'"');
     } else {
         return false;
@@ -100,9 +103,10 @@ function check_money($log_id, $money) {
  * @return  void
  */
 function order_paid($log_id, $pay_status = PS_PAYED, $note = '') {
-	$db_pay = RC_Loader::load_app_model('pay_log_model', 'orders');
-	$db_order = RC_Loader::load_app_model('order_info_model', 'orders');
-	$db_user = RC_Loader::load_app_model('user_account_model', 'user');
+	$db_pay = RC_Model::model('orders/pay_log_model');
+	$db_order = RC_Model::model('orders/order_info_model');
+	$db_user = RC_Model::model('user/user_account_model');
+
     /* 取得支付编号 */
     $log_id = intval($log_id);
     if ($log_id > 0) {
@@ -243,7 +247,8 @@ function order_paid($log_id, $pay_status = PS_PAYED, $note = '') {
  * @return  array('is_cod' => '', 'is_not_cod' => '')
  */
 function get_pay_ids() {
-	$db = RC_Loader::load_app_model('payment_model', 'payment');
+	$db = RC_Model::model('payment/payment_model');
+
 	$ids = array('is_cod' => '0', 'is_not_cod' => '0');
 	$data = $db->field('pay_id, is_cod')->where('enabled = 1')->select();
 	if(!empty($data)) {
