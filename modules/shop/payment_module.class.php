@@ -1,5 +1,6 @@
 <?php
 defined('IN_ECJIA') or exit('No permission resources.');
+//支付方式列表
 
 class payment_module extends api_front implements api_interface {
     public function handleRequest(\Royalcms\Component\HttpKernel\Request $request) {	
@@ -9,6 +10,7 @@ class payment_module extends api_front implements api_interface {
     	$cod_fee = $this->requestData('cod_fee', 0);
     	$device = $this->requestData('device', array());
     	$device_code = isset($device['code']) ? $device['code'] : '';
+    	
         $payment_method = RC_Loader::load_app_class('payment_method','payment');
         $payment_list = $payment_method->available_payment_list($is_cod, $cod_fee);
         foreach ($payment_list as $key => $val) {
@@ -20,7 +22,6 @@ class payment_module extends api_front implements api_interface {
         	}
         	unset($payment_list[$key]['pay_desc']);
         	unset($payment_list[$key]['pay_config']);
-        	
         }
         $payment_list = array_values($payment_list);
         if (!empty($payment_list)) {
