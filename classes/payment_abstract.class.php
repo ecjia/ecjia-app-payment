@@ -252,7 +252,7 @@ abstract class payment_abstract
 	    $log_id = $this->order_info['log_id'];
 	    $out_trade_no = $order_sn . $log_id;
 	    
-	    $relationship_db = RC_Loader::load_model('term_relationship_model');
+	    $relationship_db = RC_Model::model('goods/term_relationship_model');
 	    
 	    $data = array(
 	    	'object_type' 	=> $app,
@@ -297,7 +297,7 @@ abstract class payment_abstract
 	        'item_key2'		=> 'out_trade_no',
 	    	"item_value2 	= '$out_trade_no'" ,
 	    );
-	    $relationship_db = RC_Loader::load_model('term_relationship_model');
+	    $relationship_db = RC_Model::model('goods/term_relationship_model');
 	    $item = $relationship_db->where($data)->find();
 	    RC_Logger::getLogger('pay')->info($item);
 	    if ($item) {
