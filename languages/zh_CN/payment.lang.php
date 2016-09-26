@@ -29,7 +29,18 @@ return array(
 	'edit_ok' 		=> '编辑成功',
 	'edit_falid' 	=> '编辑失败',
 	'uninstall_ok' 	=> '卸载成功',
-	
+
+	'order_sn' 		=> '商城订单编号',
+	'trade_type' 	=> '支付类型',
+	'trade_no' 		=> '流水号',
+	'pay_name' 		=> ' 支付名称',
+	'total_fee' 	=> '支付金额',
+	'create_time' 	=> '创建时间',
+	'pay_status' 	=> '支付状态',
+
+	'find_order_sn' =>	'请输入商城订单编号',
+	'find_trade_no' =>	'请输入流水号',
+
 	'invalid_pay_fee' 		=> '支付费用不是一个合法的价格',
 	'decide_by_ship' 		=> '配送决定',
 	'edit_after_install' 	=> '该支付方式尚未安装，请你安装后再编辑',

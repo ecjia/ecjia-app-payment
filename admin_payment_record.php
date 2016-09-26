@@ -37,8 +37,14 @@ class admin_payment_record extends ecjia_admin {
 	 * 支付方式列表
 	 */
 	public function init() {
-		
-		
+	    $this->admin_priv('payment_manage', ecjia::MSGTYPE_JSON);
+		RC_Loader::load_app_func('global');
+
+	    $db_payment_record = get_payment_record_list($_REQUEST);
+
+	    $this->assign('modules', $db_payment_record);
+		$this->assign('search_action',	RC_Uri::url('payment/admin_payment_record/init'));
+
 		$this->display('payment_record_list.dwt');
 	}
 

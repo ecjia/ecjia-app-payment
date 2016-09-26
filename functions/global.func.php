@@ -70,6 +70,22 @@ function get_goods_name_by_id($order_id) {
 	return implode(',', $goods_name);
 }
 
+function get_payment_record_list($args = array()) {
+    $db_payment_record = RC_DB::table('payment_record');
+    $filter['order_sn']		= empty($args['order_sn'])		? ''		: intval($args['order_sn']);
+    $filter['trade_no']			= empty($args['trade_no'])			? 0			: intval($args['trade_no']);
+
+    if ($filter['order_sn']) {
+        $db_payment_record->where('order_sn', 'LIKE', '%' . mysql_like_quote($filter['order_sn']) . '%');
+    }
+    if ($filter['trade_no']) {
+        $db_payment_record->where('trade_no', 'LIKE', '%' . mysql_like_quote($filter['trade_no']) .'%');
+    }
+
+    return $db_payment_record->get();
+
+}
+
 /**
  * 检查支付的金额是否与订单相符
  *
