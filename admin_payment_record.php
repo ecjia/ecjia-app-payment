@@ -29,8 +29,6 @@ class admin_payment_record extends ecjia_admin {
 		RC_Script::enqueue_script('jquery-chosen');
 
 		RC_Loader::load_app_class('payment_factory', null, false);
-		
-		ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here(__('支付方式'), RC_Uri::url('payment/admin/init')));
 	}
 
 	/**
@@ -38,13 +36,13 @@ class admin_payment_record extends ecjia_admin {
 	 */
 	public function init() {
 	    $this->admin_priv('payment_manage', ecjia::MSGTYPE_JSON);
-		RC_Loader::load_app_func('global');
+		ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here((RC_Lang::get('payment::payment.transaction_flow_record'))));
 
+		RC_Loader::load_app_func('global');
 	    $db_payment_record = get_payment_record_list($_REQUEST);
 
 	    $this->assign('modules', $db_payment_record);
-		$this->assign('search_action',	RC_Uri::url('payment/admin_payment_record/init'));
-
+		$this->assign('ur_here', RC_Lang::get('payment::payment.transaction_flow_record'));
 		$this->display('payment_record_list.dwt');
 	}
 
@@ -52,12 +50,36 @@ class admin_payment_record extends ecjia_admin {
 	 * 禁用支付方式
 	 */
 	public function info() {
-		
-		
+		$this->admin_priv('payment_update', ecjia::MSGTYPE_JSON);
+		ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here((RC_Lang::get('payment::payment.transaction_flow_record')), RC_Uri::url('payment/admin_payment_record/init')));
+		ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here(RC_Lang::get('payment::payment.view_flow_record')));
+		RC_Loader::load_app_func('global');
+		$id = $_REQUEST['id'];
+		$order_sn = RC_DB::table('payment_record')->select('order_sn')->where('id', $id)->pluck();
+		$order = order_info($order_sn);
+
+		$db_payment_record = RC_DB::table('payment_record')->where('order_sn', $order_sn)->first();
+
+		if ($db_payment_record['trade_type'] == 'buy') {
+			$db_payment_record['trade_type'] = RC_Lang::get('payment::payment.buy');
+			$this->assign('check_modules', $order);
+		} elseif ($db_payment_record['trade_type'] == 'refund') {
+			$db_payment_record['trade_type'] = RC_Lang::get('payment::payment.refund');
+		} elseif ($db_payment_record['trade_type'] == 'deposit') {
+			$db_payment_record['trade_type'] = RC_Lang::get('payment::payment.deposit');
+		} elseif ($db_payment_record['trade_type'] == 'withdraw') {
+			$db_payment_record['trade_type'] = RC_Lang::get('payment::payment.withdraw');
+		}
+
+		$this->assign('order', $order);
+		$this->assign('ur_here', RC_Lang::get('payment::payment.view_flow_record'));
+		$this->assign('action_link', array('text' => RC_Lang::get('payment::payment.transaction_flow_record'), 'href' => RC_Uri::url('payment/admin_payment_record/init')));
+		$this->assign('modules', $db_payment_record);
+
+
 		$this->display('payment_record_info.dwt');
 	}
-	
-	
+
 }
 
 // end

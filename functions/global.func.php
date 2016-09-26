@@ -81,11 +81,63 @@ function get_payment_record_list($args = array()) {
     if ($filter['trade_no']) {
         $db_payment_record->where('trade_no', 'LIKE', '%' . mysql_like_quote($filter['trade_no']) .'%');
     }
+    $db_payment_record = $db_payment_record->get();
 
-    return $db_payment_record->get();
+    foreach ($db_payment_record as $key => $val) {
+        if ($db_payment_record[$key]['trade_type'] == 'buy') {
+            $db_payment_record[$key]['trade_type'] = RC_Lang::get('payment::payment.buy');
+        } elseif ($db_payment_record[$key]['trade_type'] == 'refund') {
+            $db_payment_record[$key]['trade_type'] = RC_Lang::get('payment::payment.refund');
+        } elseif ($db_payment_record[$key]['trade_type'] == 'deposit') {
+            $db_payment_record[$key]['trade_type'] = RC_Lang::get('payment::payment.deposit');
+        } elseif ($db_payment_record[$key]['trade_type'] == 'withdraw') {
+            $db_payment_record[$key]['trade_type'] = RC_Lang::get('payment::payment.withdraw');
+        }
+    }
 
+    foreach ($db_payment_record as $key => $val) {
+        if ($db_payment_record[$key]['pay_status'] == 0) {
+            $db_payment_record[$key]['pay_status'] = RC_Lang::get('payment::payment.wait_for_payment');;
+        } elseif ($db_payment_record[$key]['pay_status'] == 1) {
+            $db_payment_record[$key]['pay_status'] = RC_Lang::get('payment::payment.payment_success');;
+        }
+    }
+
+    return $db_payment_record;
 }
 
+function order_info($order_sn)
+{
+    RC_Loader::load_app_func('common', 'goods');
+    $db = RC_Loader::load_app_model('order_info_model', 'orders');
+    /* 计算订单各种费用之和的语句 */
+    $total_fee = " (goods_amount - discount + tax + shipping_fee + insure_fee + pay_fee + pack_fee + card_fee) AS total_fee ";
+
+    if ($order_sn > 0) {
+        $order = $db->field('*,' . $total_fee)->find(array('order_sn' => $order_sn, 'extension_code' => '', 'extension_id' => 0));
+    } else {
+        $order = $db->field('*,' . $total_fee)->find(array('order_sn' => $order_sn, 'extension_code' => '', 'extension_id' => 0));
+    }
+    /* 格式化金额字段 */
+    if ($order) {
+        $order['formated_goods_amount'] = price_format($order['goods_amount'], false);
+        $order['formated_discount'] = price_format($order['discount'], false);
+        $order['formated_tax'] = price_format($order['tax'], false);
+        $order['formated_shipping_fee'] = price_format($order['shipping_fee'], false);
+        $order['formated_insure_fee'] = price_format($order['insure_fee'], false);
+        $order['formated_pay_fee'] = price_format($order['pay_fee'], false);
+        $order['formated_pack_fee'] = price_format($order['pack_fee'], false);
+        $order['formated_card_fee'] = price_format($order['card_fee'], false);
+        $order['formated_total_fee'] = price_format($order['total_fee'], false);
+        $order['formated_money_paid'] = price_format($order['money_paid'], false);
+        $order['formated_bonus'] = price_format($order['bonus'], false);
+        $order['formated_integral_money'] = price_format($order['integral_money'], false);
+        $order['formated_surplus'] = price_format($order['surplus'], false);
+        $order['formated_order_amount'] = price_format(abs($order['order_amount']), false);
+        $order['formated_add_time'] = RC_Time::local_date(ecjia::config('time_format'), $order['add_time']);
+    }
+    return $order;
+}
 /**
  * 检查支付的金额是否与订单相符
  *

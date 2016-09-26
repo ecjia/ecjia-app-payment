@@ -6,8 +6,9 @@
 	ecjia.admin.payment_list.init();
 </script>
 <!-- {/block} -->
-
 <!-- {block name="main_content"} -->
+<!-- {if $ur_here}{/if} -->
+
 <div>
 	<h3 class="heading">
 		<!-- {if $ur_here}{$ur_here}{/if} -->
@@ -44,13 +45,17 @@
 
 			<!-- {foreach from=$modules item=list} -->
 			<tr>
-				<td class="first-cell" >{$list.order_sn}</td>
-				<td class="first-cell" >{$list.trade_type}</td>
+				<td class="hide-edit-area" >{$list.order_sn}
+					<div class="edit-list">
+						<a href='{url path="payment/admin_payment_record/info" args="id={$list.id}"}' class="data-pjax" title="{lang key='orders::order.detail'}">{lang key='orders::order.detail'}</a>
+					</div>
+				</td>
+				<td class="hide-edit-area" >{$list.trade_type}</td>
 				<td class="first-cell" >{$list.trade_no}</td>
-				<td class="first-cell" >{$list.pay_name}</td>
-				<td class="first-cell" >{$list.total_fee}</td>
-				<td class="first-cell" >{$list.create_time}</td>
-				<td class="first-cell" >{$list.pay_status}</td>
+				<td class="hide-edit-area" >{$list.pay_name}</td>
+				<td class="hide-edit-area" >{$list.total_fee}</td>
+				<td class="hide-edit-area" >{$list.create_time}</td>
+				<td class="hide-edit-area" >{$list.pay_status}</td>
 			</tr>
 			<!-- {/foreach} -->
 		</table>	

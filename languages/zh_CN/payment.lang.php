@@ -30,14 +30,6 @@ return array(
 	'edit_falid' 	=> '编辑失败',
 	'uninstall_ok' 	=> '卸载成功',
 
-	'order_sn' 		=> '商城订单编号',
-	'trade_type' 	=> '支付类型',
-	'trade_no' 		=> '流水号',
-	'pay_name' 		=> ' 支付名称',
-	'total_fee' 	=> '支付金额',
-	'create_time' 	=> '创建时间',
-	'pay_status' 	=> '支付状态',
-
 	'find_order_sn' =>	'请输入商城订单编号',
 	'find_trade_no' =>	'请输入流水号',
 
@@ -53,13 +45,33 @@ return array(
 		'pay_desc_required'		=> '请输入支付描述',
 		'pay_desc_minlength'	=> '支付描述长度不能小于6',
 	),
-	
-	'pay_status' 	=> '支付状态',
+
+	'wait_for_payment'		=>	'等待付款',
+	'payment_success'		=>	'付款成功',
+	'heading_order_info' 	=> '订单信息',
+	'fund_flow_record' 	=> '资金流水记录',
+	'transaction_flow_record'	=> '交易流水记录',
+	'view_flow_record'	=> '查看交易流水记录',
+	'order_id' 		=> '编号',
+	'order_sn' 		=> '商城订单编号',
+	'trade_type' 	=> '交易类型',
+	'trade_no' 		=> '流水号',
+	'pay_code' 		=> '支付方式',
+	'pay_name' 		=> ' 支付名称',
+	'total_fee' 	=> '支付金额',
+	'create_time' 	=> '创建时间',
+	'update_time' 	=> '修改更新时间',
+	'pay_time' 	=> '支付成功时间',
+	'pay_status' 	=> '交易状态',
 	'pay_not_exist' => '此支付方式不存在或者参数错误！',
 	'pay_disabled' 	=> '此支付方式还没有被启用！',
 	'pay_success' 	=> '您此次的支付操作已成功！',
 	'pay_fail' 		=> '支付操作失败，请返回重试！',
-	
+	'buy'			=>	'消费',
+	'refund'		=>	'退款',
+	'deposit'		=>	'充值',
+	'withdraw'		=>	'提现',
+
 	'ctenpay' 		=> '立即注册财付通商户号',
 	'ctenpay_url' 	=> 'http://union.tenpay.com/mch/mch_register_b2c.shtml?sp_suggestuser=542554970',
 	'ctenpayc2c_url'=> 'https://www.tenpay.com/mchhelper/mch_register_c2c.shtml?sp_suggestuser=542554970',
@@ -101,7 +113,8 @@ return array(
 	'more_info'             => '更多信息：',
 	
 	'payment_list_help'		=> '欢迎访问ECJia智能后台支付方式页面，系统中所有的支付方式都会显示在此列表中。',
-	'about_payment_list'	=> '关于支付方式帮助文档'
+	'about_payment_list'	=> '关于支付方式帮助文档',
+
 );
 
 // end
