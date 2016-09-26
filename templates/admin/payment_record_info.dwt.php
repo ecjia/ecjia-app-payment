@@ -26,10 +26,10 @@
                     <table class="table table-oddtd m_b0">
                         <tbody class="first-td-no-leftbd">
                         <tr>
-                            <td><div align="right"><strong>{lang key='payment::payment.order_id'}</strong></div></td>
-                            <td>{$modules.id}</td>
                             <td><div align="right"><strong>{lang key='payment::payment.order_sn'}</strong></div></td>
                             <td><a href='{url path="/orders/admin/info" args="order_id={$order.order_id}"}'>{$modules.order_sn}</a></td>
+                            <td><div align="right"><strong>{lang key='payment::payment.pay_status'}</strong></div></td>
+                            <td>{$modules.pay_status}</td>
                         </tr>
                         <tr>
                             <td><div align="right"><strong>{lang key='payment::payment.trade_type'}</strong></div></td>
@@ -53,10 +53,6 @@
                             <td>{$modules.update_time}</td>
                             <td><div align="right"><strong>{lang key='payment::payment.pay_time'}</strong></div></td>
                             <td>{$modules.pay_time}</td>
-                        </tr>
-                        <td><div align="right"><strong>{lang key='payment::payment.pay_status'}</strong></div></td>
-                        <td>{$modules.pay_status}</td>
-                        </tr>
                         </tbody>
                     </table>
                 </div>

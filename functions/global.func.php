@@ -84,6 +84,11 @@ function get_payment_record_list($args = array()) {
     $db_payment_record = $db_payment_record->get();
 
     foreach ($db_payment_record as $key => $val) {
+        if ($db_payment_record[$key]['pay_status'] == 0) {
+            $db_payment_record[$key]['pay_status'] = RC_Lang::get('payment::payment.wait_for_payment');
+        } elseif ($db_payment_record[$key]['pay_status'] == 1) {
+            $db_payment_record[$key]['pay_status'] = RC_Lang::get('payment::payment.payment_success');
+        }
         if ($db_payment_record[$key]['trade_type'] == 'buy') {
             $db_payment_record[$key]['trade_type'] = RC_Lang::get('payment::payment.buy');
         } elseif ($db_payment_record[$key]['trade_type'] == 'refund') {
@@ -93,14 +98,9 @@ function get_payment_record_list($args = array()) {
         } elseif ($db_payment_record[$key]['trade_type'] == 'withdraw') {
             $db_payment_record[$key]['trade_type'] = RC_Lang::get('payment::payment.withdraw');
         }
-    }
-
-    foreach ($db_payment_record as $key => $val) {
-        if ($db_payment_record[$key]['pay_status'] == 0) {
-            $db_payment_record[$key]['pay_status'] = RC_Lang::get('payment::payment.wait_for_payment');;
-        } elseif ($db_payment_record[$key]['pay_status'] == 1) {
-            $db_payment_record[$key]['pay_status'] = RC_Lang::get('payment::payment.payment_success');;
-        }
+        $db_payment_record[$key]['create_time'] = RC_Time::local_date(ecjia::config('time_format'), $val['create_time']);
+        $db_payment_record[$key]['update_time'] = RC_Time::local_date(ecjia::config('time_format'), $val['update_time']);
+        $db_payment_record[$key]['pay_time'] = RC_Time::local_date(ecjia::config('time_format'), $val['pay_time']);
     }
 
     return $db_payment_record;

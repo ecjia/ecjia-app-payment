@@ -40,7 +40,6 @@ class admin_payment_record extends ecjia_admin {
 
 		RC_Loader::load_app_func('global');
 	    $db_payment_record = get_payment_record_list($_REQUEST);
-
 	    $this->assign('modules', $db_payment_record);
 		$this->assign('ur_here', RC_Lang::get('payment::payment.transaction_flow_record'));
 		$this->display('payment_record_list.dwt');
@@ -71,11 +70,20 @@ class admin_payment_record extends ecjia_admin {
 			$db_payment_record['trade_type'] = RC_Lang::get('payment::payment.withdraw');
 		}
 
+		if ($db_payment_record['pay_status'] == 0) {
+			$db_payment_record['pay_status'] = RC_Lang::get('payment::payment.wait_for_payment');;
+		} elseif ($db_payment_record['pay_status'] == 1) {
+			$db_payment_record['pay_status'] = RC_Lang::get('payment::payment.payment_success');;
+		}
+
+		$db_payment_record['create_time'] = RC_Time::local_date(ecjia::config('time_format'), $db_payment_record['create_time']);
+		$db_payment_record['update_time'] = RC_Time::local_date(ecjia::config('time_format'), $db_payment_record['update_time']);
+		$db_payment_record['pay_time'] = RC_Time::local_date(ecjia::config('time_format'), $db_payment_record['pay_time']);
+
 		$this->assign('order', $order);
 		$this->assign('ur_here', RC_Lang::get('payment::payment.view_flow_record'));
 		$this->assign('action_link', array('text' => RC_Lang::get('payment::payment.transaction_flow_record'), 'href' => RC_Uri::url('payment/admin_payment_record/init')));
 		$this->assign('modules', $db_payment_record);
-
 
 		$this->display('payment_record_info.dwt');
 	}
