@@ -37,7 +37,8 @@ class payment_method
             $db_payment->where('is_online', 1);
         }
         
-        $where['enabled'] = 1;
+        //$where['enabled'] = 1;
+        $db_payment->where('enabled', 1);
         $plugins = $this->available_payment_plugins();
 
         // $data = $this->db->field('pay_id, pay_code, pay_name, pay_fee, pay_desc, pay_config, is_cod, is_online')->where($where)->order(array('pay_order' => 'asc'))->select();
