@@ -19,7 +19,7 @@
 </div>
 
 <div class="row-fluid batch" >
-	<form method="post" action="{$search_action}" name="searchForm">
+	<form method="post" action='{url path="payment/admin_payment_record/init"}' name="searchForm">
 		<div class="top_right f_r" >
 			<input type="text" name="order_sn" value="{$smarty.get.order_sn}" placeholder="{lang key='payment::payment.find_order_sn'}"/>
 			<input type="text" name="trade_no" value="{$smarty.get.trade_no}" placeholder="{lang key='payment::payment.find_trade_no'}"/>

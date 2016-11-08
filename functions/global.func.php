@@ -85,6 +85,7 @@ function get_payment_record_list($args = array()) {
     if ($filter['trade_no']) {
         $db_payment_record->where('trade_no', 'LIKE', '%' . mysql_like_quote($filter['trade_no']) .'%');
     }
+
     
     if ($filter['pay_status'] &&  $filter['pay_status'] == 1) {
     	$db_payment_record->where('pay_status', 0);
@@ -100,6 +101,7 @@ function get_payment_record_list($args = array()) {
     $filter['limit'] = 15;
     //$db_payment_record = $db_payment_record->get();
     $db_payment_record = $db_payment_record
+    ->orderBy('id', 'desc')
     ->take($filter['limit'])
     ->skip($filter['skip'])
     ->get();
