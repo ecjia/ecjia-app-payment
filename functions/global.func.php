@@ -125,7 +125,7 @@ function get_payment_record_list($args = array()) {
         $db_payment_record[$key]['update_time'] = RC_Time::local_date(ecjia::config('time_format'), $val['update_time']);
         $db_payment_record[$key]['pay_time'] = RC_Time::local_date(ecjia::config('time_format'), $val['pay_time']);
     }
-    return array('item' => $db_payment_record, 'page' => $page->show(5), 'desc' => $page->page_desc(), 'filter' => $filter);
+    return array('item' => $db_payment_record, 'page' => $page->show(2), 'desc' => $page->page_desc(), 'filter' => $filter);
 }
 
 function order_info($order_sn)
