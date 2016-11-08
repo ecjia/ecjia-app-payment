@@ -81,7 +81,7 @@ function get_payment_record_list($args = array()) {
     if ($filter['trade_no']) {
         $db_payment_record->where('trade_no', 'LIKE', '%' . mysql_like_quote($filter['trade_no']) .'%');
     }
-    $db_payment_record = $db_payment_record->get();
+    $db_payment_record = $db_payment_record->orderBy('id', 'desc')->get();
 
     foreach ($db_payment_record as $key => $val) {
         if ($db_payment_record[$key]['pay_status'] == 0) {
