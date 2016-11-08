@@ -71,9 +71,13 @@ function get_goods_name_by_id($order_id) {
 }
 
 function get_payment_record_list($args = array()) {
+	
     $db_payment_record = RC_DB::table('payment_record');
+    $filter = array();
     $filter['order_sn']		= empty($args['order_sn'])		? ''		: intval($args['order_sn']);
-    $filter['trade_no']			= empty($args['trade_no'])			? 0			: intval($args['trade_no']);
+    $filter['trade_no']		= empty($args['trade_no'])			? 0			: intval($args['trade_no']);
+    $filter['pay_status']	= $args['pay_status'];
+    
 
     if ($filter['order_sn']) {
         $db_payment_record->where('order_sn', 'LIKE', '%' . mysql_like_quote($filter['order_sn']) . '%');
@@ -81,7 +85,24 @@ function get_payment_record_list($args = array()) {
     if ($filter['trade_no']) {
         $db_payment_record->where('trade_no', 'LIKE', '%' . mysql_like_quote($filter['trade_no']) .'%');
     }
-    $db_payment_record = $db_payment_record->get();
+    
+    if ($filter['pay_status'] &&  $filter['pay_status'] == 1) {
+    	$db_payment_record->where('pay_status', 0);
+    } elseif ($filter['pay_status'] && $filter['pay_status'] == 2) {
+    	$db_payment_record->where('pay_status', 1);
+    }
+    
+    $count = $db_payment_record->count();
+    
+    $page = new ecjia_page($count, 15, 5);
+    
+    $filter['skip'] = $page->start_id-1;
+    $filter['limit'] = 15;
+    //$db_payment_record = $db_payment_record->get();
+    $db_payment_record = $db_payment_record
+    ->take($filter['limit'])
+    ->skip($filter['skip'])
+    ->get();
 
     foreach ($db_payment_record as $key => $val) {
         if ($db_payment_record[$key]['pay_status'] == 0) {
@@ -102,8 +123,7 @@ function get_payment_record_list($args = array()) {
         $db_payment_record[$key]['update_time'] = RC_Time::local_date(ecjia::config('time_format'), $val['update_time']);
         $db_payment_record[$key]['pay_time'] = RC_Time::local_date(ecjia::config('time_format'), $val['pay_time']);
     }
-
-    return $db_payment_record;
+    return array('item' => $db_payment_record, 'page' => $page->show(5), 'desc' => $page->page_desc(), 'filter' => $filter);
 }
 
 function order_info($order_sn)

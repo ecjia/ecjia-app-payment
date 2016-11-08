@@ -37,10 +37,16 @@ class admin_payment_record extends ecjia_admin {
 	public function init() {
 	    $this->admin_priv('payment_manage', ecjia::MSGTYPE_JSON);
 		ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here((RC_Lang::get('payment::payment.transaction_flow_record'))));
-
+		
+		$filter = array();
+		$filter['order_sn']		= empty($_GET['order_sn'])		? ''		: intval($_GET['order_sn']);
+		$filter['trade_no']		= empty($_GET['trade_no'])		? 0			: intval($_GET['trade_no']);
+		$filter['pay_status']	= empty($_GET['pay_status'])     ? ''		: $_GET['pay_status'];
+		
 		RC_Loader::load_app_func('global');
-	    $db_payment_record = get_payment_record_list($_REQUEST);
+	    $db_payment_record = get_payment_record_list($filter);
 	    $this->assign('modules', $db_payment_record);
+	    $this->assign('search_action', RC_Uri::url('payment/admin_payment_record/init'));
 		$this->assign('ur_here', RC_Lang::get('payment::payment.transaction_flow_record'));
 		$this->display('payment_record_list.dwt');
 	}

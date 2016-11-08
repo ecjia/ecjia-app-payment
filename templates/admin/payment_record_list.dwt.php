@@ -25,6 +25,13 @@
 			<input type="text" name="trade_no" value="{$smarty.get.trade_no}" placeholder="{lang key='payment::payment.find_trade_no'}"/>
 			<button class="btn m_l5" type="submit">{lang key='user::users.serach'}</button>
 		</div>
+		<div class="f_r m_r5">
+			<select class="w150" name="pay_status">
+				<option value="0">请选择交易状态</option>
+				<option value="1" {if $smary.get.pay_status eq 1}selected{/if}>等待付款</option>
+				<option value="2" {if $smary.get.pay_status eq 2}selected{/if}>付款成功</option>
+			</select>
+		</div>
 	</form>
 </div>
 
@@ -43,8 +50,8 @@
 				</tr>
 			</thead>
 
-			{if $modules}
-			<!-- {foreach from=$modules item=list} -->
+			<!--{if $modules}-->
+			<!-- {foreach from=$modules.item item=list} -->
 			<tr>
 				<td class="hide-edit-area" >{$list.order_sn}
 					<div class="edit-list">
@@ -59,10 +66,11 @@
 				<td class="hide-edit-area" >{$list.pay_status}</td>
 			</tr>
 			<!-- {/foreach} -->
-			{else}
+			<!-- {else} -->
 			<td class="no-records" colspan="10">{t}没有找到任何记录{/t}</td>
-            {/if}
-		</table>	
+            <!-- {/if} -->
+		</table>
+		<!-- {$modules.page} -->	
 	</div>
 </div>
 <!-- {/block} -->
