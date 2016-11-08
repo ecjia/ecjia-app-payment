@@ -43,6 +43,7 @@
 				</tr>
 			</thead>
 
+			{if $modules}
 			<!-- {foreach from=$modules item=list} -->
 			<tr>
 				<td class="hide-edit-area" >{$list.order_sn}
@@ -58,6 +59,9 @@
 				<td class="hide-edit-area" >{$list.pay_status}</td>
 			</tr>
 			<!-- {/foreach} -->
+			{else}
+			<td class="no-records" colspan="10">{t}没有找到任何记录{/t}</td>
+            {/if}
 		</table>	
 	</div>
 </div>
