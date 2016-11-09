@@ -54,18 +54,18 @@
             $("form[name='searchForm']").on('submit', function (e) {
                 e.preventDefault();
                 var url = $("form[name='searchForm']").attr('action');
+                var pay_status = $("select[name='pay_status']").val();
                 var order_sn = $("input[name='order_sn']").val();
                 var trade_no = $("input[name='trade_no']").val();
-                var pay_status = $("select[name='pay_status']").val();
 
+                if (pay_status != 0) {
+                	url += '&pay_status=' + pay_status;
+                }
                 if (order_sn != '') {
                     url += '&order_sn=' + order_sn;
                 }
                 if (trade_no != '') {
                     url += '&trade_no=' + trade_no;
-                }
-                if (pay_status != '') {
-                	url += '&pay_status=' + pay_status;
                 }
                 ecjia.pjax(url);
             });
