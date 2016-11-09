@@ -50,7 +50,7 @@
 				</tr>
 			</thead>
 
-			<!--{if $modules}-->
+			<!--{if $modules.item}-->
 			<!-- {foreach from=$modules.item item=list} -->
 			<tr>
 				<td class="hide-edit-area" >{$list.order_sn}
