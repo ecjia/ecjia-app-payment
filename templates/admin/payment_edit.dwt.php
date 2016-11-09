@@ -3,7 +3,7 @@
 
 <!-- {block name="footer"} -->
 <script type="text/javascript">
-	ecjia.admin.payment_list.editFormSubmit();
+	ecjia.admin.payment_list.submit();
 </script>
 <!-- {/block} -->
 

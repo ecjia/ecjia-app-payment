@@ -41,8 +41,8 @@
 			<thead>
 				<tr>
 					<th class="w110">{lang key='payment::payment.order_sn'}</th>
-					<th class="w80">{lang key='payment::payment.trade_type'}</th>
-					<th>{lang key='payment::payment.trade_no'}</th>
+					<th class="w100">{lang key='payment::payment.trade_type'}</th>
+					<th class="w220">{lang key='payment::payment.trade_no'}</th>
 					<th class="w80">{lang key='payment::payment.pay_name'}</th>
 					<th class="w100">{lang key='payment::payment.total_fee'}</th>
 					<th class="w130">{lang key='payment::payment.create_time'}</th>

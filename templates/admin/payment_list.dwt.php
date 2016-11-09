@@ -3,7 +3,7 @@
 
 <!-- {block name="footer"} -->
 <script type="text/javascript">
-	ecjia.admin.payment_list.initList();
+	ecjia.admin.payment_list.list();
 </script>
 <!-- {/block} -->
 
