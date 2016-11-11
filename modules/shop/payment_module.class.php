@@ -8,7 +8,7 @@ class payment_module extends api_front implements api_interface {
     	$this->authSession();
     	$is_cod = $this->requestData('is_cod', true);
     	$cod_fee = $this->requestData('cod_fee', 0);
-    	$device = $this->requestData('device', array());
+    	$device		  = $this->device;
     	$device_code = isset($device['code']) ? $device['code'] : '';
     	
         $payment_method = RC_Loader::load_app_class('payment_method','payment');
