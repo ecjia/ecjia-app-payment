@@ -129,7 +129,7 @@ function get_payment_record_list($args = array()) {
 
 function order_info($order_sn)
 {
-    RC_Loader::load_app_func('common', 'goods');
+    RC_Loader::load_app_func('global', 'goods');
     $db = RC_Loader::load_app_model('order_info_model', 'orders');
     /* 计算订单各种费用之和的语句 */
     $total_fee = " (goods_amount - discount + tax + shipping_fee + insure_fee + pay_fee + pack_fee + card_fee) AS total_fee ";
