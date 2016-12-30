@@ -8,7 +8,7 @@ class respond extends ecjia_front {
 
 	public function __construct() {
 		parent::__construct();
-		RC_Loader::load_app_func('order','orders');
+		RC_Loader::load_app_func('admin_order', 'orders');
 	}
 	
 	public function init() {
