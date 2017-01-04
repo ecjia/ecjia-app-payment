@@ -1,8 +1,9 @@
 <?php
+defined('IN_ECJIA') or exit('No permission resources.');
+
 /**
  * ECJIA 支付方式管理
  */
-defined('IN_ECJIA') or exit('No permission resources.');
 
 class admin extends ecjia_admin {
 	
@@ -118,7 +119,6 @@ class admin extends ecjia_admin {
 		return $this->showmessage(RC_Lang::get('payment::payment.plugin')."<strong> ".RC_Lang::get('payment::payment.enabled')." </strong>", ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS, array('pjaxurl' => $refresh_url));
 	}
 	
-
 	/**
 	 * 编辑支付方式 code={$code}
 	 */
@@ -229,14 +229,14 @@ class admin extends ecjia_admin {
 			} else {
 				/* 该支付方式没有安装过, 将该支付方式的信息添加到数据库 */				
 				$data = array(
-				    'pay_code' => $code,
-					'pay_name' => $name,
-					'pay_desc' => trim($_POST['pay_desc']),
-					'pay_config' => $pay_config,
-					'is_cod'   => intval($_POST['is_cod']),
-					'pay_fee'  => $pay_fee,
-					'enabled'  => '1',
-					'is_online' => intval($_POST['is_online'])
+				    'pay_code'     => $code,
+					'pay_name'     => $name,
+					'pay_desc'     => trim($_POST['pay_desc']),
+					'pay_config'   => $pay_config,
+					'is_cod'       => intval($_POST['is_cod']),
+					'pay_fee'      => $pay_fee,
+					'enabled'      => '1',
+					'is_online'    => intval($_POST['is_online'])
 				);
 	           	RC_DB::table('payment')->insertGetId($data);
 			}

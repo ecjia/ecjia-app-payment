@@ -1,5 +1,6 @@
 <?php
 defined('IN_ECJIA') or exit('No permission resources.');
+
 /**
  * 支付模块调用工厂
  * @author royalwang
@@ -57,7 +58,6 @@ class payment_factory
 		) 
 		  return call_user_func_array(array(& $this->adapter_instance, $method_name), $method_args);
 	}	
-
 }
 
 // end

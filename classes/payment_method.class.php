@@ -1,5 +1,6 @@
 <?php
 defined('IN_ECJIA') or exit('No permission resources.');
+
 /**
  * 支付方法
  * @author royalwang
@@ -280,8 +281,6 @@ class payment_method
 	
 // 		return $modules;
 	}
-	
-		
 }
 
 // end

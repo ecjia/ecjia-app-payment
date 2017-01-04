@@ -1,8 +1,9 @@
 <?php
+defined('IN_ECJIA') or exit('No permission resources.');
+
 /**
  * 支付方式应用
  */
-defined('IN_ECJIA') or exit('No permission resources.');
 
 return array(
 	'identifier' 	=> 'ecjia.payment',

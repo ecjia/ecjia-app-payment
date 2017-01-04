@@ -1,8 +1,9 @@
 <?php
+defined('IN_ECJIA') or exit('No permission resources.');
+
 /**
  * ECJIA 支付方式管理
  */
-defined('IN_ECJIA') or exit('No permission resources.');
 
 class admin_payment_record extends ecjia_admin {
 	
@@ -86,7 +87,7 @@ class admin_payment_record extends ecjia_admin {
 
 		$db_payment_record['create_time'] = RC_Time::local_date(ecjia::config('time_format'), $db_payment_record['create_time']);
 		$db_payment_record['update_time'] = RC_Time::local_date(ecjia::config('time_format'), $db_payment_record['update_time']);
-		$db_payment_record['pay_time'] = RC_Time::local_date(ecjia::config('time_format'), $db_payment_record['pay_time']);
+		$db_payment_record['pay_time']    = RC_Time::local_date(ecjia::config('time_format'), $db_payment_record['pay_time']);
 
 		$this->assign('order', $order);
 		$this->assign('ur_here', RC_Lang::get('payment::payment.view_flow_record'));
@@ -95,7 +96,6 @@ class admin_payment_record extends ecjia_admin {
 
 		$this->display('payment_record_info.dwt');
 	}
-
 }
 
 // end
