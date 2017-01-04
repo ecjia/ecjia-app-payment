@@ -13,8 +13,8 @@ return array(
 	'payment_desc' 		=> '描述',
 	'short_pay_fee' 	=> '费用',
 	'payment_author' 	=> '插件作者',
-	'payment_is_cod' 	=> '货到付款？',
-	'payment_is_online' => '在线支付？',
+	'payment_is_cod' 	=> '货到付款：',
+	'payment_is_online' => '在线支付：',
 	
 	'enable' 		=> '启用',
 	'disable' 		=> '禁用',
