@@ -102,9 +102,7 @@ RESPOND;
 	
 	public function notify() {
 	    RC_Logger::getLogger('pay')->debug('POST: ' . json_encode($_POST));
-	    RC_Logger::getLogger('pay')->debug('$GLOBALS: ' . $GLOBALS);
-	    RC_Logger::getLogger('pay')->debug('$GLOBALS: ' . $GLOBALS['HTTP_RAW_POST_DATA']);
-	    
+	      
 	    /* 支付方式代码 */
 	    $pay_code = !empty($_GET['code']) ? trim($_GET['code']) : '';
 	    unset($_GET['code']);
