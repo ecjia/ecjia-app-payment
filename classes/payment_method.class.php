@@ -4,15 +4,12 @@ defined('IN_ECJIA') or exit('No permission resources.');
 /**
  * 支付方法
  * @author royalwang
- *
  */
-class payment_method  
-{
+class payment_method {
 	private $db;
 	private $dblog;
 	
-	public function __construct() 
-	{
+	public function __construct() {
 		$this->db = RC_Model::model('payment/payment_model');
 		RC_Loader::load_app_class('payment_factory', 'payment', false);
 	}
@@ -25,8 +22,7 @@ class payment_method
 	 * @param   int     $is_online          是否支持在线支付
 	 * @return  array   配送方式数组
 	 */
-	public function available_payment_list($support_cod = true, $cod_fee = 0, $is_online = false) 
-	{
+	public function available_payment_list($support_cod = true, $cod_fee = 0, $is_online = false) {
 		$db_payment = RC_DB::table('payment');
         $where = array();
         if (!$support_cod) {
@@ -67,8 +63,7 @@ class payment_method
 	/**
 	 * 激活的支付插件列表
 	 */
-	public function available_payment_plugins() 
-	{
+	public function available_payment_plugins() {
 	   return ecjia_config::instance()->get_addon_config('payment_plugins', true, true);
 	}
 	
@@ -78,8 +73,7 @@ class payment_method
 	 * @param array $config
 	 * @return payment_factory
 	 */
-	public function get_payment_instance($pay_code, $config = array()) 
-	{
+	public function get_payment_instance($pay_code, $config = array()) {
 	    $payment_info = $this->payment_info_by_code($pay_code);
 	    if (empty($config)) {
 	        $config = $this->unserialize_config($payment_info['pay_config']);
@@ -96,20 +90,16 @@ class payment_method
 	 * @param   int|string     $pay_id/$pay_code     支付方式id 或 支付方式code
 	 * @return  array   支付方式信息
 	 */
-	public function payment_info($pay_id)
-	{
+	public function payment_info($pay_id) {
 	    return $this->payment_info_by_id($pay_id);
 	}
-	public function payment_info_by_id($pay_id) 
-	{
+	public function payment_info_by_id($pay_id) {
 	    return $this->db->find(array('pay_id' => $pay_id , 'enabled' => 1));
 	}
-	public function payment_info_by_code($pay_code)
-	{
+	public function payment_info_by_code($pay_code) {
 	    return $this->db->find(array('pay_code' => $pay_code , 'enabled' => 1));
 	}
-	public function payment_info_by_name($pay_name)
-	{
+	public function payment_info_by_name($pay_name) {
 		return $this->db->where(array('pay_name' => $pay_name , 'enabled' => 1))->select();
 	}
 	
@@ -118,8 +108,7 @@ class payment_method
 	 * @param   bool    $is_cod 是否货到付款
 	 * @return  array
 	 */
-	public function payment_id_list($is_cod) 
-	{
+	public function payment_id_list($is_cod) {
 		$db_payment = RC_DB::table('payment');
 	    if ($is_cod) {
 	        // $where = "is_cod = 1" ;
@@ -158,8 +147,7 @@ class payment_method
 	 *
 	 * @return int
 	 */
-	public function insert_pay_log($id, $amount, $type = PAY_SURPLUS, $is_paid = 0) 
-	{
+	public function insert_pay_log($id, $amount, $type = PAY_SURPLUS, $is_paid = 0) {
 	    // $db = RC_Loader::load_app_model('pay_log_model', 'orders');
 	    $data = array (
 	        'order_id'     => $id,
@@ -186,8 +174,7 @@ class payment_method
 	 *
 	 * @return int
 	 */
-	public function get_paylog_id($surplus_id, $pay_type = PAY_SURPLUS) 
-	{
+	public function get_paylog_id($surplus_id, $pay_type = PAY_SURPLUS) {
 	    // $db = RC_Loader::load_app_model('pay_log_model', 'orders');
 	    // $log_id = $db->where(array('order_id' => $surplus_id, 'order_type' => $pay_type, 'is_paid' => 0))->get_field('log_id');
 
@@ -210,8 +197,7 @@ class payment_method
 	 *
 	 * @return int
 	 */
-	public function update_pay_log($id, $amount, $type = PAY_SURPLUS, $is_paid = 0)
-	{
+	public function update_pay_log($id, $amount, $type = PAY_SURPLUS, $is_paid = 0) {
 		// $db = RC_Loader::load_app_model('pay_log_model', 'orders');
 		// $row = $db->where(array('order_id' => $id, 'order_type'=> $type, 'is_paid' => 0))->update(array('order_amount' => $amount));
 		// return $row;
@@ -227,8 +213,7 @@ class payment_method
 	 * @param   string       $cfg
 	 * @return  void
 	 */
-	public function unserialize_config($cfg) 
-	{
+	public function unserialize_config($cfg) {
 	    if (is_string($cfg) && ($arr = unserialize($cfg)) !== false) {
 	        $config = array();
 	        foreach ($arr AS $key => $val) {
@@ -245,8 +230,7 @@ class payment_method
 	 * @param   bool    $include_balance    是否包含余额支付（冲值时不应包括）
 	 * @return  array   已安装的配送方式列表
 	 */
-	public function get_online_payment_list($include_balance = true)
-	{
+	public function get_online_payment_list($include_balance = true) {
 		// $where = array();
 		// $where['enabled'] = '1';
 		// $where['is_cod'] = array('neq' => '1');

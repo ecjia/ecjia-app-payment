@@ -1,9 +1,9 @@
 <?php
 defined('IN_ECJIA') or exit('No permission resources.');
+
 /**
  *  支付响应页面
  */
-
 class respond extends ecjia_front {
 
 	public function __construct() {

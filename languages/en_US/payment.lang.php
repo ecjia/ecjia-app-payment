@@ -4,7 +4,6 @@ defined('IN_ECJIA') or exit('No permission resources.');
 /**
  * ECJia 管理中心支付方式管理语言文件
  */
-
 return array(
 	'02_payment_list' 	=> 'Payment',
 	'payment'			=> 'Payment Mothod',

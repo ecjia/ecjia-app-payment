@@ -4,7 +4,6 @@ defined('IN_ECJIA') or exit('No permission resources.');
 /**
  * 支付方式应用
  */
-
 return array(
 	'identifier' 	=> 'ecjia.payment',
 	'directory' 	=> 'payment',

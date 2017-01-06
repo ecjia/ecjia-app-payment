@@ -4,10 +4,8 @@ defined('IN_ECJIA') or exit('No permission resources.');
 /**
  * 支付抽象类
  * @author royalwang
- *
  */
-abstract class payment_abstract
-{
+abstract class payment_abstract {
 	protected $product_info 	= array();
 	protected $customter_info 	= array();
 	protected $order_info 		= array();
@@ -24,8 +22,7 @@ abstract class payment_abstract
 	 *
 	 * @return null
 	*/
-	public function __construct($cfg = array())
-	{
+	public function __construct($cfg = array()) {
 	    if (!empty($cfg)) {
 	        foreach ($cfg AS $key => $val) {
 	            $this->configure[$key] = $val;
@@ -44,8 +41,7 @@ abstract class payment_abstract
 	/**
 	 * 支付方式的配置表单信息
 	 */
-	public function configure_forms($code_list = array(), $format = false) 
-	{
+	public function configure_forms($code_list = array(), $format = false) {
 	    $config = $this->configure_config();
 	    $forms = array();
 	    if ($config['forms']) {
@@ -87,38 +83,32 @@ abstract class payment_abstract
 	 * 获取插件配置信息
 	 */
 	abstract public function configure_config();
-	public function set_config(array $config) 
-	{
+	public function set_config(array $config) {
 		foreach ($config as $key => $value) {
 		    $this->configure[$key] = $value;
 		}
 		return $this;
 	}
-	public function get_config() 
-	{
+	public function get_config() {
 	    return $this->configure;
 	}
 
-	public function set_productinfo($product_info)
-	{
+	public function set_productinfo($product_info) {
 		$this->product_info = $product_info;
 		return $this;
 	}
 
-	public function set_customerinfo($customer_info)
-	{
+	public function set_customerinfo($customer_info) {
 		$this->customer_info = $customer_info;
 		return $this;
 	}
 
-	public function set_orderinfo($order_info)
-	{
+	public function set_orderinfo($order_info) {
 		$this->order_info = $order_info;
 		return $this;
 	}
 
-	public function set_shippinginfo($shipping_info)
-	{
+	public function set_shippinginfo($shipping_info) {
 		$this->shipping_info = $shipping_info;
 		return $this;
 	}
@@ -133,8 +123,7 @@ abstract class payment_abstract
 	 * @param string $args
 	 * @return string
 	 */
-	public function get_code($type, $args = array())
-	{
+	public function get_code($type, $args = array()) {
 	    $prepare_data = $this->get_prepare_data();
 	    if (is_ecjia_error($prepare_data)) {
 	        return $prepare_data;
@@ -156,8 +145,7 @@ abstract class payment_abstract
      * 如果使用Crul 你需要改一改你的php.ini文件的设置，找到php_curl.dll去掉前面的";"就行了
      * 返回 $data
      */
-    public function post($url, $param)
-    {
+    public function post($url, $param) {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url); // 配置网关地址
         curl_setopt($ch, CURLOPT_HEADER, 0); // 过滤HTTP头

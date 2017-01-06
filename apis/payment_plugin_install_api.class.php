@@ -5,11 +5,9 @@ defined('IN_ECJIA') or exit('No permission resources.');
  * 支付方式安装API
  * @author royalwang
  */
-class payment_plugin_install_api extends Component_Event_Api 
-{
+class payment_plugin_install_api extends Component_Event_Api {
 	
-	public function call(&$options) 
-	{
+	public function call(&$options) {
 	    $plugin_data = array();
 	    if (isset($options['file'])) {
 	        $plugin_file = $options['file'];

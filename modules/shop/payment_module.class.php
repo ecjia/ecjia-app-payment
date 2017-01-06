@@ -6,10 +6,10 @@ class payment_module extends api_front implements api_interface {
     public function handleRequest(\Royalcms\Component\HttpKernel\Request $request) {	
     	
     	$this->authSession();
-    	$is_cod = $this->requestData('is_cod', true);
-    	$cod_fee = $this->requestData('cod_fee', 0);
+    	$is_cod       = $this->requestData('is_cod', true);
+    	$cod_fee      = $this->requestData('cod_fee', 0);
     	$device		  = $this->device;
-    	$device_code = isset($device['code']) ? $device['code'] : '';
+    	$device_code  = isset($device['code']) ? $device['code'] : '';
     	
         $payment_method = RC_Loader::load_app_class('payment_method','payment');
         $payment_list = $payment_method->available_payment_list($is_cod, $cod_fee);

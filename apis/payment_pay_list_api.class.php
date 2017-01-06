@@ -4,7 +4,6 @@ defined('IN_ECJIA') or exit('No permission resources.');
 /**
  * 获取支付方式下拉列表
  * @author wutifang
- *
  */
 class payment_pay_list_api extends Component_Event_Api {
 	

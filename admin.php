@@ -4,7 +4,6 @@ defined('IN_ECJIA') or exit('No permission resources.');
 /**
  * ECJIA 支付方式管理
  */
-
 class admin extends ecjia_admin {
 	
 	private $db;	
