@@ -99,8 +99,9 @@ class admin extends ecjia_admin {
 		$this->assign('ur_here', RC_Lang::get('payment::payment.payment'));
 		
 		$plugins = ecjia_config::instance()->get_addon_config('payment_plugins', true, true);
-		$data = RC_DB::table('payment')->orderBy('pay_order')->get();
-		
+		/* 不能用，该数据查询会把特殊字符双重转义*/
+// 		$data = RC_DB::table('payment')->orderBy('pay_order')->get();
+		$data = RC_Model::model('payment/payment_model')->select();
 		$data or $data = array();
 		$modules = array();
 		foreach($data as $_key => $_value) {
