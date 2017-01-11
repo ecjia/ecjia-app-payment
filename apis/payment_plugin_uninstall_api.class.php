@@ -73,7 +73,6 @@ class payment_plugin_uninstall_api extends Component_Event_Api {
 	        
 	        /* 检查输入 */
 	        if (empty($format_name) || empty($options['config']['pay_code'])) {
-				// return $this->_return(addon::ADDON_ERROR, RC_Lang::lang('payment_name') . RC_Lang::lang('empty'));
 	            return ecjia_plugin::add_error('plugin_uninstall_error', RC_Lang::get('payment::payment.plugin_uninstall_error'));
 	        }
 	        

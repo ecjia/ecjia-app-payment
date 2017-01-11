@@ -100,6 +100,7 @@ abstract class payment_abstract {
 	        /* 循环插件中所有属性 */
 	        if (!empty($forms)) {
 	            foreach ($forms as $key => $value) {
+	            	//todo 语言包升级待确认
 	                $pay_config[$key]['desc'] = RC_Lang::lang($value['name'] . '_desc') ? RC_Lang::lang($value['name'] . '_desc') : '';
 	                $pay_config[$key]['label'] = RC_Lang::lang($value['name']);
 	                $pay_config[$key]['name'] = $value['name'];
@@ -113,6 +114,7 @@ abstract class payment_abstract {
 	        
 	                if ($pay_config[$key]['type'] == 'select' ||
 	                    $pay_config[$key]['type'] == 'radiobox') {
+	                	//todo 语言包升级待确认
 	                        $pay_config[$key]['range'] = RC_Lang::lang($pay_config[$key]['name'] . '_range');
 	                    }
 	            }
