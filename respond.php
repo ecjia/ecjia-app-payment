@@ -200,7 +200,7 @@ RESPOND;
 	    
 	    $this->assign('msg', $msg);
 	    $this->assign('info', $info);
-	    $url['index'] = RC_Cookie::set('pay_response_index');
+	    $url['index'] = RC_Cookie::get('pay_response_index');
 	    $url['order'] = RC_Cookie::get('pay_response_order');
 	    $this->assign('url', $url);
 	    

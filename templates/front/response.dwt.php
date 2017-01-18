@@ -256,7 +256,7 @@ defined('IN_ECJIA') or header("HTTP/1.0 404 Not Found");exit('404 Not Found');
         }
         
         .ecjia-flow-done ul {display:block;    overflow: hidden;}
-        .ecjia-flow-done ul li {clear:both;padding:0 2em;font-size:1em;line-height:2em;}
+        .ecjia-flow-done ul li {clear:both;padding:0 3em;font-size:1em;line-height:2em;}
         .ecjia-flow-done ul .fl{color:#999}
         .ecjia-flow-done .two-btn {clear:both; border-top:1px solid #ddd; padding-top:1.5em;width:80%;margin:1em auto;}
         .ecjia-flow-done .two-btn .btn {
