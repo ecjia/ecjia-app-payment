@@ -140,7 +140,15 @@ RESPOND;
         </html>
 RESPOND;
         
-        echo RC_Hook::apply_filters('payment_respond_template', $respond, $msg);
+//         echo RC_Hook::apply_filters('payment_respond_template', $respond, $msg);
+
+		$payment_info = $payment_method->payment_info_by_code($pay_code);
+		$info = array(
+		    'pay_name' => $payment_info['pay_name'],
+		    'amount'   => '',
+		    'order_id' => $pay_code == 'pay_alipay' ? $_GET['out_trade_no'] : '',
+		);
+		return $this->response_template($msg, $info);
 	}
 	
 	
@@ -186,6 +194,17 @@ RESPOND;
 	        }
 	    }
 
+	}
+	
+	public function response_template($msg, $info) {
+	    
+	    $this->assign('msg', $msg);
+	    $this->assign('info', $info);
+	    $url['index'] = RC_Cookie::set('pay_response_index');
+	    $url['order'] = RC_Cookie::get('pay_response_order');
+	    $this->assign('url', $url);
+	    
+	    $this->display('response.dwt');
 	}
 	
 }
