@@ -94,7 +94,7 @@ class respond extends ecjia_front {
 
 		}
 		
-		$touch_url = ecjia::config('shop_touch_url');
+		$touch_url = ecjia::config('mobile_touch_url');
 		
         $respond =<<<RESPOND
         <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
