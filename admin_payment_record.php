@@ -80,7 +80,7 @@ class admin_payment_record extends ecjia_admin {
 	 * 支付方式列表
 	 */
 	public function init() {
-	    $this->admin_priv('payment_manage', ecjia::MSGTYPE_JSON);
+	    $this->admin_priv('payment_manage');
 	    
 		ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here((RC_Lang::get('payment::payment.transaction_flow_record'))));
 		
@@ -103,7 +103,7 @@ class admin_payment_record extends ecjia_admin {
 	 * 禁用支付方式
 	 */
 	public function info() {
-		$this->admin_priv('payment_update', ecjia::MSGTYPE_JSON);
+		$this->admin_priv('payment_update');
 		
 		ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here((RC_Lang::get('payment::payment.transaction_flow_record')), RC_Uri::url('payment/admin_payment_record/init')));
 		ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here(RC_Lang::get('payment::payment.view_flow_record')));

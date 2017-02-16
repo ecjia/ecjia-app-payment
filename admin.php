@@ -82,7 +82,7 @@ class admin extends ecjia_admin {
 	 * 支付方式列表
 	 */
 	public function init() {
-		$this->admin_priv('payment_manage', ecjia::MSGTYPE_JSON);
+		$this->admin_priv('payment_manage');
 		
 		ecjia_screen::get_current_screen()->remove_last_nav_here();
 		ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here(RC_Lang::get('payment::payment.payment')));
@@ -168,7 +168,7 @@ class admin extends ecjia_admin {
 	 * 编辑支付方式 code={$code}
 	 */
 	public function edit() {
-		$this->admin_priv('payment_update', ecjia::MSGTYPE_JSON);
+		$this->admin_priv('payment_update');
 		
 		ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here(RC_Lang::get('payment::payment.edit_payment')));
 		$this->assign('action_link', array('text' => RC_Lang::get('payment::payment.payment'), 'href' => RC_Uri::url('payment/admin/init')));
