@@ -200,8 +200,6 @@ class payment_method {
 	        'order_type'   => $type,
 	        'is_paid'      => $is_paid
 	    );
-	
-	    // $insert_id = $db->insert($data);
 		$insert_id = RC_DB::table('pay_log')->insertGetId($data);    	
 
 	    return $insert_id;
