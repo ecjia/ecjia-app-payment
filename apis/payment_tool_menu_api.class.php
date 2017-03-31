@@ -50,7 +50,7 @@ defined('IN_ECJIA') or exit('No permission resources.');
  * 后台菜单API
  * @author royalwang
  */
-class payment_admin_menu_api extends Component_Event_Api {
+class payment_tool_menu_api extends Component_Event_Api {
 	
 	public function call(&$options) {	
 		$menus = ecjia_admin::make_admin_menu('15_payment_manage', '支付管理', '', 15);
