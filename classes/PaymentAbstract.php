@@ -61,29 +61,7 @@ abstract class PaymentAbstract extends AbstractPlugin {
         return $this->agent;
     }
     
-//     /**
-//      * 获取模板ID字段是否必填
-//      */
-//     public function requiredTemplateId()
-//     {
-//         return $this->loadConfig('required_templateid', false);
-//     }
-    
-//     /**
-//      * 获取签名字段是否必填
-//      */
-//     public function requiredSignName()
-//     {
-//         return $this->loadConfig('required_signname', false);
-//     }
-    
-//     /**
-//      * 检测是否支持余额查询
-//      */
-//     public function checkBalance()
-//     {
-//         return $this->loadConfig('check_balance', false);
-//     }
+
     
     
     public function __call($method, $parameters)
