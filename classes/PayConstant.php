@@ -63,5 +63,30 @@ class PayConstant
      */
     const PAY_SURPLUS = 1;
     
+    /**
+     * PC平台
+     * @var number
+     */
+    const PLATFORM_PC       = 0b00000001;
+    
+    /**
+     * 手机APP平台
+     * @var number
+     */
+    const PLATFORM_APP      = 0b00000010;
+    
+    /**
+     * H5平台
+     * @var number
+     */
+    const PLATFORM_H5       = 0b00000100;
+    
+    /**
+     * 微信小程序平台
+     * @var number
+     */
+    const PLATFORM_WEAPP    = 0b00001000;
+    
+    
 
 }
