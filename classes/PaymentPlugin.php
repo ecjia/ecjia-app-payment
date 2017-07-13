@@ -45,7 +45,7 @@
 //  ---------------------------------------------------------------------------------
 //
 
-namespace Ecjia\App\Sms;
+namespace Ecjia\App\Payment;
 
 use Ecjia\System\Plugin\PluginModel;
 use ecjia_config;
@@ -68,7 +68,7 @@ class PaymentPlugin extends PluginModel
      */
     public function getInstalledPlugins()
     {
-        return ecjia_config::getAddonConfig('payment_plugins', true);
+        return ecjia_config::getAddonConfig('payment_plugins', true, true);
     }
     
     /**
@@ -185,17 +185,28 @@ class PaymentPlugin extends PluginModel
         return $handler;
     }
     
+    /**
+     * 获取某个插件的实例对象
+     * @param string|integer $code 类型为string时是pay_code，类型是integer时是pay_id
+     * @return Ambigous <\ecjia_error, \Ecjia\System\Plugin\AbstractPlugin>|\ecjia_error|\Ecjia\System\Plugin\AbstractPlugin
+     */
     public function channel($code = null)
     {
         if ($code === null) {
             return $this->defaultChannel();
         }
         
-        $data = $this->getPluginDataByCode($code);
+        if (is_int($code)) {
+            $data = $this->getPluginDataById($code);
+        }
+        else {
+            $data = $this->getPluginDataByCode($code);
+        }
         
         $config = $this->unserializeConfig($data->pay_config);
          
         $handler = $this->pluginInstance($data->pay_code, $config);
+        $handler->setPayment($data);
         
         if (!$handler) {
             return new ecjia_error('code_not_found', $data['pay_code'] . ' plugin not found!');

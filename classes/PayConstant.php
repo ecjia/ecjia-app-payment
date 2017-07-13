@@ -88,5 +88,22 @@ class PayConstant
     const PLATFORM_WEAPP    = 0b00001000;
     
     
+    /**
+     * 支付代码类型 1 => 表单
+     * @var integer
+     */
+    const PAYCODE_FORM     = 1;
+    
+    /**
+     * 支付代码类型 2 => 链接
+     * @var integer
+     */
+    const PAYCODE_STRING   = 2;
+    
+    /**
+     * 支付代码类型 3 => 数组
+     * @var integer
+     */
+    const PAYCODE_PARAM    = 3;
 
 }
