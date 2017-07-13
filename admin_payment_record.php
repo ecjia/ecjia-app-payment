@@ -69,7 +69,6 @@ class admin_payment_record extends ecjia_admin {
 		RC_Style::enqueue_style('chosen');
 		RC_Script::enqueue_script('jquery-chosen');
 
-		RC_Loader::load_app_class('payment_factory', null, false);
 	}
 
 	/**
