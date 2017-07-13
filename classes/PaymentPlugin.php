@@ -113,33 +113,77 @@ class PaymentPlugin extends PluginModel
         return $config;
     }
     
-//     /**
-//      * 限制查询只包括启动的短信渠道。
-//      *
-//      * @return \Royalcms\Component\Database\Eloquent\Builder
-//      */
-//     public function scopeEnabled($query)
-//     {
-//         return $query->where('channel_type', 'sms')->where('enabled', 1);
-//     }
+    /**
+     * 限制查询只包括启动的支付渠道。
+     *
+     * @return \Royalcms\Component\Database\Eloquent\Builder
+     */
+    public function scopeEnabled($query)
+    {
+        return $query->where('enabled', 1);
+    }
     
-//     /**
-//      * 获取默认插件实例
-//      */
-//     public function defaultChannel()
-//     {
-//         $data = $this->enabled()->orderBy('sort_order', 'asc')->first();
+    /**
+     * 限制查询只包括在线的支付渠道。
+     *
+     * @return \Royalcms\Component\Database\Eloquent\Builder
+     */
+    public function scopeOnlie($query)
+    {
+        return $query->where('is_online', 1);
+    }
+    
+    /**
+     * 取得已安装的支付方式(其中不包括线下支付的)
+     * @param   array   $available_plugins  可使用的插件，一维数组 ['pay_alipay', 'pay_balance']
+     * @param   bool    $include_balance    是否包含余额支付（冲值时不应包括）
+     * @return  array   已安装的配送方式列表
+     */
+    public function getOnlinePayments(array $available_plugins = array(), $include_balance = true)
+    {
+        $this->online();
+        if (!$include_balance) {
+            $this->where('pay_code', '<>', 'balance');
+        }
         
-//         $config = $this->unserializeConfig($data->channel_config);
+        $data = $this->select('pay_id', 'pay_code', 'pay_name', 'pay_fee', 'pay_desc')->get();
+        
+        $pay_list = array();
+        	
+        if (!empty($data)) {
+            
+            $pay_list = collect($data)->each(function ($item) use ($available_plugins) {
+                if (empty($available_plugins)) {
+                    return $item;
+                }
+                
+                if (array_has($available_plugins, $item['pay_code'])) {
+                    $item['format_pay_fee'] = strpos($item['pay_fee'], '%') !== false ? $item['pay_fee'] : '';
+                    return $item;
+                }
+            });
+        }
+        
+        return $pay_list;
+    }
+    
+    /**
+     * 获取默认插件实例
+     */
+    public function defaultChannel()
+    {
+        $data = $this->enabled()->orderBy('pay_order', 'asc')->first();
+        
+        $config = $this->unserializeConfig($data->pay_config);
      
-//         $handler = $this->pluginInstance($data->channel_code, $config);
+        $handler = $this->pluginInstance($data->pay_code, $config);
         
-//         if (!$handler) {
-//             return new ecjia_error('code_not_found', $data['channel_code'] . ' plugin not found!');
-//         }
+        if (!$handler) {
+            return new ecjia_error('code_not_found', $data['pay_code'] . ' plugin not found!');
+        }
         
-//         return $handler;
-//     }
+        return $handler;
+    }
     
     public function channel($code = null)
     {
@@ -158,7 +202,6 @@ class PaymentPlugin extends PluginModel
         }
         
         return $handler;
-        
     }
     
 }
