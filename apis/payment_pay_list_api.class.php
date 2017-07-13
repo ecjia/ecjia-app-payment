@@ -54,7 +54,7 @@ class payment_pay_list_api extends Component_Event_Api {
 	
 	public function __construct() {
 		parent::__construct();
-		RC_Loader::load_app_class('payment_factory', 'payment', false);
+		
 	}
 	
     /**
