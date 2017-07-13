@@ -75,11 +75,18 @@ class payment_batch_payment_info_api extends Component_Event_Api {
 		/* 查询该支付方式内容 */
 		$pay_list = array ();
 		foreach ($code_list as $row) {
-			$pay_info = RC_DB::TABLE('payment')->where('pay_code', $row)->select('pay_name', 'pay_code', 'pay_desc', 'enabled')->orderby('enabled', 'desc')->first();
+			$pay_info = RC_DB::TABLE('payment')->where('pay_code', $row)->select('pay_name', 'pay_code', 'pay_desc', 'enabled')->first();
 			if(!empty($pay_info)){
 				$pay_list[$row] = $pay_info;
 			}
 		}
+		
+		
+		$sort_pay_list = array ();
+		foreach($pay_list as $v){
+			$sort_pay_list[] = $v['enabled'];
+		}
+		array_multisort($sort_pay_list, SORT_DESC, $pay_list);
 		return $pay_list;
 	}
 }
