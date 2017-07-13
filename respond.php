@@ -79,13 +79,14 @@ class respond extends ecjia_front {
 			if (count($payment_list) == 0) {
 				$msg = RC_Lang::get('payment::payment.pay_disabled');
 			} else {
-			    $payment = $payment_method->get_payment_instance($pay_code);
+// 			    $payment_handler = $payment_method->get_payment_instance($pay_code);
+			    $payment_handler = with(new Ecjia\App\Payment\PaymentPlugin)->channel($pay_code);
 				/* 检查插件文件是否存在，如果存在则验证支付是否成功，否则则返回失败信息 */
-				if (!$payment) {
+				if (!$payment_handler) {
 				    $msg = RC_Lang::get('payment::payment.pay_not_exist');
 				} 
 				/* 根据支付方式代码创建支付类的对象并调用其响应操作方法 */
-				elseif ($payment->response()) {
+				elseif ($payment_handler->response()) {
 				    $msg = RC_Lang::get('payment::payment.pay_success');
 				} else {
 				    $msg = RC_Lang::get('payment::payment.pay_fail');
@@ -174,14 +175,15 @@ RESPOND;
 	            RC_Logger::getLogger('pay')->debug('payment_disabled');
 	            die();
 	        } else {
-	            $payment = $payment_method->get_payment_instance($pay_code);
+// 	            $payment_handler = $payment_method->get_payment_instance($pay_code);
+	            $payment_handler = with(new Ecjia\App\Payment\PaymentPlugin)->channel($pay_code);
 	            /* 检查插件文件是否存在，如果存在则验证支付是否成功，否则则返回失败信息 */
 	            if (!$payment) {
 	                RC_Logger::getLogger('pay')->debug('payment_not_exist');
 	                die();
 	            }
 	            /* 根据支付方式代码创建支付类的对象并调用其响应操作方法 */
-	            $result = $payment->notify();
+	            $result = $payment_handler->notify();
 	            if (is_ecjia_error($result)) {
 	                RC_Logger::getLogger('pay')->debug('pay_fail: ' . $result->get_error_message());
 	                echo "fail";
