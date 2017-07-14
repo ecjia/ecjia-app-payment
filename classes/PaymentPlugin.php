@@ -152,7 +152,7 @@ class PaymentPlugin extends PluginModel
         	
         if (!empty($data)) {
             
-            $pay_list = collect($data)->each(function ($item) use ($available_plugins) {
+            $pay_list = $data->each(function ($item) use ($available_plugins) {
                 if (empty($available_plugins)) {
                     return $item;
                 }
@@ -179,7 +179,7 @@ class PaymentPlugin extends PluginModel
         $handler = $this->pluginInstance($data->pay_code, $config);
         
         if (!$handler) {
-            return new ecjia_error('code_not_found', $data['pay_code'] . ' plugin not found!');
+            return new ecjia_error('code_not_found', $data->pay_code . ' plugin not found!');
         }
         
         return $handler;
@@ -202,7 +202,7 @@ class PaymentPlugin extends PluginModel
         else {
             $data = $this->getPluginDataByCode($code);
         }
-        \RC_Logger::getLogger('invite')->debug($data);
+        
         $config = $this->unserializeConfig($data->pay_config);
          
         $handler = $this->pluginInstance($data->pay_code, $config);
