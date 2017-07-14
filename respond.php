@@ -82,7 +82,7 @@ class respond extends ecjia_front {
 // 			    $payment_handler = $payment_method->get_payment_instance($pay_code);
 			    $payment_handler = with(new Ecjia\App\Payment\PaymentPlugin)->channel($pay_code);
 				/* 检查插件文件是否存在，如果存在则验证支付是否成功，否则则返回失败信息 */
-				if (!$payment_handler) {
+				if (is_ecjia_error($payment_handler)) {
 				    $msg = RC_Lang::get('payment::payment.pay_not_exist');
 				} 
 				/* 根据支付方式代码创建支付类的对象并调用其响应操作方法 */
@@ -178,8 +178,8 @@ RESPOND;
 // 	            $payment_handler = $payment_method->get_payment_instance($pay_code);
 	            $payment_handler = with(new Ecjia\App\Payment\PaymentPlugin)->channel($pay_code);
 	            /* 检查插件文件是否存在，如果存在则验证支付是否成功，否则则返回失败信息 */
-	            if (!$payment) {
-	                RC_Logger::getLogger('pay')->debug('payment_not_exist');
+	            if (is_ecjia_error($payment_handler)) {
+	                RC_Logger::getLogger('pay')->debug($payment_handler->get_error_message());
 	                die();
 	            }
 	            /* 根据支付方式代码创建支付类的对象并调用其响应操作方法 */
