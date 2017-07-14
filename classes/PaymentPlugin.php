@@ -209,7 +209,7 @@ class PaymentPlugin extends PluginModel
         $handler->setPayment($data);
         
         if (!$handler) {
-            return new ecjia_error('code_not_found', $data['pay_code'] . ' plugin not found!');
+            return new ecjia_error('code_not_found', $data->pay_code . ' plugin not found!');
         }
         
         return $handler;
