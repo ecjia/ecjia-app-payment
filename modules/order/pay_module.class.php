@@ -100,7 +100,6 @@ class pay_module extends api_front implements api_interface {
 	        'pay_code'       => $handler->getCode(),
 	        'pay_name'		 => $handler->getName(),
 	        'trade_type'	 => 'buy',
-	        'pay_status' 	 => 0
     	]);
 
         //增加支付状态
