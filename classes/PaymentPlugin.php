@@ -202,7 +202,7 @@ class PaymentPlugin extends PluginModel
         else {
             $data = $this->getPluginDataByCode($code);
         }
-        RC_Logger::getLogger('invite')->debug($data);
+        \RC_Logger::getLogger('invite')->debug($data);
         $config = $this->unserializeConfig($data->pay_config);
          
         $handler = $this->pluginInstance($data->pay_code, $config);
