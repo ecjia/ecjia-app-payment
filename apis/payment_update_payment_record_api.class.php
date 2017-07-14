@@ -72,7 +72,7 @@ class payment_update_payment_record_api extends Component_Event_Api {
 		    'pay_time'	    => RC_Time::gmtime(),
 		);
 		$db->update($payment_data);
-		
+		RC_Logger::getLogger('invite')->debug($payment_data);
 		return true;
 	}
 	
