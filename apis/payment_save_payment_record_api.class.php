@@ -52,11 +52,6 @@ defined('IN_ECJIA') or exit('No permission resources.');
  */
 class payment_save_payment_record_api extends Component_Event_Api {
 	
-	public function __construct() {
-		parent::__construct();
-		RC_Loader::load_app_class('payment_factory', 'payment', false);
-	}
-	
     /**
      * order_sn 订单编号
      * total_fee 订单金额
