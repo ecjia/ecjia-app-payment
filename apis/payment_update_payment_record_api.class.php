@@ -66,7 +66,6 @@ class payment_update_payment_record_api extends Component_Event_Api {
 		$db = RC_DB::table('payment_record')->where('order_sn', $options['order_sn'])->where('pay_status', 0);
 
 		$payment_data = array(
-		    'order_sn'		=> $options['order_sn'],
 		    'trade_no'	    => $options['trade_no'],
 		    'pay_status'	=> 1,
 		    'pay_time'	    => RC_Time::gmtime(),
