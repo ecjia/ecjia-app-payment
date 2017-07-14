@@ -210,11 +210,11 @@ class PaymentPlugin extends PluginModel
         $config = $this->unserializeConfig($data->pay_config);
          
         $handler = $this->pluginInstance($data->pay_code, $config);
-        $handler->setPayment($data);
-        
         if (!$handler) {
             return new ecjia_error('code_not_found', $data->pay_code . ' plugin not found!');
         }
+        
+        $handler->setPayment($data);
         
         return $handler;
     }
