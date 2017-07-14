@@ -104,6 +104,7 @@ return array(
 	'pay_name' 		=> ' 支付名称',
 	'total_fee' 	=> '支付金额',
 	'create_time' 	=> '创建时间',
+	'pay_times' 	=> '付款时间',
 	'update_time' 	=> '修改更新时间',
 	'pay_time' 	=> '支付成功时间',
 	'pay_status' 	=> '交易状态',
