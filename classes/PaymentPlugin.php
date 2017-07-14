@@ -196,11 +196,15 @@ class PaymentPlugin extends PluginModel
             return $this->defaultChannel();
         }
         
-        if (is_int($code)) {
+        if (is_numeric($code)) {
             $data = $this->getPluginDataById($code);
         }
         else {
             $data = $this->getPluginDataByCode($code);
+        }
+        
+        if (!empty($data)) {
+            return new ecjia_error('payment_not_found', $data->pay_code . ' payment not found!');
         }
         
         $config = $this->unserializeConfig($data->pay_config);
