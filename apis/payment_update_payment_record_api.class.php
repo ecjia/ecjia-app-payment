@@ -50,7 +50,7 @@ defined('IN_ECJIA') or exit('No permission resources.');
  * 获取支付方式信息
  * @author wutifang
  */
-class payment_save_payment_record_api extends Component_Event_Api {
+class payment_update_payment_record_api extends Component_Event_Api {
 	
     /**
      * order_sn 订单编号（必填）
