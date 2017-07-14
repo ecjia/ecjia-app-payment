@@ -192,7 +192,7 @@ class PaymentPlugin extends PluginModel
      */
     public function channel($code = null)
     {
-        if ($code === null) {
+        if (is_null($code)) {
             return $this->defaultChannel();
         }
         
@@ -211,7 +211,7 @@ class PaymentPlugin extends PluginModel
          
         $handler = $this->pluginInstance($data->pay_code, $config);
         if (!$handler) {
-            return new ecjia_error('code_not_found', $data->pay_code . ' plugin not found!');
+            return new ecjia_error('plugin_not_found', $data->pay_code . ' plugin not found!');
         }
         
         $handler->setPayment($data);
