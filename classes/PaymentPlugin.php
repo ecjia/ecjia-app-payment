@@ -196,7 +196,7 @@ class PaymentPlugin extends PluginModel
             return $this->defaultChannel();
         }
         
-        if (is_numeric($code)) {
+        if (is_int($code)) {
             $data = $this->getPluginDataById($code);
         }
         else {
