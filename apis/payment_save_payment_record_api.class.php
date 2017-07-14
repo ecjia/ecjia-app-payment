@@ -59,7 +59,7 @@ class payment_save_payment_record_api extends Component_Event_Api {
 	
     /**
      * order_sn 订单编号
-     * order_amount 订单金额
+     * total_fee 订单金额
      * pay_code 支付代号
      * pay_name 支付名称
      * trade_type   交易类型： buy 购买， deposit 充值， withdraw 提现
@@ -79,7 +79,7 @@ class payment_save_payment_record_api extends Component_Event_Api {
 		    'trade_type'	=> array_get($options, 'trade_type', 'buy'),
 		    'pay_code'		=> $options['pay_code'],
 		    'pay_name'		=> $options['pay_name'],
-		    'total_fee'		=> $options['order_amount'],
+		    'total_fee'		=> $options['total_fee'],
 		    'pay_status'	=> array_get($options, 'pay_status', 0),
 		);
 		
