@@ -58,7 +58,7 @@ class payment_update_payment_record_api extends Component_Event_Api {
      * @return array
      */
 	public function call(&$options) {	
-		if (! array_get($options, 'order_sn') || ! array_get($options, 'trade_no')) {
+		if (! array_get($options, 'order_sn') || ! array_has($options, 'trade_no')) {
 			return new ecjia_error('invalid_parameter', RC_Lang::get('payment::payment.invalid_parameter'));
 		}
 		
