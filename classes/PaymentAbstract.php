@@ -70,11 +70,27 @@ abstract class PaymentAbstract extends AbstractPlugin
     public function setPayment(PaymentPlugin $payment)
     {
         $this->payment = $payment;
+        
+        return $this;
     }
     
+    /**
+     * 获取支付方式数据对象
+     * @return \Ecjia\App\Payment\PaymentPlugin $payment
+     */
+    public function getPayment()
+    {
+        return $this->payment;
+    }
     
-    
-    
+    /**
+     * 获取支付插件的ID
+     * @return integer
+     */
+    public function getId()
+    {
+        return $this->payment->pay_id;
+    }
     
     /**
      * 获取支付插件的名称
