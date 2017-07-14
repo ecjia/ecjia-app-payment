@@ -58,12 +58,12 @@ class payment_update_payment_record_api extends Component_Event_Api {
      * @return array
      */
 	public function call(&$options) {	
-		if (! array_get($options, 'order_sn') || ! array_get($options, 'trade_no') || ! array_get($options, 'pay_status') || ! array_get($options, 'pay_time')) {
+		if (! array_get($options, 'order_sn') || ! array_get($options, 'trade_no')) {
 			return new ecjia_error('invalid_parameter', RC_Lang::get('payment::payment.invalid_parameter'));
 		}
 		
 		/* 插入支付流水记录 */
-		$db = RC_DB::table('payment_record')->where('order_sn', $options['order_sn']);
+		$db = RC_DB::table('payment_record')->where('order_sn', $options['order_sn'])->where('pay_status', 0);
 
 		$payment_data = array(
 		    'order_sn'		=> $options['order_sn'],
