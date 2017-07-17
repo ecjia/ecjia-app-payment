@@ -114,6 +114,16 @@ abstract class PaymentAbstract extends AbstractPlugin
         return $this->getName();
     }
     
+    /**
+     * 支付服务器异步回调通知地址
+     */
+    abstract public function notifyUrl();
+    
+    /**
+     * 支付服务器同步回调响应地址
+     */
+    abstract public function callbackUrl();
+    
     
     /**
      * 支付服务器异步回调通知 POST方式
