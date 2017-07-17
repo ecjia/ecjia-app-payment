@@ -48,12 +48,13 @@
 namespace Ecjia\App\Payment\Repositories;
 
 use Royalcms\Component\Repository\Repositories\AbstractRepository;
+use RC_Time;
 
-class PayLogRepository extends AbstractRepository
+class PaymentRecordRepository extends AbstractRepository
 {
-    protected $model = 'Ecjia\App\Payment\Models\PayLogModel';
+    protected $model = 'Ecjia\App\Payment\Models\PaymentRecordModel';
     
-    protected $orderBy = ['log_id' => 'desc'];
+    protected $orderBy = ['id' => 'desc'];
     
     protected $type;
     
@@ -66,36 +67,111 @@ class PayLogRepository extends AbstractRepository
     
     /**
      * 添加订单支付日志记录
-     * @param number $orderId   订单编号
+     * @param number $orderSn   订单编号
      * @param float $amount     订单金额
      * @param number $isPaid    是否已支付
      * @return int
      */
-    public function addPayLog($orderId, $amount, $isPaid = 0)
+    public function addPaymentRecord($orderSn, $amount)
     {
-        
+        $where = array(
+        	'order_sn' => $orderSn,
+            'trade_type' => $this->type,
+            'pay_status' => 0
+        );
+        $result = $this->findWhere($where);
+        if (count($result) > 0) {
+            /* 未付款，更新支付金额 */
+            $model = $result->shift();
+            $model->total_fee = $amount;
+            $model->save();
+            
+            return $model->id;
+        }
+        else {
+            $attributes = array(
+                'order_sn' => $orderSn,
+                'total_fee' => $amount,
+                'trade_type' => $this->type,
+                'create_time' => RC_Time::gmtime(),
+            );
+            $model = $this->create($attributes);
+            
+            $model->order_trade_no = $model->order_sn . $model->id;
+            $model->save();
+            
+            return $model->id;
+        }
     }
     
     /**
      * 获取上次未支付的pay_log_id
-     * @param number $orderId   余额记录的ID
+     * @param number $orderSn   余额记录的ID
      * @return int
      */
-    public function getUnPaidLogId($orderId)
+    public function getUnPaidRecordId($orderSn)
     {
         
     }
     
     /**
      * 更新支付日志   
-     * @param number $orderId   订单编号
-     * @param float $amount     订单金额
-     * @param number $isPaid    是否已支付
+     * @param number $orderTradeNo   订单编号
+     * @param float  $amount         订单金额
+     * @param number $isPaid         是否已支付
      * @return int
      */
-    public function updatePayLog($orderId, $amount, $isPaid = 0)
+    public function updatePayment($orderTradeNo, $payCode, $payName)
     {
+        $attributes = array(
+            'pay_code' => $payCode,
+            'pay_name' => $payName,
+            'update_time' => RC_Time::gmtime(),
+        );
         
+        return $this->getModel()->where('order_trade_no', $orderTradeNo)->where('pay_status', 0)->update($attributes);
+    }
+    
+    /**
+     * 更新订单的支付成功
+     *
+     * @access  public
+     * @param   string  $log_id     支付编号
+     * @param   integer $pay_status 状态
+     * @param   string  $note       备注
+     * @return  void
+     */
+    public function updateOrderPaid($orderTradeNo)
+    {
+        $attributes = array(
+            'pay_status' => 1,
+            'pay_time' => RC_Time::gmtime(),
+        );
+        
+        /* 修改此次支付操作的状态为已付款 */
+        return $this->getModel()->where('order_trade_no', $orderTradeNo)->where('pay_status', 0)->update($attributes);
+    }
+    
+    
+    
+    /**
+     * 检查支付的金额是否与订单相符
+     *
+     * @access  public
+     * @param   string   $orderTradeNo 商户支付流水编号
+     * @param   float    $money        支付接口返回的金额
+     * @return  boolean
+     */
+    public function checkMoney($orderTradeNo, $money)
+    {
+        $amount = $this->getModel()->where('order_trade_no', $orderTradeNo)->pluck('total_fee');
+        
+        if ($amount == $money) {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
     
    
