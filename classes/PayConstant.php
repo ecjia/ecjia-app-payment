@@ -53,15 +53,22 @@ class PayConstant
 
     /**
      * 订单支付
-     * @var integer
+     * @var string
      */
-    const PAY_ORDER = 0;
+    const PAY_ORDER = 'buy';
     
     /**
      * 会员预付款
-     * @var integer
+     * @var string
      */
-    const PAY_SURPLUS = 1;
+    const PAY_SURPLUS = 'deposit';
+    const PAY_DEPOSIT = 'deposit';
+    
+    /**
+     * 会员提现
+     * @var string
+     */
+    const PAY_WITHDRAW = 'withdraw';
     
     /**
      * PC平台
