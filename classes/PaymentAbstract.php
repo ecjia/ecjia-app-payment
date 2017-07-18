@@ -47,6 +47,7 @@
 namespace Ecjia\App\Payment;
 
 use Ecjia\System\Plugin\AbstractPlugin;
+use Ecjia\App\Payment\Repositories\PaymentRecordRepository;
 
 /**
  * 短信插件抽象类
@@ -62,6 +63,12 @@ abstract class PaymentAbstract extends AbstractPlugin
      * @var \Ecjia\App\Payment\PaymentPlugin
      */
     protected $payment;
+    
+    /**
+     * 支付流水记录
+     * @var \Ecjia\App\Payment\Repositories\PaymentRecordRepository
+     */
+    protected $paymentRecord;
     
     /**
      * 设置配置方式
@@ -81,6 +88,27 @@ abstract class PaymentAbstract extends AbstractPlugin
     public function getPayment()
     {
         return $this->payment;
+    }
+    
+    /**
+     * 设置支付流水记录对象
+     * @param PaymentRecordRepository $paymentRecord
+     * @return \Ecjia\App\Payment\PaymentAbstract
+     */
+    public function setPaymentRecord(PaymentRecordRepository $paymentRecord)
+    {
+        $this->paymentRecord = $paymentRecord;
+        
+        return $this;
+    }
+    
+    /**
+     * 获取支付流水记录操作对象
+     * @return \Ecjia\App\Payment\Repositories\PaymentRecordRepository
+     */
+    public function getPaymentRecord()
+    {
+        return $this->paymentRecord;
     }
     
     /**
