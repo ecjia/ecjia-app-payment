@@ -110,11 +110,7 @@ class PaymentRecordRepository extends AbstractRepository
      */
     public function getPaymentRecord($orderTradeNo)
     {
-        $where = array(
-        	'order_trade_no' => $orderTradeNo,
-        );
-        
-        return $this->findWhere($where);
+        return $this->getModel()->where('order_trade_no', $orderTradeNo)->first();
     }
     
     
