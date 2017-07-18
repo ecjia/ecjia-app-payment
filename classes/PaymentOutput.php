@@ -155,9 +155,9 @@ class PaymentOutput
     }
     
     
-    public function setPayRecordId($payRecordid)
+    public function setPayRecordId($payRecordId)
     {
-        $this->payRecordid = $payRecordid;
+        $this->payRecordId = $payRecordId;
         
         return $this;
     }
@@ -165,7 +165,7 @@ class PaymentOutput
     
     public function getPayRecordId()
     {
-        return $this->payRecordid;
+        return $this->payRecordId;
     }
     
     public function setPayCode($payCode)
