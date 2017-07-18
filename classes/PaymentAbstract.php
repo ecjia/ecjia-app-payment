@@ -146,9 +146,8 @@ abstract class PaymentAbstract extends AbstractPlugin
      */
     public function parseOrderTradeNo($orderTradeNo)
     {
-        \RC_Logger::getLogger('pay')->info('order_trade_no '.$orderTradeNo);
         $item = $this->paymentRecord->getPaymentRecord($orderTradeNo);
-        \RC_Logger::getLogger('pay')->info('parse order_trade_no '.json_encode($item));
+
         if ($item) {
             return array('order_sn' => $item['order_sn'], 'record_id' => $item['id']);
         }
@@ -169,10 +168,13 @@ abstract class PaymentAbstract extends AbstractPlugin
         if (!$this->paymentRecord->checkMoney($orderTradeNo, $amount)) {
             return new ecjia_error('check_money_fail', __('支付的金额有误'));
         }
-        \RC_Logger::getLogger('pay')->info('go checkMoney');
-        $this->paymentRecord->updateOrderPaid($orderTradeNo, $tradeNo);
+
+        $this->paymentRecord->updateOrderPaid($orderTradeNo, $amount, $tradeNo);
         
         $item = $this->parseOrderTradeNo($orderTradeNo);
+        if (!$item) {
+            return new ecjia_error('parse_order_trade_no_error', __('解析订单号时失败'));
+        }
         \RC_Logger::getLogger('pay')->info('go order_paid');
         \RC_Logger::getLogger('pay')->info('view $item' . json_encode($item));
         $result = RC_Api::api('orders', 'buy_order_paid', array('order_sn' => $item['order_sn'], 'money' => $amount));

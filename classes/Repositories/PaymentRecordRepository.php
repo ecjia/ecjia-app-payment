@@ -110,9 +110,6 @@ class PaymentRecordRepository extends AbstractRepository
      */
     public function getPaymentRecord($orderTradeNo)
     {
-        
-//         $this->findWhere($where)
-//         return $this->getModel()->where('order_trade_no', $orderTradeNo)->first();
         return $this->findBy('order_trade_no', $orderTradeNo);
     }
     
@@ -183,7 +180,7 @@ class PaymentRecordRepository extends AbstractRepository
     public function checkMoney($orderTradeNo, $money)
     {
         $amount = $this->getModel()->where('order_trade_no', $orderTradeNo)->pluck('total_fee');
-        \RC_Logger::getLogger('pay')->info('payment record amount ' . $amount);
+
         if ($amount == $money) {
             return true;
         }
