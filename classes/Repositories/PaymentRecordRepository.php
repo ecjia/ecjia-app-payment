@@ -83,11 +83,11 @@ class PaymentRecordRepository extends AbstractRepository
         _dump($result);
         if (count($result) > 0) {
             /* 未付款，更新支付金额 */
-            $model = $result->shift();_dump($model);
+            $model = $result->shift();
             $model->total_fee = $amount;
 
             if (! $model->order_trade_no) {
-                $this->order_trade_no = $model->order_sn . $model->id;
+                $model->order_trade_no = $model->order_sn . $model->id;
             }
 
             $model->save();
