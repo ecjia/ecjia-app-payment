@@ -49,21 +49,14 @@ namespace Ecjia\App\Payment\Repositories;
 
 use Royalcms\Component\Repository\Repositories\AbstractRepository;
 use RC_Time;
+use Ecjia\App\Payment\PayConstant;
 
 class PaymentRecordRepository extends AbstractRepository
 {
     protected $model = 'Ecjia\App\Payment\Models\PaymentRecordModel';
     
     protected $orderBy = ['id' => 'desc'];
-    
-    protected $type;
-    
-    public function __construct($type)
-    {
-        parent::__construct();
-        
-        $this->type = $type;
-    }
+   
     
     /**
      * 添加订单支付日志记录
@@ -72,11 +65,11 @@ class PaymentRecordRepository extends AbstractRepository
      * @param number $isPaid    是否已支付
      * @return int
      */
-    public function addPaymentRecord($orderSn, $amount)
+    public function addPaymentRecord($orderSn, $amount, $type = PayConstant::PAY_ORDER)
     {
         $where = array(
         	'order_sn' => $orderSn,
-            'trade_type' => $this->type,
+            'trade_type' => $type,
             'pay_status' => 0
         );
         $result = $this->findWhere($where);
@@ -98,7 +91,7 @@ class PaymentRecordRepository extends AbstractRepository
             $attributes = array(
                 'order_sn' => $orderSn,
                 'total_fee' => $amount,
-                'trade_type' => $this->type,
+                'trade_type' => $type,
                 'create_time' => RC_Time::gmtime(),
             );
             $model = $this->create($attributes);
