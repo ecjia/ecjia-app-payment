@@ -2,7 +2,9 @@
 
 namespace Ecjia\App\Payment\Models;
 
-class PaymentRecordModel
+use Royalcms\Component\Database\Eloquent\Model;
+
+class PaymentRecordModel extends Model
 {
     protected $table = 'payment_record';
     
