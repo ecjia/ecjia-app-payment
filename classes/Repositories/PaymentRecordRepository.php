@@ -105,6 +105,21 @@ class PaymentRecordRepository extends AbstractRepository
     }
     
     /**
+     * 获取交易流水记录
+     * @param string $orderTradeNo
+     * @return \Royalcms\Component\Database\Eloquent\Collection
+     */
+    public function getPaymentRecord($orderTradeNo)
+    {
+        $where = array(
+        	'order_trade_no' => $orderTradeNo,
+        );
+        
+        return $this->findWhere($where);
+    }
+    
+    
+    /**
      * 获取上次未支付的pay_log_id
      * @param number $orderSn   余额记录的ID
      * @return int
@@ -134,22 +149,27 @@ class PaymentRecordRepository extends AbstractRepository
     
     /**
      * 更新订单的支付成功
-     *
-     * @access  public
-     * @param   string  $log_id     支付编号
-     * @param   integer $pay_status 状态
-     * @param   string  $note       备注
-     * @return  void
+     * @param   string  $orderTradeNo     订单流水编号
+     * @param   float   $amount           订单金额
+     * @param   integer $tradeNo          支付平台交易号
+     * @return  boolean
      */
-    public function updateOrderPaid($orderTradeNo)
+    public function updateOrderPaid($orderTradeNo, $amount, $tradeNo = null)
     {
         $attributes = array(
             'pay_status' => 1,
             'pay_time' => RC_Time::gmtime(),
         );
         
+        if (! is_null($tradeNo)) {
+            $attributes['trade_no'] = $tradeNo;
+        }
+        
         /* 修改此次支付操作的状态为已付款 */
-        return $this->getModel()->where('order_trade_no', $orderTradeNo)->where('pay_status', 0)->update($attributes);
+        return $this->getModel()->where('order_trade_no', $orderTradeNo)
+                                ->where('pay_status', 0)
+                                ->where('total_fee', $amount)
+                                ->update($attributes);
     }
     
     

@@ -48,6 +48,10 @@ namespace Ecjia\App\Payment;
 
 use Ecjia\System\Plugin\AbstractPlugin;
 use Ecjia\App\Payment\Repositories\PaymentRecordRepository;
+use ecjia_error;
+use RC_Lang;
+use RC_Api;
+use RC_Hook;
 
 /**
  * 短信插件抽象类
@@ -109,6 +113,61 @@ abstract class PaymentAbstract extends AbstractPlugin
     public function getPaymentRecord()
     {
         return $this->paymentRecord;
+    }
+    
+    /**
+     * 获取外部支付使用的订单交易号
+     */
+    public function getOrderTradeNo()
+    {
+        $order_sn = $this->order_info['order_sn'];
+        $amount = $this->order_info['order_amount'];
+        
+        $id = $this->paymentRecord->addPaymentRecord($order_sn, $amount);
+        
+        $model = $this->paymentRecord->find($id);
+        $this->paymentRecord->updatePayment($model->order_trade_no, $this->getCode(), $this->getName());
+        
+        return $model->order_trade_no;
+    }
+    
+    /**
+     * 解析支付使用的外部订单号
+     */
+    public function parseOrderTradeNo($orderTradeNo)
+    {
+        $item = $this->paymentRecord->getPaymentRecord($orderTradeNo);
+        if ($item) {
+            return array('order_sn' => $item['order_sn'], 'record_id' => $item['id']);
+        }
+        
+        return false;
+    }
+    
+    /**
+     * 更新订单的支付成功
+     * @param   string  $orderTradeNo     订单流水编号
+     * @param   float   $amount           订单金额
+     * @param   integer $tradeNo          支付平台交易号
+     * @return  boolean
+     */
+    public function updateOrderPaid($orderTradeNo, $amount, $tradeNo = null)
+    {
+        /* 检查支付的金额是否相符 */
+        if (!$this->paymentRecord->checkMoney($orderTradeNo, $amount)) {
+            return new ecjia_error('check_money_fail', __('支付的金额有误'));
+        }
+        
+        $this->paymentRecord->updateOrderPaid($orderTradeNo, $tradeNo);
+        
+        $item = $this->parseOrderTradeNo($orderTradeNo);
+        
+        $result = RC_Api::api('orders', 'order_paid', array('order_sn' => $item['order_sn'], 'money' => $amount));
+        if (! is_ecjia_error($result)) {
+            RC_Hook::do_action('order_payed_do_something', $orderTradeNo); 
+        }
+        
+        return $result;
     }
     
     /**
