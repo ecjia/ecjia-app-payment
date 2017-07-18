@@ -175,8 +175,7 @@ abstract class PaymentAbstract extends AbstractPlugin
         if (!$item) {
             return new ecjia_error('parse_order_trade_no_error', __('解析订单号时失败'));
         }
-        \RC_Logger::getLogger('pay')->info('go order_paid');
-        \RC_Logger::getLogger('pay')->info('view $item' . json_encode($item));
+ 
         $result = RC_Api::api('orders', 'buy_order_paid', array('order_sn' => $item['order_sn'], 'money' => $amount));
         if (! is_ecjia_error($result)) {
             RC_Hook::do_action('order_payed_do_something', $orderTradeNo); 
