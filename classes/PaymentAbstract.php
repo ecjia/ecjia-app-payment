@@ -147,6 +147,7 @@ abstract class PaymentAbstract extends AbstractPlugin
     public function parseOrderTradeNo($orderTradeNo)
     {
         $item = $this->paymentRecord->getPaymentRecord($orderTradeNo);
+        \RC_Logger::getLogger('pay')->info('parse order_trade_no '.json_encode($item));
         if ($item) {
             return array('order_sn' => $item['order_sn'], 'record_id' => $item['id']);
         }
