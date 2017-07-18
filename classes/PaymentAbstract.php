@@ -171,6 +171,7 @@ abstract class PaymentAbstract extends AbstractPlugin
         
         $item = $this->parseOrderTradeNo($orderTradeNo);
         \RC_Logger::getLogger('pay')->info('go order_paid');
+        \RC_Logger::getLogger('pay')->info('view $item' . $item);
         $result = RC_Api::api('orders', 'buy_order_paid', array('order_sn' => $item['order_sn'], 'money' => $amount));
         if (! is_ecjia_error($result)) {
             RC_Hook::do_action('order_payed_do_something', $orderTradeNo); 
