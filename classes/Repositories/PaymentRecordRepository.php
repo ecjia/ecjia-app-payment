@@ -80,10 +80,10 @@ class PaymentRecordRepository extends AbstractRepository
             'pay_status' => 0
         );
         $result = $this->findWhere($where);
-        _dump($result);
+        
         if (count($result) > 0) {
             /* 未付款，更新支付金额 */
-            $model = $result->shift();
+            $model = $result->shift();_dump($model);
             $model->total_fee = $amount;
             $model->save();
             
