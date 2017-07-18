@@ -115,17 +115,26 @@ abstract class PaymentAbstract extends AbstractPlugin
         return $this->paymentRecord;
     }
     
-    /**
-     * 获取外部支付使用的订单交易号
-     */
-    public function getOrderTradeNo()
+    public function getPaymentRecordId()
     {
         $order_sn = $this->order_info['order_sn'];
         $amount = $this->order_info['order_amount'];
         
         $id = $this->paymentRecord->addPaymentRecord($order_sn, $amount);
+        
+        return $id;
+    }
+    
+    /**
+     * 获取外部支付使用的订单交易号
+     */
+    public function getOrderTradeNo($recordId = null)
+    {
+        if (is_null($recordId)) {
+            $recordId = $this->getPaymentRecordId();
+        }
 
-        $model = $this->paymentRecord->find($id);
+        $model = $this->paymentRecord->find($recordId);
         $this->paymentRecord->updatePayment($model->order_trade_no, $this->getCode(), $this->getName());
         
         return $model->order_trade_no;
