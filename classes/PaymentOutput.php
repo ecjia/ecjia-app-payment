@@ -8,73 +8,92 @@ class PaymentOutput
      * 订单ID
      * @var integer
      */
-    protected $order_id;
+    protected $orderId;
     
     /**
      * 订单编号
      * @var string
      */
-    protected $order_sn;
+    protected $orderSn;
     
     /**
      * 订单金额
      * @var float
      */
-    protected $order_amount;
+    protected $orderAmount;
     
     /**
      * 订单支付状态
      * @var string
      */
-    protected $order_pay_status;
+    protected $orderPayStatus;
     
     /**
-     * 支付日志ID
+     * 商户交易号
+     * @var string
+     */
+    protected $orderTradeNo;
+    
+    /**
+     * 支付流水记录ID
      * @var integer
      */
-    protected $pay_logid;
+    protected $payRecordId;
     
     /**
      * 支付插件code
      * @var string
      */
-    protected $pay_code;
+    protected $payCode;
     
     /**
      * 支付插件名称
      * @var string
      */
-    protected $pay_name;
+    protected $payName;
     
+    
+    /**
+     * 支付主题内容
+     * @var string
+     */
+    protected $subject;
+    
+    /**
+     * 异步返回通知地址
+     * @var string
+     */
+    protected $notifyUrl;
+    
+    /**
+     * 同步返回通知地址
+     * @var string
+     */
+    protected $callbackUrl;
 
     /**
-     * 支付插件相关的数据
+     * 支付插件相关的私有数据
      * @var array
      */
-    protected $pay_data = array(
-    	'notify_url',
-        'callback_url',
-        'pay_order_sn',
-        'subject',
-        
+    protected $privateData = array(
+
         //余额支付
-        'pay_status',
-        'order_surplus',
+        //'order_surplus',
     );
     
     /**
      * 支付相关的加密数据
      * @var array
      */
-    protected $encrypted_data = array(
-    	'app_secret',
-        'private_key',
+    protected $encryptedData = array(
+    	///'app_secret',
+        //'private_key',
     );
     
     
-    public function setOrderId($order_id)
+    public function setOrderId($orderId)
     {
-        $this->order_id = $order_id;
+        $this->orderId = $orderId;
         
         return $this;
     }
@@ -82,21 +101,21 @@ class PaymentOutput
     
     public function getOrderId()
     {
-        return $this->order_id;
+        return $this->orderId;
     }
     
     
-    public function setOrderSn($order_sn)
+    public function setOrderSn($orderSn)
     {
-        $this->order_sn = $order_sn;
+        $this->orderSn = $orderSn;
         
         return $this;
     }
     
     
-    public function setOrderAmount($order_amount)
+    public function setOrderAmount($orderAmount)
     {
-        $this->order_amount = $order_amount;
+        $this->orderAmount = $orderAmount;
         
         return $this;
     }
@@ -104,13 +123,13 @@ class PaymentOutput
     
     public function getOrderAmount()
     {
-        return $this->order_amount;
+        return $this->orderAmount;
     }
     
     
-    public function setOrderPayStatus($order_pay_status)
+    public function setOrderPayStatus($orderPayStatus)
     {
-        $this->order_pay_status = $order_pay_status;
+        $this->orderPayStatus = $orderPayStatus;
         
         return $this;
     }
@@ -118,26 +137,40 @@ class PaymentOutput
     
     public function getOrderPayStatus()
     {
-        return $this->order_pay_status;
+        return $this->orderPayStatus;
     }
     
     
-    public function setPayLogId($pay_logid)
+    public function setOrderTradeNo($orderTradeNo)
     {
-        $this->pay_logid = $pay_logid;
+        $this->orderTradeNo = $orderTradeNo;
         
         return $this;
     }
     
     
-    public function getPayLogId()
+    public function getOrderTradeNo()
     {
-        return $this->pay_logid;
+        return $this->orderTradeNo;
     }
     
-    public function setPayCode($pay_code)
+    
+    public function setPayRecordId($payRecordid)
     {
-        $this->pay_code = $pay_code;
+        $this->payRecordid = $payRecordid;
+        
+        return $this;
+    }
+    
+    
+    public function getPayRecordId()
+    {
+        return $this->payRecordid;
+    }
+    
+    public function setPayCode($payCode)
+    {
+        $this->payCode = $payCode;
         
         return $this;
     }
@@ -145,12 +178,12 @@ class PaymentOutput
     
     public function getPayCode()
     {
-        return $this->pay_code;
+        return $this->payCode;
     }
     
-    public function setPayName($pay_name)
+    public function setPayName($payName)
     {
-        $this->pay_name = $pay_name;
+        $this->payName = $payName;
         
         return $this;
     }
@@ -158,33 +191,104 @@ class PaymentOutput
     
     public function getPayName()
     {
-        return $this->pay_name;
+        return $this->payName;
     }
     
     
-    public function setPayData(array $pay_data)
+    public function setSubject($subject)
     {
-        $this->pay_data = $pay_data;
+        $this->subject = $subject;
         
         return $this;
     }
     
-    public function getPayData()
+    
+    public function getSubject()
     {
-        return $this->pay_data;
+        return $this->subject;
     }
     
     
-    public function setEncryptedData(array $encrypted_data)
+    public function setNotifyUrl($notifyUrl)
     {
-        $this->encrypted_data = $encrypted_data;
+        $this->notifyUrl = $notifyUrl;
+        
+        return $this;
+    }
+    
+    public function getNotifyUrl()
+    {
+        return $this->notifyUrl;
+    }
+    
+    
+    public function setCallbackUrl($callbackUrl)
+    {
+        $this->callbackUrl = $callbackUrl;
+        
+        return $this;
+    }
+    
+    public function getCallbackUrl()
+    {
+        return $this->callbackUrl;
+    }
+    
+     
+    
+    public function setPrivateData(array $privateData)
+    {
+        $this->privateData = $privateData;
+        
+        return $this;
+    }
+    
+    public function getPrivateData()
+    {
+        return $this->privateData;
+    }
+    
+    
+    public function setEncryptedData(array $encryptedData)
+    {
+        $this->encryptedData = $encryptedData;
         
         return $this;
     }
     
     public function getEncryptedData()
     {
-        return $this->encrypted_data;
+        return $this->encryptedData;
     }
     
+    /**
+     * 导出内容为数组格式
+     */
+    public function export() {
+        return array(
+            'order_id'          => $this->orderId,
+            'order_sn'          => $this->orderSn,
+            'order_amount'      => $this->orderAmount,
+            'order_pay_status'  => $this->orderPayStatus,
+            'order_trade_no'    => $this->orderTradeNo,
+            
+            'pay_record_id'     => $this->pay_record_id,
+            'pay_code'          => $this->payCode,
+            'pay_name'          => $this->payName,
+            
+            'subject'           => $this->subject,
+            'notify_url'        => $this->notifyUrl,
+            'callback_url'      => $this->callbackUrl,
+            
+            'private_data'      => $this->privateData,
+            'encrypted_data'    => $this->encryptedData,
+        );
+    }
+    
+    /**
+     * 魔术方法
+     */
+    public function __toString() {
+        return var_export($this->export(), true);
+    }
 }
