@@ -272,7 +272,7 @@ class PaymentOutput
             'order_pay_status'  => $this->orderPayStatus,
             'order_trade_no'    => $this->orderTradeNo,
             
-            'pay_record_id'     => $this->pay_record_id,
+            'pay_record_id'     => $this->payRecordId,
             'pay_code'          => $this->payCode,
             'pay_name'          => $this->payName,
             
