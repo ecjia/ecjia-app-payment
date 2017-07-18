@@ -124,7 +124,7 @@ abstract class PaymentAbstract extends AbstractPlugin
         $amount = $this->order_info['order_amount'];
         
         $id = $this->paymentRecord->addPaymentRecord($order_sn, $amount);
-        _dump($id,1);
+        _dump($id,3);
         $model = $this->paymentRecord->find($id);
         $this->paymentRecord->updatePayment($model->order_trade_no, $this->getCode(), $this->getName());
         
