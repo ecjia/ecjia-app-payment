@@ -143,6 +143,24 @@ class PaymentRecordRepository extends AbstractRepository
     }
     
     /**
+     * 更新商户号
+     * @param number $orderTradeNo  订单编号
+     * @param string $partner       商户号
+     * @param string $account       商户帐号
+     */
+    public function updatePartner($orderTradeNo, $partner, $account)
+    {
+        $attributes = array(
+            'partner_id' => $partner,
+            'account' => $account,
+            'update_time' => RC_Time::gmtime(),
+        );
+        
+        return $this->getModel()->where('order_trade_no', $orderTradeNo)->update($attributes);
+    }
+    
+    
+    /**
      * 更新订单的支付成功
      * @param   string  $orderTradeNo     订单流水编号
      * @param   float   $amount           订单金额
@@ -166,8 +184,6 @@ class PaymentRecordRepository extends AbstractRepository
                                 ->where('total_fee', $amount)
                                 ->update($attributes);
     }
-    
-    
     
     /**
      * 检查支付的金额是否与订单相符
