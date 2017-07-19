@@ -59,7 +59,7 @@ class payment_update_payment_record_api extends Component_Event_Api {
      */
 	public function call(&$options) {	
 		if (! array_get($options, 'order_sn') || ! array_has($options, 'trade_no')) {
-			return new ecjia_error('invalid_parameter', RC_Lang::get('payment::payment.invalid_parameter'));
+			return new ecjia_error('invalid_parameter', __('缺少必要参数'));
 		}
 		
 		/* 插入支付流水记录 */
