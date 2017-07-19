@@ -134,6 +134,16 @@ class PaymentPlugin extends PluginModel
     }
     
     /**
+     * 限制查询只包括在线的支付渠道。
+     *
+     * @return \Royalcms\Component\Database\Eloquent\Builder
+     */
+    public function scopeCod($query)
+    {
+        return $query->where('is_cod', 1);
+    }
+    
+    /**
      * 取得已安装的支付方式(其中不包括线下支付的)
      * @param   array   $available_plugins  可使用的插件，一维数组 ['pay_alipay', 'pay_balance']
      * @param   bool    $include_balance    是否包含余额支付（冲值时不应包括）
@@ -141,29 +151,76 @@ class PaymentPlugin extends PluginModel
      */
     public function getOnlinePayments(array $available_plugins = array(), $include_balance = true)
     {
-        $this->online();
+        $model = $this->online();
         if (!$include_balance) {
-            $this->where('pay_code', '<>', 'balance');
+            $model->where('pay_code', '<>', 'pay_balance');
         }
         
-        $data = $this->select('pay_id', 'pay_code', 'pay_name', 'pay_fee', 'pay_desc')->get();
+        $data = $model->select('pay_id', 'pay_code', 'pay_name', 'pay_fee', 'pay_desc')->get();
         
         $pay_list = array();
         	
         if (!empty($data)) {
             
-            $pay_list = $data->each(function ($item) use ($available_plugins) {
+            $pay_list = $data->filter(function ($item) use ($available_plugins) {
                 if (empty($available_plugins)) {
                     return $item;
                 }
                 
-                if (array_has($available_plugins, $item['pay_code'])) {
-                    $item['format_pay_fee'] = strpos($item['pay_fee'], '%') !== false ? $item['pay_fee'] : '';
+                if (in_array($item['pay_code'], $available_plugins)) {
+                    $item['format_pay_fee'] = strpos($item['pay_fee'], '%') !== false ? $item['pay_fee'] : price_format($item['pay_fee'], false);
                     return $item;
                 }
             });
         }
         
+        return $pay_list;
+    }
+    
+    /**
+     * 取得可用的支付方式列表
+     * @param   bool    $support_cod        配送方式是否支持货到付款
+     * @param   int     $cod_fee            货到付款手续费（当配送方式支持货到付款时才传此参数）
+     * @param   int     $is_online          是否支持在线支付
+     * @return  array   配送方式数组
+     */
+    public function getAvailablePayments(array $available_plugins = array(), $support_cod = true, $cod_fee = 0, $is_online = false)
+    {
+        $model = $this->enabled();
+        
+        if ($support_cod) 
+        {
+            $model->cod();
+        }
+        
+        if ($is_online)
+        {
+            $model->online();
+        }
+
+        $data = $model->select('pay_id', 'pay_code', 'pay_name', 'pay_fee', 'pay_desc', 'is_cod', 'is_online')
+             ->orderby('pay_order', 'asc')->get();
+
+        $pay_list = array();
+         
+        if (!empty($data)) {
+        
+            $pay_list = $data->filter(function ($item) use ($available_plugins) {
+                if (empty($available_plugins)) {
+                    return $item;
+                }
+ 
+                if (in_array($item['pay_code'], $available_plugins)) {
+                    if ($item['is_cod'] == 1) {
+                        $item['pay_fee'] = $cod_fee;
+                    }
+                    
+                    $item['format_pay_fee'] = strpos($item['pay_fee'], '%') !== false ? $item['pay_fee'] : price_format($item['pay_fee'], false);
+                    return $item;
+                }
+            });
+        }
+
         return $pay_list;
     }
     
