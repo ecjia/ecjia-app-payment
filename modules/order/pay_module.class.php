@@ -132,7 +132,7 @@ class pay_module extends api_front implements api_interface {
                 }
                 
                 unset($item['pay_desc']);
-                $newitem = $item;
+//                 $newitem = $item;
                 $newitem['pay_name'] = strip_tags($item['pay_name']);
                 
                 return $newitem;
