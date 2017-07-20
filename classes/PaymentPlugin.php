@@ -138,9 +138,9 @@ class PaymentPlugin extends PluginModel
      *
      * @return \Royalcms\Component\Database\Eloquent\Builder
      */
-    public function scopeCod($query)
+    public function scopeNotSupportCod($query)
     {
-        return $query->where('is_cod', 1);
+        return $query->where('is_cod', 0);
     }
     
     /**
@@ -164,7 +164,7 @@ class PaymentPlugin extends PluginModel
             
             $pay_list = $data->filter(function ($item) use ($available_plugins) {
                 if (empty($available_plugins)) {
-                    return $item;
+                    $available_plugins = array_keys($this->getInstalledPlugins());
                 }
                 
                 if (in_array($item['pay_code'], $available_plugins)) {
@@ -188,9 +188,9 @@ class PaymentPlugin extends PluginModel
     {
         $model = $this->enabled();
         
-        if ($support_cod) 
+        if (! $support_cod) 
         {
-            $model->cod();
+            $model->notSupportCod();
         }
         
         if ($is_online)
@@ -207,7 +207,7 @@ class PaymentPlugin extends PluginModel
         
             $pay_list = $data->filter(function ($item) use ($available_plugins, $cod_fee) {
                 if (empty($available_plugins)) {
-                    return $item;
+                    $available_plugins = array_keys($this->getInstalledPlugins());
                 }
  
                 if (in_array($item['pay_code'], $available_plugins)) {
