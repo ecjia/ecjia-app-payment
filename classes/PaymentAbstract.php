@@ -199,7 +199,7 @@ abstract class PaymentAbstract extends AbstractPlugin
      */
     public function getName()
     {
-        return $this->payment->pay_name;
+        return strip_tags($this->payment->pay_name);
     }
     
     /**

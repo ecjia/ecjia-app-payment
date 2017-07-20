@@ -129,8 +129,7 @@ class pay_module extends api_front implements api_interface {
             if ($item['pay_id'] == $order['pay_id']) {
                 return array();
             }
-
-            $item['pay_name'] = strip_tags($item['pay_name']);
+            
             return array($item);
         })->all();
 
