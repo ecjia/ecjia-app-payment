@@ -131,7 +131,7 @@ class pay_module extends api_front implements api_interface {
                     return false;
                 }
                 return $item;
-            })->each(function($item) {
+            })->transform(function($item) {
                 unset($item['pay_desc']);
                 $item['pay_name'] = strip_tags($item['pay_name']);
                 return $item;
