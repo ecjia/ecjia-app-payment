@@ -139,7 +139,7 @@ class pay_module extends api_front implements api_interface {
                 return false;
             }
 
-            $item['pay_name'] = strip_tags($item['pay_name']);
+            $item['pay_name'] = strip_tags($item['pay_name']).'x';
             return $item;
         });
         _dump($payments,1);
