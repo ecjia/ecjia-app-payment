@@ -109,7 +109,33 @@ class pay_module extends api_front implements api_interface {
         //增加支付状态
         $order['payment']['order_pay_status'] = $order['pay_status'];//0 未付款，1付款中，2已付款
         
-        return array('payment' => $order['payment']);
+        if ($order['shipping_id'] == 0) {
+            $cod        = true;
+            $cod_fee    = 0;
+        } else {
+            $shipping_method   = RC_Loader::load_app_class('shipping_method', 'shipping');
+            $shipping = $shipping_method->shipping_info($order['shipping_id']);
+            $cod      = $shipping['support_cod'];
+            
+            if ($cod) {
+                $region             = array($order['country'], $order['province'], $order['city'], $order['district']);
+                $shipping_area_info = $shipping_method->shipping_area_info($order['shipping_id'], $region, $order['store_id']);
+                $cod_fee            = $shipping_area_info['pay_fee'];
+            }
+        }
+        $payment_list = RC_Api::api('payment', 'available_payments', array('store_id' => $order['store_id'], 'cod_fee' => $cod_fee));
+        
+        $other = collect($payment_list)->filter(function ($item) use ($order) {
+        	if ($item['pay_id'] == $order['pay_id']) {
+        	    return false;
+        	}
+        	
+        	unset($item['pay_desc']);
+        	$item['pay_name'] = strip_tags($item['pay_name']);
+        	return $item;
+        })->toArray();
+        
+        return array('payment' => $order['payment'], 'other' => $other);
 	}
 }
 
