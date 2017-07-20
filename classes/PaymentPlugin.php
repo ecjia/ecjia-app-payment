@@ -198,7 +198,7 @@ class PaymentPlugin extends PluginModel
             $model->online();
         }
 
-        $data = $model->select('pay_id', 'pay_code', 'pay_name', 'pay_fee', 'is_cod', 'is_online')
+        $data = $model->select('pay_id', 'pay_code', 'pay_name', 'pay_fee', 'pay_desc', 'is_cod', 'is_online')
              ->orderby('pay_order', 'asc')->get();
 
         $pay_list = array();
