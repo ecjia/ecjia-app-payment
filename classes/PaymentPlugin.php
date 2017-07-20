@@ -156,20 +156,20 @@ class PaymentPlugin extends PluginModel
             $model->where('pay_code', '<>', 'pay_balance');
         }
         
-        $data = $model->select('pay_id', 'pay_code', 'pay_name', 'pay_fee', 'pay_desc')->get();
+        $data = $model->select('pay_id', 'pay_code', 'pay_name', 'pay_fee')->get();
         
         $pay_list = array();
         	
         if (!empty($data)) {
             
-            $pay_list = $data->filter(function ($item) use ($available_plugins) {
+            $pay_list = $data->mapWithKeys(function ($item) use ($available_plugins) {
                 if (empty($available_plugins)) {
                     $available_plugins = array_keys($this->getInstalledPlugins());
                 }
                 
                 if (in_array($item['pay_code'], $available_plugins)) {
                     $item['format_pay_fee'] = strpos($item['pay_fee'], '%') !== false ? $item['pay_fee'] : price_format($item['pay_fee'], false);
-                    return $item;
+                    return array($item);
                 }
             });
         }
@@ -198,14 +198,14 @@ class PaymentPlugin extends PluginModel
             $model->online();
         }
 
-        $data = $model->select('pay_id', 'pay_code', 'pay_name', 'pay_fee', 'pay_desc', 'is_cod', 'is_online')
+        $data = $model->select('pay_id', 'pay_code', 'pay_name', 'pay_fee', 'is_cod', 'is_online')
              ->orderby('pay_order', 'asc')->get();
 
         $pay_list = array();
          
         if (!empty($data)) {
         
-            $pay_list = $data->filter(function ($item) use ($available_plugins, $cod_fee) {
+            $pay_list = $data->mapWithKeys(function ($item) use ($available_plugins, $cod_fee) {
                 if (empty($available_plugins)) {
                     $available_plugins = array_keys($this->getInstalledPlugins());
                 }
@@ -217,7 +217,7 @@ class PaymentPlugin extends PluginModel
                     
                     $item['pay_name'] = $this->channel($item['pay_code'])->getDisplayName();
                     $item['format_pay_fee'] = strpos($item['pay_fee'], '%') !== false ? $item['pay_fee'] : price_format($item['pay_fee'], false);
-                    return $item;
+                    return array($item);
                 }
             });
         }
