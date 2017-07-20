@@ -135,7 +135,7 @@ class pay_module extends api_front implements api_interface {
 //         } 
         _dump($payment_list);
         $payments = collect($payment_list)->filter(function ($item) {
-            if ($item['pay_id'] != $order['pay_id']) {
+            if ($item['pay_id'] == $order['pay_id']) {
                 return false;
             }
 
