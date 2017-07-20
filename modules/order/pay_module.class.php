@@ -136,9 +136,9 @@ class pay_module extends api_front implements api_interface {
         _dump($payment_list);
         $payments = collect($payment_list)->mapWithKeys(function ($item) use ($order) {
             if ($item['pay_id'] == $order['pay_id']) {
-                return [];
+                return array();
             }
-
+            unset($item['pay_desc']);
             $item['pay_name'] = strip_tags($item['pay_name']).'x';
             return array($item);
         });
