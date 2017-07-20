@@ -126,7 +126,7 @@ class pay_module extends api_front implements api_interface {
         $payment_list = RC_Api::api('payment', 'available_payments', array('store_id' => $order['store_id'], 'cod_fee' => $cod_fee));
         _dump($payment_list);
         if (! is_ecjia_error($payment_list)) {
-            $other = collect($payment_list)->filter(function ($item) use ($order) {
+            $other = collect($payment_list)->each(function ($item) use ($order) {
                 if ($item['pay_id'] == $order['pay_id']) {
                     return false;
                 }
