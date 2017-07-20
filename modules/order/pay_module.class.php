@@ -133,7 +133,7 @@ class pay_module extends api_front implements api_interface {
 //                 $other[] = $item;
 //             }
 //         } 
-        
+        _dump($payment_list);
         $payments = collect($payment_list)->filter(function ($item) {
             if ($item['pay_id'] != $order['pay_id']) {
                 return false;
@@ -142,6 +142,7 @@ class pay_module extends api_front implements api_interface {
             $item['pay_name'] = strip_tags($item['pay_name']);
             return $item;
         });
+        _dump($payments,1);
         $other = $payments->all();
 
         return array('payment' => $order['payment'], 'others' => $other);
