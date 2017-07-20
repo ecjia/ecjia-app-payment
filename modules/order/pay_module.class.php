@@ -130,12 +130,12 @@ class pay_module extends api_front implements api_interface {
                 if ($item['pay_id'] == $order['pay_id']) {
                     return false;
                 }
-                return $item;
-            })->transform(function($item) {
-//                 unset($item['pay_desc']);
-                array_except($item, 'pay_desc');
-                $item['pay_name'] = strip_tags($item['pay_name']);
-                return $item;
+                
+                unset($item['pay_desc']);
+                $newitem = $item;
+                $newitem['pay_name'] = strip_tags($item['pay_name']);
+                
+                return $newitem;
             })->toArray();
         } else {
             $other = array();
