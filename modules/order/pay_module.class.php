@@ -124,7 +124,7 @@ class pay_module extends api_front implements api_interface {
             }
         }
         $payment_list = RC_Api::api('payment', 'available_payments', array('store_id' => $order['store_id'], 'cod_fee' => $cod_fee));
-        _dump($payment_list,1);
+        _dump($payment_list);
         if (! is_ecjia_error($payment_list)) {
             $other = collect($payment_list)->mapWithKeys(function ($item) use ($order) {
                 if ($item['pay_id'] == $order['pay_id']) {
@@ -133,12 +133,13 @@ class pay_module extends api_front implements api_interface {
                  
                 unset($item['pay_desc']);
                 $item['pay_name'] = strip_tags($item['pay_name']);
+                _dump($item);
                 return $item;
             })->toArray();
         } else {
             $other = array();
         }
-
+        _dump($other,1);
         return array('payment' => $order['payment'], 'others' => $other);
 	}
 }
