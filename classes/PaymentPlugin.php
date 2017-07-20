@@ -205,7 +205,7 @@ class PaymentPlugin extends PluginModel
          
         if (!empty($data)) {
         
-            $pay_list = $data->filter(function ($item) use ($available_plugins) {
+            $pay_list = $data->filter(function ($item) use ($available_plugins, $cod_fee) {
                 if (empty($available_plugins)) {
                     return $item;
                 }
@@ -215,6 +215,7 @@ class PaymentPlugin extends PluginModel
                         $item['pay_fee'] = $cod_fee;
                     }
                     
+                    $item['pay_name'] = $this->channel($item['pay_code'])->getDisplayName();
                     $item['format_pay_fee'] = strpos($item['pay_fee'], '%') !== false ? $item['pay_fee'] : price_format($item['pay_fee'], false);
                     return $item;
                 }
