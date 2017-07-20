@@ -54,16 +54,13 @@ defined('IN_ECJIA') or exit('No permission resources.');
 class payment_available_payments_api extends Component_Event_Api {
 	
     /**
-     * store_id     店铺ID（必填）
-     * cod_fee      货到付款费用
-     * is_online    是否在线支付
+     * store_id     店铺ID      （选填）
+     * cod_fee      货到付款费用  （选填）
+     * is_online    是否在线支付  （选填）
      * @return array
      */
-	public function call(&$options) {	
-		if (! array_get($options, 'store_id')) {
-			return new ecjia_error('invalid_parameter', __('缺少必要参数'));
-		}
-		
+	public function call(&$options) {			
+		$store_id = array_get($options, 'store_id', 0);
 		$cod_fee = array_get($options, 'cod_fee', 0);
 		$is_online = array_get($options, 'is_online', false);
 		
@@ -77,15 +74,24 @@ class payment_available_payments_api extends Component_Event_Api {
 
 		$plugin = new PaymentPlugin();
 		
+		$payment_list = array();
+		
 		// 给货到付款的手续费加<span id>，以便改变配送的时候动态显示
-		$store_info = RC_DB::table('store_franchisee')->where('store_id', $options['store_id'])->first();
-		if ($store_info['manage_mode'] == 'self') {
-		    $payment_list = $plugin->getAvailablePayments($available_plugins, true, $cod_fee, $is_online);
-		} else {
-		    $payment_list = $plugin->getAvailablePayments($available_plugins, false, $cod_fee, $is_online);
+		if ($store_id) {
+		    $store_info = RC_DB::table('store_franchisee')->where('store_id', $options['store_id'])->first();
+		    
+		    if ($store_info['manage_mode'] == 'self') {
+		        $payments = $plugin->getAvailablePayments($available_plugins, true, $cod_fee, $is_online);
+		        $payment_list = $payments->toArray();
+		    }
+		}
+		
+		if (! $payment_list) {
+		    $payments = $plugin->getAvailablePayments($available_plugins, false, $cod_fee, $is_online);
+		    $payment_list = $payments->toArray();
 		}
 
-		return $payment_list->toArray();
+		return $payment_list;
 	}
 	
 }
