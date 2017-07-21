@@ -188,11 +188,11 @@ RESPOND;
 	            $result = $payment_handler->notify();
 	            if (is_ecjia_error($result)) {
 	                RC_Logger::getLogger('pay')->debug('pay_fail: ' . $result->get_error_message());
-	                echo "fail";
+	                echo $result->get_error_data();
 	                die();
 	            } else {
 	                RC_Logger::getLogger('pay')->debug('pay_success');
-	                echo "success";
+	                echo $result;
 	                die();
 	            }
 	        }
