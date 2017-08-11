@@ -54,7 +54,7 @@
 			<tr>
 				<td class="hide-edit-area">{$list.order_sn}
 					<div class="edit-list">
-						<a href='{url path="payment/admin_payment_record/info" args="id={$list.id}"}' class="data-pjax" title="{lang key='orders::order.detail'}">{lang key='orders::order.detail'}</a>
+						<a href='{url path="payment/admin_payment_record/info" args="id={$list.id}"}' class="data-pjax" title="{lang key='orders::order.detail'}">查看</a>
 					</div>
 				</td>
 				<td>{$list.trade_type}</td>
