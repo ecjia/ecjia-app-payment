@@ -191,11 +191,9 @@ class admin_plugin extends ecjia_admin {
 		            $code_list[$value['name']] = $value['value'];
 		        }
 		    }
-// 		    $payment_handle = new payment_factory($pay_code);
-// 		    $pay['pay_config'] = $payment_handle->configure_forms($code_list, true);
+
 		    $payment_handle = with(new Ecjia\App\Payment\PaymentPlugin)->channel($pay_code);
 		    $pay['pay_config'] = $payment_handle->makeFormData($code_list);
-
 		}
 		
 		/* 如果以前没设置支付费用，编辑时补上 */
