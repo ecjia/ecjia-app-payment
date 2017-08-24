@@ -169,7 +169,13 @@ abstract class PaymentAbstract extends AbstractPlugin
         $item = $this->paymentRecord->getPaymentRecord($orderTradeNo);
 
         if ($item) {
-            return array('order_sn' => $item['order_sn'], 'record_id' => $item['id']);
+            $this->setOrderType($item['trade_type']);
+            
+            return array(
+                'order_sn' => $item['order_sn'], 
+                'record_id' => $item['id'], 
+                'order_type' => $item['trade_type']
+            );
         }
         
         return false;
