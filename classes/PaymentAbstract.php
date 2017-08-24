@@ -76,6 +76,26 @@ abstract class PaymentAbstract extends AbstractPlugin
     protected $paymentRecord;
     
     /**
+     * 订单类型，标识订单号来源于哪张表的
+     * PAY_ORDER = buy 消费订单
+     * PAY_SURPLUS = surplus 会员预付费订单
+     * @var string
+     */
+    protected $orderType = PayConstant::PAY_ORDER;
+    
+    public function setOrderType($orderType)
+    {
+        $this->orderType = $orderType;
+        
+        return $this;
+    }
+    
+    public function getOrderType()
+    {
+        return $this->orderType;
+    }
+    
+    /**
      * 设置配置方式
      * @param \Ecjia\App\Payment\PaymentPlugin $payment
      */
@@ -121,7 +141,7 @@ abstract class PaymentAbstract extends AbstractPlugin
         $order_sn = $this->order_info['order_sn'];
         $amount = $this->order_info['order_amount'];
         
-        $id = $this->paymentRecord->addPaymentRecord($order_sn, $amount);
+        $id = $this->paymentRecord->addPaymentRecord($order_sn, $amount, $this->orderType);
         
         return $id;
     }
@@ -176,7 +196,12 @@ abstract class PaymentAbstract extends AbstractPlugin
             return new ecjia_error('parse_order_trade_no_error', __('解析订单号时失败'));
         }
  
-        $result = RC_Api::api('orders', 'buy_order_paid', array('order_sn' => $item['order_sn'], 'money' => $amount));
+        if ($this->orderType == PayConstant::PAY_ORDER) {
+            $result = RC_Api::api('orders', 'buy_order_paid', array('order_sn' => $item['order_sn'], 'money' => $amount));
+        } elseif ($this->orderType == PayConstant::PAY_SURPLUS) {
+            $result = RC_Api::api('finance', 'surplus_order_paid', array('order_sn' => $item['order_sn'], 'money' => $amount));
+        }
+        
         if (! is_ecjia_error($result)) {
             RC_Hook::do_action('order_payed_do_something', $orderTradeNo); 
         }
