@@ -203,6 +203,8 @@ abstract class PaymentAbstract extends AbstractPlugin
         }
         
         if (! is_ecjia_error($result)) {
+            \RC_Logger::getLogger('pay')->info('order_payed_do_something');
+            \RC_Logger::getLogger('pay')->info($result);
             RC_Hook::do_action('order_payed_do_something', $orderTradeNo); 
         }
         
