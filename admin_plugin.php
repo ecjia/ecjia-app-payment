@@ -69,7 +69,6 @@ class admin_plugin extends ecjia_admin {
 		RC_Script::enqueue_script('jquery-chosen');
 		RC_Script::localize_script('payment_admin', 'js_lang', RC_Lang::get('payment::payment.js_lang'));
 		
-		RC_Loader::load_app_class('payment_factory', null, false);
 		ecjia_screen::get_current_screen()->add_nav_here(new admin_nav_here(__('支付方式'), RC_Uri::url('payment/admin_plugin/init')));
 		ecjia_screen::get_current_screen()->set_parentage('payment', 'payment/admin_plugin.php');
 	}
