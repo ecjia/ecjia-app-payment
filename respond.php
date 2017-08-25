@@ -96,7 +96,6 @@ class respond extends ecjia_front {
 				}
 				
 				$order_type = $payment_handler->getOrderType();
-				_dump($order_type,1);
 			}
 
 		}
