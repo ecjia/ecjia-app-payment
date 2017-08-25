@@ -167,7 +167,7 @@ class respond extends ecjia_front {
 	    $url['order'] = RC_Cookie::get('pay_response_order');
 	    $this->assign('url', $url);
 	    
-	    return $this->fetch_string('response.dwt');
+	    return $this->fetch('response.dwt');
 	}
 	
 }
