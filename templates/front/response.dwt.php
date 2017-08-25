@@ -234,7 +234,7 @@ html, body {
             
             <div class="ecjia-margin-t ecjia-margin-b two-btn">
                 {if $url.index}<a class="btn" href="{$url.index}">返回首页</a>{/if}
-                {if $info.order_type != 'user_account'}
+                {if $info.order_type != 'surplus'}
                 {if $url.order}<a class="btn btn-hollow" href="{$url.order}">查看订单</a>{/if}
                 {/if}
             </div>
