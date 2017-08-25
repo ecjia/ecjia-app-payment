@@ -67,6 +67,8 @@ class respond extends ecjia_front {
 		$pay_code = !empty($_GET['code']) ? trim($_GET['code']) : '';
 		unset($_GET['code']);
 		
+		$order_type = '';
+		
 		/* 参数是否为空 */
 		if (empty($pay_code)) {
 			$msg = RC_Lang::get('payment::payment.pay_not_exist');
@@ -74,7 +76,7 @@ class respond extends ecjia_front {
 		    $payment_method = RC_Loader::load_app_class('payment_method', 'payment');
 		    
 		    $payment_list = $payment_method->available_payment_list();
-
+        
 			/* 判断是否启用 */
 			if (count($payment_list) == 0) {
 				$msg = RC_Lang::get('payment::payment.pay_disabled');
@@ -92,6 +94,8 @@ class respond extends ecjia_front {
 				} else {
 				    $msg = RC_Lang::get('payment::payment.pay_fail');
 				}
+				
+				$order_type = $payment_handler->getOrderType();
 			}
 
 		}
@@ -103,6 +107,7 @@ class respond extends ecjia_front {
 		    'pay_name' => $payment_info['pay_name'],
 		    'amount'   => '',
 		    'order_id' => $pay_code == 'pay_alipay' ? $_GET['out_trade_no'] : '',
+		    'order_type' => $order_type,
 		);
 		
 		$function = RC_Hook::apply_filters( 'payment_respond_template', array($this, '_default_response_template') );
