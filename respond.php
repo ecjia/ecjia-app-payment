@@ -109,7 +109,7 @@ class respond extends ecjia_front {
 		
 		$respondContent = '';
 		
-        $respondContent = call_user_func($function, $respondContent, $msg);
+        $respondContent = call_user_func($function, $respondContent, $msg, $info);
 
 		return $this->displayContent($respondContent);
 	}
@@ -159,7 +159,7 @@ class respond extends ecjia_front {
 	    }
 	}
 	
-	public function _default_response_template($msg, $info) {
+	public function _default_response_template($respondContent, $msg, $info) {
 	    $this->assign('msg', $msg);
 	    $this->assign('info', $info);
 	    
