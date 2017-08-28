@@ -26,13 +26,13 @@
                         <tbody class="first-td-no-leftbd">
                         <tr>
                             <td><div align="right"><strong>{lang key='payment::payment.order_sn'}</strong></div></td>
-                            <td><a target="__blank" href='{url path="/orders/admin/info" args="order_id={$order.order_id}"}'>{$modules.order_sn}</a></td>
+                            <td>{if $modules.trade_type eq 'buy'}<a target="__blank" href='{url path="/orders/admin/info" args="order_id={$order.order_id}"}'>{$modules.order_sn}</a>{else}{$modules.order_sn}{/if}</td>
                             <td><div align="right"><strong>{lang key='payment::payment.pay_status'}</strong></div></td>
                             <td>{$modules.pay_status}</td>
                         </tr>
                         <tr>
                             <td><div align="right"><strong>{lang key='payment::payment.trade_type'}</strong></div></td>
-                            <td>{$modules.trade_type}</td>
+                            <td>{$modules.label_trade_type}</td>
                             <td><div align="right"><strong>{lang key='payment::payment.trade_no'}</strong></div></td>
                             <td>{$modules.trade_no}</td>
                         </tr>

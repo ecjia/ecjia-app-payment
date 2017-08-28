@@ -164,6 +164,8 @@ function get_payment_record_list($args = array()) {
             $db_payment_record[$key]['trade_type'] = RC_Lang::get('payment::payment.deposit');
         } elseif ($db_payment_record[$key]['trade_type'] == 'withdraw') {
             $db_payment_record[$key]['trade_type'] = RC_Lang::get('payment::payment.withdraw');
+        }elseif ($db_payment_record[$key]['trade_type'] == 'surplus') {
+            $db_payment_record[$key]['trade_type'] = RC_Lang::get('payment::payment.surplus');
         }
         $db_payment_record[$key]['create_time'] = RC_Time::local_date(ecjia::config('time_format'), $val['create_time']);
         $db_payment_record[$key]['update_time'] = RC_Time::local_date(ecjia::config('time_format'), $val['update_time']);

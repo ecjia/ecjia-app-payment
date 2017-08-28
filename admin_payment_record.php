@@ -115,14 +115,16 @@ class admin_payment_record extends ecjia_admin {
 		$db_payment_record = RC_DB::table('payment_record')->where('order_sn', $order_sn)->first();
 
 		if ($db_payment_record['trade_type'] == 'buy') {
-			$db_payment_record['trade_type'] = RC_Lang::get('payment::payment.buy');
+			$db_payment_record['label_trade_type'] = RC_Lang::get('payment::payment.buy');
 			$this->assign('check_modules', $order);
 		} elseif ($db_payment_record['trade_type'] == 'refund') {
-			$db_payment_record['trade_type'] = RC_Lang::get('payment::payment.refund');
+			$db_payment_record['label_trade_type'] = RC_Lang::get('payment::payment.refund');
 		} elseif ($db_payment_record['trade_type'] == 'deposit') {
-			$db_payment_record['trade_type'] = RC_Lang::get('payment::payment.deposit');
+			$db_payment_record['label_trade_type'] = RC_Lang::get('payment::payment.deposit');
 		} elseif ($db_payment_record['trade_type'] == 'withdraw') {
-			$db_payment_record['trade_type'] = RC_Lang::get('payment::payment.withdraw');
+			$db_payment_record['label_trade_type'] = RC_Lang::get('payment::payment.withdraw');
+		}elseif ($db_payment_record['trade_type'] == 'surplus') {
+			$db_payment_record['label_trade_type'] = RC_Lang::get('payment::payment.surplus');
 		}
 
 		if ($db_payment_record['pay_status'] == 0) {
