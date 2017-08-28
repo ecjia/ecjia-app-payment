@@ -14,10 +14,7 @@ defined('IN_ECJIA') or header("HTTP/1.0 404 Not Found");exit('404 Not Found');
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="format-detection" content="telephone=no" />
 <title>{$page_title}</title>
-<link href="{if ecjia::config('wap_logo')}{RC_Upload::upload_url(ecjia::config('wap_logo'))}{else}favicon.ico{/if}" rel="shortcut icon bookmark">
 <!-- {block name="ready_meta"} --><!-- {/block} -->
-<link rel="stylesheet" href="css/response.css">
-
 <style type="text/css">
 {literal}
 /**
@@ -235,7 +232,7 @@ html, body {
             <div class="ecjia-margin-t ecjia-margin-b two-btn">
                 {if $url.index}<a class="btn" href="{$url.index}">返回首页</a>{/if}
                 {if $info.order_type != 'surplus'}
-                {if $url.order}<a class="btn btn-hollow" href="{$url.order}">查看订单</a>{/if}
+                    {if $url.order}<a class="btn btn-hollow" href="{$url.order}">查看订单</a>{/if}
                 {/if}
             </div>
         </div>
