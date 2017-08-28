@@ -26,7 +26,7 @@
                         <tbody class="first-td-no-leftbd">
                         <tr>
                             <td><div align="right"><strong>{lang key='payment::payment.order_sn'}</strong></div></td>
-                            <td>{if $modules.trade_type eq 'buy'}<a target="__blank" href='{url path="/orders/admin/info" args="order_id={$order.order_id}"}'>{$modules.order_sn}</a>{else}{$modules.order_sn}{/if}</td>
+                            <td>{if $modules.trade_type eq 'buy'}<a target="__blank" href='{url path="/orders/admin/info" args="order_id={$order.order_id}"}'>{$modules.order_sn}</a>{else}<a target="_blank" href='{url path="/finance/admin_account/info" args="order_sn={$user_account.order_sn}&id={$user_account.id}{if $type}&type={$type}{/if}"}'>{$modules.order_sn}</a>{/if}</td>
                             <td><div align="right"><strong>{lang key='payment::payment.pay_status'}</strong></div></td>
                             <td>{$modules.pay_status}</td>
                         </tr>
