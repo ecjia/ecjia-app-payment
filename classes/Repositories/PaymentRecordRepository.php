@@ -65,7 +65,7 @@ class PaymentRecordRepository extends AbstractRepository
      * @param number $isPaid    是否已支付
      * @return int
      */
-    public function addPaymentRecord($orderSn, $amount, $type = PayConstant::PAY_ORDER, callable $callback = null)
+    public function addPaymentRecord($orderSn, $amount, $type = PayConstant::PAY_ORDER, $callback = null)
     {
         $where = array(
         	'order_sn' => $orderSn,
