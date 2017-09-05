@@ -141,7 +141,7 @@ abstract class PaymentAbstract extends AbstractPlugin
         $order_sn = $this->order_info['order_sn'];
         $amount = $this->order_info['order_amount'];
         
-        $id = $this->paymentRecord->addPaymentRecord($order_sn, $amount, $this->orderType);
+        $id = $this->paymentRecord->addPaymentRecord($order_sn, $amount, $this->orderType, array($this, 'customizeOrderTradeNoRule'));
         
         return $id;
     }
@@ -159,6 +159,16 @@ abstract class PaymentAbstract extends AbstractPlugin
         $this->paymentRecord->updatePayment($model->order_trade_no, $this->getCode(), $this->getName());
         
         return $model->order_trade_no;
+    }
+    
+    /**
+     * 自定义生成外部订单号规则
+     * @param \Ecjia\App\Payment\Models\PaymentRecordModel $model
+     * @return string
+     */
+    protected function customizeOrderTradeNoRule($model)
+    {
+        return $model->order_sn . $model->id;
     }
     
     /**

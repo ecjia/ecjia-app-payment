@@ -65,7 +65,7 @@ class PaymentRecordRepository extends AbstractRepository
      * @param number $isPaid    是否已支付
      * @return int
      */
-    public function addPaymentRecord($orderSn, $amount, $type = PayConstant::PAY_ORDER)
+    public function addPaymentRecord($orderSn, $amount, $type = PayConstant::PAY_ORDER, callable $callback = null)
     {
         $where = array(
         	'order_sn' => $orderSn,
@@ -79,8 +79,10 @@ class PaymentRecordRepository extends AbstractRepository
             $model = $result->shift();
             $model->total_fee = $amount;
 
-            if (! $model->order_trade_no) {
-                $model->order_trade_no = $model->order_sn . $model->id;
+            if (! $model->order_trade_no && is_callable($callback)) {
+                $model->order_trade_no = $callback($model);
+            } else {
+                $model->order_trade_no = $this->customizeOrderTradeNoRule($model);
             }
 
             $model->save();
@@ -96,11 +98,25 @@ class PaymentRecordRepository extends AbstractRepository
             );
             $model = $this->create($attributes);
             
-            $model->order_trade_no = $model->order_sn . $model->id;
+            if (is_callable($callback)) {
+                $model->order_trade_no = $callback($model);
+            } else {
+                $model->order_trade_no = $this->customizeOrderTradeNoRule($model);
+            }
             $model->save();
             
             return $model->id;
         }
+    }
+    
+    /**
+     * 自定义生成外部订单号规则
+     * @param \Ecjia\App\Payment\Models\PaymentRecordModel $model
+     * @return string
+     */
+    protected function customizeOrderTradeNoRule($model)
+    {
+        return $model->order_sn . $model->id;
     }
     
     /**
