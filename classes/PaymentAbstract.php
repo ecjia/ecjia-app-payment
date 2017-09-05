@@ -162,6 +162,19 @@ abstract class PaymentAbstract extends AbstractPlugin
     }
     
     /**
+     * 更新外部支付使用的订单交易号
+     */
+    public function updateOrderTradeNo($recordId = null)
+    {
+        if (is_null($recordId)) {
+            $recordId = $this->getPaymentRecordId();
+        }
+        $model = $this->paymentRecord->find($recordId);
+        $model->order_trade_no = $this->customizeOrderTradeNoRule($model);
+        return $model->save();
+    }
+    
+    /**
      * 自定义生成外部订单号规则
      * @param \Ecjia\App\Payment\Models\PaymentRecordModel $model
      * @return string
