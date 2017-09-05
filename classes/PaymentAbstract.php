@@ -166,7 +166,7 @@ abstract class PaymentAbstract extends AbstractPlugin
      * @param \Ecjia\App\Payment\Models\PaymentRecordModel $model
      * @return string
      */
-    protected function customizeOrderTradeNoRule($model)
+    public function customizeOrderTradeNoRule($model)
     {
         return $model->order_sn . $model->id;
     }
