@@ -79,10 +79,12 @@ class PaymentRecordRepository extends AbstractRepository
             $model = $result->shift();
             $model->total_fee = $amount;
 
-            if (! $model->order_trade_no && is_callable($callback)) {
-                $model->order_trade_no = $callback($model);
-            } else {
-                $model->order_trade_no = $this->customizeOrderTradeNoRule($model);
+            if (! $model->order_trade_no) {
+                if (is_callable($callback)) {
+                    $model->order_trade_no = $callback($model);
+                } else {
+                    $model->order_trade_no = $this->customizeOrderTradeNoRule($model);
+                }
             }
 
             $model->save();
