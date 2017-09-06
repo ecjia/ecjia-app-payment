@@ -65,7 +65,7 @@ class PaymentRecordRepository extends AbstractRepository
      * @param number $isPaid    是否已支付
      * @return int
      */
-    public function addPaymentRecord($orderSn, $amount, $type = PayConstant::PAY_ORDER, $callback = null)
+    public function addOrUpdatePaymentRecord($orderSn, $amount, $type = PayConstant::PAY_ORDER, $callback = null)
     {
         $where = array(
         	'order_sn' => $orderSn,
@@ -92,23 +92,35 @@ class PaymentRecordRepository extends AbstractRepository
             return $model->id;
         }
         else {
-            $attributes = array(
-                'order_sn' => $orderSn,
-                'total_fee' => $amount,
-                'trade_type' => $type,
-                'create_time' => RC_Time::gmtime(),
-            );
-            $model = $this->create($attributes);
-            
-            if (is_callable($callback)) {
-                $model->order_trade_no = $callback($model);
-            } else {
-                $model->order_trade_no = $this->customizeOrderTradeNoRule($model);
-            }
-            $model->save();
-            
-            return $model->id;
+            return $this->addPaymentRecord($orderSn, $amount, $type, $callback);
         }
+    }
+    
+    /**
+     * 添加订单支付日志记录
+     * @param number $orderSn   订单编号
+     * @param float $amount     订单金额
+     * @param number $isPaid    是否已支付
+     * @return int
+     */
+    public function addPaymentRecord($orderSn, $amount, $type = PayConstant::PAY_ORDER, $callback = null)
+    {
+        $attributes = array(
+            'order_sn' => $orderSn,
+            'total_fee' => $amount,
+            'trade_type' => $type,
+            'create_time' => RC_Time::gmtime(),
+        );
+        $model = $this->create($attributes);
+
+        if (is_callable($callback)) {
+            $model->order_trade_no = $callback($model);
+        } else {
+            $model->order_trade_no = $this->customizeOrderTradeNoRule($model);
+        }
+        $model->save();
+
+        return $model->id;
     }
     
     /**

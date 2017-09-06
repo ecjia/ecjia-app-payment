@@ -141,8 +141,18 @@ abstract class PaymentAbstract extends AbstractPlugin
         $order_sn = $this->order_info['order_sn'];
         $amount = $this->order_info['order_amount'];
         
-        $id = $this->paymentRecord->addPaymentRecord($order_sn, $amount, $this->orderType, array($this, 'customizeOrderTradeNoRule'));
+        $id = $this->paymentRecord->addOrUpdatePaymentRecord($order_sn, $amount, $this->orderType, array($this, 'customizeOrderTradeNoRule'));
         
+        return $id;
+    }
+    
+    public function getPaymentNewRecordId()
+    {
+        $order_sn = $this->order_info['order_sn'];
+        $amount = $this->order_info['order_amount'];
+    
+        $id = $this->paymentRecord->addPaymentRecord($order_sn, $amount, $this->orderType, array($this, 'customizeOrderTradeNoRule'));
+    
         return $id;
     }
     
