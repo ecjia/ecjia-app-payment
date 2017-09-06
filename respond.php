@@ -53,7 +53,6 @@ class respond extends ecjia_front {
 
 	public function __construct() {
 		parent::__construct();
-		RC_Loader::load_app_func('admin_order', 'orders');
 	}
 	
 	public function init() {
@@ -81,18 +80,27 @@ class respond extends ecjia_front {
 			if (count($payment_list) == 0) {
 				$msg = RC_Lang::get('payment::payment.pay_disabled');
 			} else {
-// 			    $payment_handler = $payment_method->get_payment_instance($pay_code);
 			    $payment_handler = with(new Ecjia\App\Payment\PaymentPlugin)->channel($pay_code);
 			    $payment_handler->setPaymentRecord(new Ecjia\App\Payment\Repositories\PaymentRecordRepository());
+			    
 				/* 检查插件文件是否存在，如果存在则验证支付是否成功，否则则返回失败信息 */
 				if (is_ecjia_error($payment_handler)) {
+				    
 				    $msg = RC_Lang::get('payment::payment.pay_not_exist');
-				} 
-				/* 根据支付方式代码创建支付类的对象并调用其响应操作方法 */
-				elseif ($payment_handler->response()) {
-				    $msg = RC_Lang::get('payment::payment.pay_success');
+				    RC_Logger::getLogger('pay')->debug($payment_handler->get_error_message());
+				    
 				} else {
-				    $msg = RC_Lang::get('payment::payment.pay_fail');
+				    
+				    /* 根据支付方式代码创建支付类的对象并调用其响应操作方法 */
+				    $result = $payment_handler->response();
+				    if (is_ecjia_error($result)) {
+				        RC_Logger::getLogger('pay')->debug('pay_fail: ' . $result->get_error_message());
+				        $msg = $result->get_error_data();
+				    } else {
+				        RC_Logger::getLogger('pay')->debug('pay_success');
+				        $msg = RC_Lang::get('payment::payment.pay_success');
+				    }
+				    
 				}
 				
 				$order_type = $payment_handler->getOrderType();
@@ -100,11 +108,8 @@ class respond extends ecjia_front {
 
 		}
 		
-		$touch_url = ecjia::config('mobile_touch_url');
-		
-		$payment_info = $payment_method->payment_info_by_code($pay_code);
 		$info = array(
-		    'pay_name' => $payment_info['pay_name'],
+		    'pay_name' => $payment_handler->getName(),
 		    'amount'   => '',
 		    'order_id' => $pay_code == 'pay_alipay' ? $_GET['out_trade_no'] : '',
 		    'order_type' => $order_type,
@@ -141,7 +146,6 @@ class respond extends ecjia_front {
 	            RC_Logger::getLogger('pay')->debug('payment_disabled');
 	            die();
 	        } else {
-// 	            $payment_handler = $payment_method->get_payment_instance($pay_code);
 	            $payment_handler = with(new Ecjia\App\Payment\PaymentPlugin)->channel($pay_code);
 	            $payment_handler->setPaymentRecord(new Ecjia\App\Payment\Repositories\PaymentRecordRepository());
 	            /* 检查插件文件是否存在，如果存在则验证支付是否成功，否则则返回失败信息 */
