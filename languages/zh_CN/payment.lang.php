@@ -160,6 +160,7 @@ return array(
 	
 	'payment_list_help'		=> '欢迎访问ECJia智能后台支付方式页面，系统中所有的支付方式都会显示在此列表中。',
 	'about_payment_list'	=> '关于支付方式帮助文档',
+	'change_status_ok'		=> '修复订单状态成功！'
 
 );
 

@@ -53,6 +53,7 @@
 			<!-- {foreach from=$modules.item item=list} -->
 			<tr>
 				<td class="hide-edit-area">{$list.order_sn}
+					<br>{$list.order_trade_no}
 					<div class="edit-list">
 						<a href='{url path="payment/admin_payment_record/info" args="id={$list.id}"}' class="data-pjax" title="{lang key='orders::order.detail'}">查看</a>
 					</div>
