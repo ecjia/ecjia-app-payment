@@ -58,7 +58,7 @@
 					</div>
 				</td>
 				<td>{$list.trade_type}</td>
-				<td>{$list.trade_no}<br>{$list.order_trade_no}</td>
+				<td>{$list.order_trade_no}<br>{$list.trade_no}</td>
 				<td>{$list.pay_name}</td>
 				<td>{$list.total_fee}</td>
 				<td>{$list.create_time}<br>{$list.pay_time}</td>
