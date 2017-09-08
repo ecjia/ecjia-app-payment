@@ -120,14 +120,15 @@ function get_payment_record_list($args = array()) {
     $db_payment_record = RC_DB::table('payment_record');
     $filter = array();
     $filter['order_sn']		= empty($args['order_sn'])		? ''		: trim($args['order_sn']);
-    $filter['trade_no']		= empty($args['trade_no'])		? 0			: trim($args['trade_no']);
+    $filter['keywords']		= empty($args['keywords'])		? 0			: trim($args['keywords']);
     $filter['pay_status']	= $args['pay_status'];
     
     if ($filter['order_sn']) {
         $db_payment_record->where('order_sn', 'LIKE', '%' . mysql_like_quote($filter['order_sn']) . '%');
     }
-    if ($filter['trade_no']) {
-        $db_payment_record->where('trade_no', 'LIKE', '%' . mysql_like_quote($filter['trade_no']) . '%');
+    if ($filter['keywords']) {
+        //$db_payment_record->where('trade_no', 'LIKE', '%' . mysql_like_quote($filter['trade_no']) . '%');
+    	$db_payment_record ->whereRaw('(trade_no like  "%' . mysql_like_quote($filter['keywords']) . '%" or order_trade_no like "%'.mysql_like_quote($filter['keywords']).'%" )');
     }
 
     

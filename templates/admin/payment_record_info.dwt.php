@@ -61,7 +61,7 @@
                             <td>{$modules.pay_time}</td>
                         </tr>
                          <tr>
-                            <td><div align="right"><strong>订单交易流水号：</strong></div></td>
+                            <td><div align="right"><strong>支付订单号：</strong></div></td>
                             <td colspan="3">{$modules.order_trade_no}</td>
                         </tr>
                         </tbody>

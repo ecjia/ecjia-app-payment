@@ -82,7 +82,7 @@ class admin_payment_record extends ecjia_admin {
 		
 		$filter = array();
 		$filter['order_sn']		= empty($_GET['order_sn'])		? ''		: trim($_GET['order_sn']);
-		$filter['trade_no']		= empty($_GET['trade_no'])		? 0			: trim($_GET['trade_no']);
+		$filter['keywords']		= empty($_GET['keywords'])		? 0			: trim($_GET['keywords']);
 		$filter['pay_status']	= empty($_GET['pay_status'])	? ''		: $_GET['pay_status'];
 		
 		RC_Loader::load_app_func('global');
