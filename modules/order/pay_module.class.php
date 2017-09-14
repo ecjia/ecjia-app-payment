@@ -55,8 +55,17 @@ class pay_module extends api_front implements api_interface {
     public function handleRequest(\Royalcms\Component\HttpKernel\Request $request) {	
     	
     	$user_id = $_SESSION['user_id'];
-    	if ($user_id < 1 ) {
-    	    return new ecjia_error(100, 'Invalid session');
+    	
+    	$device		      = $this->device;
+    	if (!empty($device) && is_array($device) && $device['code'] == '8001') {
+    		//收银台支付登录判断
+    		if ($_SESSION['staff_id'] <= 0 && empty($_SESSION['user_id'])) {
+    			return new ecjia_error(100, 'Invalid session');
+    		}
+    	} else {
+	    	if ($user_id < 1 ) {
+	    	    return new ecjia_error(100, 'Invalid session');
+	    	}
     	}
     	
 		$order_id	= $this->requestData('order_id', 0);
