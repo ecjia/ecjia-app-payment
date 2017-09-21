@@ -91,7 +91,7 @@ class pay_module extends api_front implements api_interface {
 		}
 		
 		//支付方式信息
-		$handler = with(new Ecjia\App\Payment\PaymentPlugin)->channel(intval($order['pay_id']));
+		$handler = with(new Ecjia\App\Payment\PaymentPlugin)->channel(trim($order['pay_code']));
 		if (is_ecjia_error($handler)) {
 		    return $handler;
 		}
