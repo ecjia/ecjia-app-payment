@@ -57,6 +57,8 @@ class pay_module extends api_front implements api_interface {
     	$user_id = $_SESSION['user_id'];
     	
     	$device		      = $this->device;
+    	RC_Logger::getLogger('info')->info('$device');
+    	RC_Logger::getLogger('info')->info($device);
     	if (!empty($device) && is_array($device) && $device['code'] == '8001') {
     		//收银台支付登录判断
     		if ($_SESSION['staff_id'] <= 0 && empty($_SESSION['user_id'])) {
