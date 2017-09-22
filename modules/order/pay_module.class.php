@@ -91,7 +91,10 @@ class pay_module extends api_front implements api_interface {
 		}
 		
 		//支付方式信息
+		RC_Logger::getLogger('info')->info('order-pay');
+		RC_Logger::getLogger('info')->info($order);
 		$handler = with(new Ecjia\App\Payment\PaymentPlugin)->channel(intval($order['pay_id']));
+		RC_Logger::getLogger('info')->info($handler);
 		if (is_ecjia_error($handler)) {
 		    return $handler;
 		}
