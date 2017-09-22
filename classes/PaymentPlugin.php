@@ -254,8 +254,6 @@ class PaymentPlugin extends PluginModel
      */
     public function channel($code = null)
     {
-        RC_Logger::getLogger('info')->info('paymentPlugin');
-        RC_Logger::getLogger('info')->info($code);
         if (is_null($code)) {
             return $this->defaultChannel();
         }
@@ -266,7 +264,6 @@ class PaymentPlugin extends PluginModel
             $data = $this->getPluginDataByCode($code);
         }
         
-        RC_Logger::getLogger('info')->info(array('data', $data));
         if (empty($data)) {
             return new ecjia_error('payment_not_found', $code . ' payment not found!');
         }
