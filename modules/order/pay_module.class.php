@@ -70,6 +70,7 @@ class pay_module extends api_front implements api_interface {
     	
 		$order_id	= $this->requestData('order_id', 0);
 		$is_mobile	= $this->requestData('is_mobile', true);
+		$wxpay_open_id = $this->requestData('wxpay_open_id', 0);
 		
 		if (!$order_id) {
 			return new ecjia_error('invalid_parameter', RC_Lang::get('orders::order.invalid_parameter'));
@@ -88,6 +89,11 @@ class pay_module extends api_front implements api_interface {
 		//判断是否是管理员登录
 		if ($_SESSION['admin_id'] > 0) {
 			$_SESSION['user_id'] = $order['user_id'];
+		}
+		
+		//添加微信支付需要的OPEN_ID
+		if ($wxpay_open_id) {
+		  $order['open_id']	     = $wxpay_open_id;
 		}
 		
 		//支付方式信息
