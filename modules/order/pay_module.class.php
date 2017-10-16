@@ -93,7 +93,7 @@ class pay_module extends api_front implements api_interface {
 		
 		//添加微信支付需要的OPEN_ID
 		if ($wxpay_open_id) {
-		  $order['open_id']	     = $wxpay_open_id;
+		    $order['open_id'] = $wxpay_open_id;
 		}
 		
 		//支付方式信息
