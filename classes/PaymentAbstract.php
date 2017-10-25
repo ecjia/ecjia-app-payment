@@ -233,8 +233,11 @@ abstract class PaymentAbstract extends AbstractPlugin
         if (!$item) {
             return new ecjia_error('parse_order_trade_no_error', __('解析订单号时失败'));
         }
- 
+        RC_Logger::getLogger('error')->info('test微信支付7');
+        RC_Logger::getLogger('error')->info(PayConstant::PAY_ORDER);
+        
         if ($this->orderType == PayConstant::PAY_ORDER) {
+        	RC_Logger::getLogger('error')->info('test微信支付8');
             $result = RC_Api::api('orders', 'buy_order_paid', array('order_sn' => $item['order_sn'], 'money' => $amount));
         } elseif ($this->orderType == PayConstant::PAY_SURPLUS) {
             $result = RC_Api::api('finance', 'surplus_order_paid', array('order_sn' => $item['order_sn'], 'money' => $amount));
