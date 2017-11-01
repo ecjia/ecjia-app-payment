@@ -82,13 +82,13 @@ class pay_module extends api_front implements api_interface {
 			return $order;
 		}
 		
-		if ($_SESSION['user_id'] != $order['user_id']) {
-			return new ecjia_error('error_order_detail', RC_Lang::get('orders::order.error_order_detail'));
-		}
-		
 		//判断是否是管理员登录
 		if ($_SESSION['store_id'] > 0) {
 			$_SESSION['user_id'] = $order['user_id'];
+		}
+		
+		if ($_SESSION['user_id'] != $order['user_id']) {
+			return new ecjia_error('error_order_detail', RC_Lang::get('orders::order.error_order_detail'));
 		}
 		
 		//添加微信支付需要的OPEN_ID
