@@ -82,14 +82,12 @@ class pay_module extends api_front implements api_interface {
 			return $order;
 		}
 		
-		if ($device['code'] != '8001') {
-			if ($_SESSION['user_id'] != $order['user_id']) {
-				return new ecjia_error('error_order_detail', RC_Lang::get('orders::order.error_order_detail'));
-			}
+		if ($_SESSION['user_id'] != $order['user_id']) {
+			return new ecjia_error('error_order_detail', RC_Lang::get('orders::order.error_order_detail'));
 		}
 		
 		//判断是否是管理员登录
-		if ($_SESSION['admin_id'] > 0) {
+		if ($_SESSION['store_id'] > 0) {
 			$_SESSION['user_id'] = $order['user_id'];
 		}
 		
@@ -124,6 +122,9 @@ class pay_module extends api_front implements api_interface {
         if (is_ecjia_error($result)) {
             return $result;
         } else {
+        	if ($device['code'] == '8001') {
+        		unset($_SESSION['user_id']);
+        	}
             $order['payment'] = $result;
         }
 
