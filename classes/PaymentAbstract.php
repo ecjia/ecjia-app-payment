@@ -221,8 +221,8 @@ abstract class PaymentAbstract extends AbstractPlugin
      */
     public function updateOrderPaid($orderTradeNo, $amount, $tradeNo = null)
     {
-        RC_Logger::getLogger('pay')->info('paymentAbs');
-        RC_Logger::getLogger('pay')->info($this->orderType);
+        \RC_Logger::getLogger('pay')->info('paymentAbs');
+        \RC_Logger::getLogger('pay')->info($this->orderType);
         
         /* 检查支付的金额是否相符 */
         if (!$this->paymentRecord->checkMoney($orderTradeNo, $amount)) {
@@ -244,7 +244,7 @@ abstract class PaymentAbstract extends AbstractPlugin
             $result = RC_Api::api('quickpay', 'quickpay_order_paid', array('order_sn' => $item['order_sn'], 'money' => $amount));
         }
         
-        RC_Logger::getLogger('pay')->info($result);
+        \RC_Logger::getLogger('pay')->info($result);
         if (! is_ecjia_error($result)) {
             RC_Hook::do_action('order_payed_do_something', $item['order_sn']); 
         }
