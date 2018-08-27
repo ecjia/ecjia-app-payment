@@ -221,6 +221,9 @@ abstract class PaymentAbstract extends AbstractPlugin
      */
     public function updateOrderPaid($orderTradeNo, $amount, $tradeNo = null)
     {
+        RC_Logger::getLogger('pay')->info('paymentAbs');
+        RC_Logger::getLogger('pay')->info($this->orderType);
+        
         /* 检查支付的金额是否相符 */
         if (!$this->paymentRecord->checkMoney($orderTradeNo, $amount)) {
             return new ecjia_error('check_money_fail', __('支付的金额有误'));
@@ -232,8 +235,6 @@ abstract class PaymentAbstract extends AbstractPlugin
         if (!$item) {
             return new ecjia_error('parse_order_trade_no_error', __('解析订单号时失败'));
         }
-        RC_Logger::getLogger('pay')->info('paymentAbs');
-        RC_Logger::getLogger('pay')->info($this->orderType);
         
         if ($this->orderType == PayConstant::PAY_ORDER) {
             $result = RC_Api::api('orders', 'buy_order_paid', array('order_sn' => $item['order_sn'], 'money' => $amount));
