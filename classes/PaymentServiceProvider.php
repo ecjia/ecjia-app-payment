@@ -57,7 +57,7 @@ class PaymentServiceProvider extends AppParentServiceProvider
      */
     public function boot() 
     {
-        $this->package('ecjia/app-payment');
+        $this->package('ecjia/app-payment', null, dirname(__DIR__));
     }
 
 	/**
