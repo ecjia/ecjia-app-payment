@@ -8,12 +8,14 @@
 
 defined('IN_ECJIA') or exit('No permission resources.');
 
+use Royalcms\Component\Shouqianba\Gateways\Shouqianba\Orders\PayOrder;
+
 /**
  * 订单支付
  * @author royalwang
  * 16-12-09 增加支付状态
  */
-class admin_payment_scancode_module extends api_front implements api_interface
+class admin_payment_scancode_module extends api_admin implements api_interface
 {
 
     /**
@@ -49,12 +51,28 @@ class admin_payment_scancode_module extends api_front implements api_interface
 
         $plugin_config = $plugin_handler->getConfig();
 
+        if ($record_model->trade_type == 'buy') {
+            /* 查询订单信息 */
+            $orderinfo = RC_Api::api('orders', 'order_info', array('order_sn' => $record_model->order_sn));
+            if (empty($orderinfo)) {
+                return new ecjia_error('order_dose_not_exist', $record_model->order_sn . '未找到该订单信息');
+            }
 
-        $config = config('shouqianba::pay.shouqianba');
-        $config['terminal_sn'] = $plugin_config['shouqianba_terminal_sn'];
-        $config['terminal_key'] = $plugin_config['shouqianba_terminal_key'];
-        $shouqianba = RC_Pay::shouqianba($config);
-        $result = $shouqianba->pay(null, []);
+            $order = new PayOrder();
+            $order->setClientSn($record_model->order_trade_no);
+            $order->setTotalAmount($record_model->total_fee * 100);
+            $order->setDynamicId($dynamic_code);
+            $order->setSubject($_SESSION['store_name'] . '商户的订单：' . $orderinfo['order_sn']);
+            $order->setOperator($_SESSION['staff_name']);
+
+            $config = config('shouqianba::pay.shouqianba');
+            $config['terminal_sn'] = $plugin_config['shouqianba_terminal_sn'];
+            $config['terminal_key'] = $plugin_config['shouqianba_terminal_key'];
+            $shouqianba = RC_Pay::shouqianba($config);
+            $result = $shouqianba->pay(null, $order);
+
+        }
+
 
         dd($result);
 
