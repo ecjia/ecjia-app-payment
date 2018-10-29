@@ -74,8 +74,7 @@ class admin_payment_scancode_module extends api_admin implements api_interface
         }
 
 
-        dd($result);
-
+//        dd($result);
 
         return $result;
     }
