@@ -24,7 +24,7 @@ class admin_payment_scancode_module extends api_admin implements api_interface
      *
      * @param \Royalcms\Component\Http\Request $request
      */
-    public function handleRequest(\Royalcms\Component\Http\Request $request)
+    public function handleRequest(\Royalcms\Component\HttpKernel\Request $request)
     {
         if ($_SESSION['admin_id'] <= 0 && $_SESSION['staff_id'] <= 0) {
             return new ecjia_error(100, 'Invalid session');
