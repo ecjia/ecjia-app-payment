@@ -48,6 +48,7 @@ class admin_payment_scancode_module extends api_admin implements api_interface
 
         $payment_plugin	= new Ecjia\App\Payment\PaymentPlugin();
         $plugin_handler = $payment_plugin->channel($record_model->pay_code);
+        $plugin_handler->setPaymentRecord(new Ecjia\App\Payment\Repositories\PaymentRecordRepository());
 
         $plugin_config = $plugin_handler->getConfig();
 
