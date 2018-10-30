@@ -72,14 +72,16 @@ class admin_payment_scancode_module extends api_admin implements api_interface
                 $shouqianba = RC_Pay::shouqianba($config);
                 $result = $shouqianba->scan($order);
 
-                //支付成功逻辑处理
-                if ($result['data']['status'] = 'SUCCESS' && $result['data']['order_status'] == 'PAID') {
-                    $this->paySuccess($plugin_handler, $result['data']);
+                if ($result['result_code'] == 'PAY_SUCCESS') {
+                    //支付成功逻辑处理
+                    if ($result['data']['status'] = 'SUCCESS' && $result['data']['order_status'] == 'PAID') {
+                        $this->paySuccess($plugin_handler, $result);
 
-                    return $result;
+                        return $result;
+                    }
                 } else {
                     dd($result);
-                    return $this->payFail($plugin_handler, $result['data'], array_get($result, 'error_message'));
+                    return $this->payFail($plugin_handler, $result);
                 }
 
             } catch (\Royalcms\Component\Pay\Exceptions\GatewayException $e) {
@@ -98,19 +100,21 @@ class admin_payment_scancode_module extends api_admin implements api_interface
      */
     protected function paySuccess($handler, $result)
     {
-        $handler->updateOrderPaid($result['client_sn'], $result['total_amount']/100, $result['sn']);
+        $data = array_get($result, 'data');
+
+        $handler->updateOrderPaid($data['client_sn'], $data['total_amount']/100, $data['sn']);
 
         $paymentRecord = $handler->getPaymentRecord();
-        $paymentRecord->updateChannelPayment($result['client_sn'], [
-            'payer_uid'             => $result['payer_uid'],
-            'payer_login'           => $result['payer_login'],
-            'subject'               => $result['subject'],
-            'operator'              => $result['operator'],
-            'channel_payway'        => $result['payway'],
-            'channel_payway_name'   => $result['payway_name'],
-            'channel_sub_payway'    => $result['sub_payway'],
-            'channel_trade_no'      => $result['trade_no'],
-            'channel_payment_list'  => $result['payment_list'],
+        $paymentRecord->updateChannelPayment($data['client_sn'], [
+            'payer_uid'             => $data['payer_uid'],
+            'payer_login'           => $data['payer_login'],
+            'subject'               => $data['subject'],
+            'operator'              => $data['operator'],
+            'channel_payway'        => $data['payway'],
+            'channel_payway_name'   => $data['payway_name'],
+            'channel_sub_payway'    => $data['sub_payway'],
+            'channel_trade_no'      => $data['trade_no'],
+            'channel_payment_list'  => $data['payment_list'],
         ]);
     }
 
@@ -120,14 +124,17 @@ class admin_payment_scancode_module extends api_admin implements api_interface
      * @param $handler
      * @param $result
      */
-    protected function payFail($handler, $result, $error = null)
+    protected function payFail($handler, $result)
     {
         $paymentRecord = $handler->getPaymentRecord();
 
-        if ($result['status'] = 'IN_PROG' && $result['order_status'] == 'CREATED') {
-            $paymentRecord->updateOrderPayFail($result['client_sn'], [
-                'trade_no'              => $result['sn'],
-                'channel_trade_no'      => $result['trade_no'],
+        $error = array_get($result, 'error_message');
+        $data = array_get($result, 'data');
+
+        if ($result['status'] = 'IN_PROG' && $data['order_status'] == 'CREATED') {
+            $paymentRecord->updateOrderPayFail($data['client_sn'], [
+                'trade_no'              => $data['sn'],
+                'channel_trade_no'      => $data['trade_no'],
                 'last_error_message'    => $error,
                 'last_error_time'       => RC_Time::gmtime(),
                 'pay_status'            => \Ecjia\App\Payment\PayConstant::PAYMENT_RECORD_STATUS_PROGRESS,
@@ -135,21 +142,22 @@ class admin_payment_scancode_module extends api_admin implements api_interface
 
             return new ecjia_error('shouqianba_pay_progress', '扫码支付交易进行中');
         }
-        elseif ($result['status'] = 'FAIL_CANCELED' && $result['order_status'] == 'PAY_CANCELED') {
-            $paymentRecord->updateOrderPayFail($result['client_sn'], [
-                'trade_no'              => $result['sn'],
-                'channel_payway'        => $result['payway'],
-                'channel_payway_name'   => \Ecjia\App\Payment\PayConstant::getPayway($result['payway']),
-                'channel_sub_payway'    => $result['sub_payway'],
+        elseif ($data['status'] = 'FAIL_CANCELED' && $data['order_status'] == 'PAY_CANCELED') {
+            $paymentRecord->updateOrderPayFail($data['client_sn'], [
+                'trade_no'              => $data['sn'],
+                'channel_payway'        => $data['payway'],
+                'channel_payway_name'   => \Ecjia\App\Payment\PayConstant::getPayway($data['payway']),
+                'channel_sub_payway'    => $data['sub_payway'],
                 'last_error_message'    => $error,
                 'last_error_time'       => RC_Time::gmtime(),
                 'pay_status'            => \Ecjia\App\Payment\PayConstant::PAYMENT_RECORD_STATUS_FAIL,
             ]);
 
             return new ecjia_error('shouqianba_pay_fail', $error);
-        }
+        } else {
 
-        return new ecjia_error('shouqianba_pay_fail', '扫码支付出现未知错误，请联系管理员');
+            return new ecjia_error('shouqianba_pay_fail', $error);
+        }
     }
 
 }
