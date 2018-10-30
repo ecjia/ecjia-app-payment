@@ -78,6 +78,7 @@ class admin_payment_scancode_module extends api_admin implements api_interface
 
                     return $result;
                 } else {
+                    dd($result);
                     return $this->payFail($plugin_handler, $result['data'], array_get($result, 'error_message'));
                 }
 
