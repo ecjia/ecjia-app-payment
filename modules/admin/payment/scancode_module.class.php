@@ -69,7 +69,7 @@ class admin_payment_scancode_module extends api_admin implements api_interface
             $config['terminal_sn'] = $plugin_config['shouqianba_terminal_sn'];
             $config['terminal_key'] = $plugin_config['shouqianba_terminal_key'];
             $shouqianba = RC_Pay::shouqianba($config);
-            $result = $shouqianba->pay(null, $order);
+            $result = $shouqianba->scan($order);
 
         }
 
