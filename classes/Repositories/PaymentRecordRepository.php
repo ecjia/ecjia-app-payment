@@ -240,7 +240,9 @@ class PaymentRecordRepository extends AbstractRepository
             return ($value == '' || is_null($value)) ? false : true;
         });
 
-        return $this->getModel()->where('order_trade_no', $orderTradeNo)->update($attributes);
+        return $this->getModel()->where('order_trade_no', $orderTradeNo)
+            ->where('pay_status', PayConstant::PAYMENT_RECORD_STATUS_WAIT)
+            ->update($attributes);
     }
     
     

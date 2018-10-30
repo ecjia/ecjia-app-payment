@@ -37,7 +37,9 @@ class admin_payment_scancode_module extends api_admin implements api_interface
             return new ecjia_error('payment_scancode_content_not_empty', '扫码支付的二维码内容不能为空');
         }
 
-        $record_model = (new Ecjia\App\Payment\Repositories\PaymentRecordRepository())->find($record_id);
+        $paymentRecordRepository = new Ecjia\App\Payment\Repositories\PaymentRecordRepository();
+
+        $record_model = $paymentRecordRepository->find($record_id);
         if (empty($record_model)) {
             return new ecjia_error('payment_record_not_found', '此笔交易记录未找到');
         }
@@ -48,7 +50,7 @@ class admin_payment_scancode_module extends api_admin implements api_interface
 
         $payment_plugin	= new Ecjia\App\Payment\PaymentPlugin();
         $plugin_handler = $payment_plugin->channel($record_model->pay_code);
-        $plugin_handler->setPaymentRecord(new Ecjia\App\Payment\Repositories\PaymentRecordRepository());
+        $plugin_handler->setPaymentRecord($paymentRecordRepository);
 
         $plugin_config = $plugin_handler->getConfig();
 
