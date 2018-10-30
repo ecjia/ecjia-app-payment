@@ -65,18 +65,20 @@ class admin_payment_scancode_module extends api_admin implements api_interface
             $order->setSubject($_SESSION['store_name'] . '商户的订单：' . $orderinfo['order_sn']);
             $order->setOperator($_SESSION['staff_name']);
 
-            $config = config('shouqianba::pay.shouqianba');
-            $config['terminal_sn'] = $plugin_config['shouqianba_terminal_sn'];
-            $config['terminal_key'] = $plugin_config['shouqianba_terminal_key'];
-            $shouqianba = RC_Pay::shouqianba($config);
-            $result = $shouqianba->scan($order);
+            try {
+                $config = config('shouqianba::pay.shouqianba');
+                $config['terminal_sn'] = $plugin_config['shouqianba_terminal_sn'];
+                $config['terminal_key'] = $plugin_config['shouqianba_terminal_key'];
+                $shouqianba = RC_Pay::shouqianba($config);
+                $result = $shouqianba->scan($order);
+
+                return $result;
+            } catch (\Royalcms\Component\Pay\Exceptions\GatewayException $e) {
+                return new ecjia_error('shouqianba_api_request_error', $e->getMessage());
+            }
 
         }
 
-
-//        dd($result);
-
-        return $result;
     }
 
 }
