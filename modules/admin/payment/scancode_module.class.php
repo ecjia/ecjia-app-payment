@@ -72,13 +72,83 @@ class admin_payment_scancode_module extends api_admin implements api_interface
                 $shouqianba = RC_Pay::shouqianba($config);
                 $result = $shouqianba->scan($order);
 
-                return $result;
+                //支付成功逻辑处理
+                if ($result['data']['status'] = 'SUCCESS' && $result['data']['order_status'] == 'PAID') {
+                    $this->paySuccess($plugin_handler, $result['data']);
+
+                    return $result;
+                } else {
+                    return $this->payFail($plugin_handler, $result['data'], array_get($result, 'error_message'));
+                }
+
             } catch (\Royalcms\Component\Pay\Exceptions\GatewayException $e) {
                 return new ecjia_error('shouqianba_api_request_error', $e->getMessage());
             }
 
         }
 
+    }
+
+    /**
+     * 支付成功处理
+     *
+     * @param $handler
+     * @param $result
+     */
+    protected function paySuccess($handler, $result)
+    {
+        $handler->updateOrderPaid($result['client_sn'], $result['total_amount']/100, $result['sn']);
+
+        $paymentRecord = $handler->getPaymentRecord();
+        $paymentRecord->updateChannelPayment($result['client_sn'], [
+            'payer_uid'             => $result['payer_uid'],
+            'payer_login'           => $result['payer_login'],
+            'subject'               => $result['subject'],
+            'operator'              => $result['operator'],
+            'channel_payway'        => $result['payway'],
+            'channel_payway_name'   => $result['payway_name'],
+            'channel_sub_payway'    => $result['sub_payway'],
+            'channel_trade_no'      => $result['trade_no'],
+            'channel_payment_list'  => $result['payment_list'],
+        ]);
+    }
+
+    /**
+     * 支付失败处理
+     *
+     * @param $handler
+     * @param $result
+     */
+    protected function payFail($handler, $result, $error = null)
+    {
+        $paymentRecord = $handler->getPaymentRecord();
+
+        if ($result['status'] = 'IN_PROG' && $result['order_status'] == 'CREATED') {
+            $paymentRecord->updateOrderPayFail($result['client_sn'], [
+                'trade_no'              => $result['sn'],
+                'channel_trade_no'      => $result['trade_no'],
+                'last_error_message'    => $error,
+                'last_error_time'       => RC_Time::gmtime(),
+                'pay_status'            => \Ecjia\App\Payment\PayConstant::PAYMENT_RECORD_STATUS_PROGRESS,
+            ]);
+
+            return new ecjia_error('shouqianba_pay_progress', '扫码支付交易进行中');
+        }
+        elseif ($result['status'] = 'FAIL_CANCELED' && $result['order_status'] == 'PAY_CANCELED') {
+            $paymentRecord->updateOrderPayFail($result['client_sn'], [
+                'trade_no'              => $result['sn'],
+                'channel_payway'        => $result['payway'],
+                'channel_payway_name'   => \Ecjia\App\Payment\PayConstant::getPayway($result['payway']),
+                'channel_sub_payway'    => $result['sub_payway'],
+                'last_error_message'    => $error,
+                'last_error_time'       => RC_Time::gmtime(),
+                'pay_status'            => \Ecjia\App\Payment\PayConstant::PAYMENT_RECORD_STATUS_FAIL,
+            ]);
+
+            return new ecjia_error('shouqianba_pay_fail', $error);
+        }
+
+        return new ecjia_error('shouqianba_pay_fail', '扫码支付出现未知错误，请联系管理员');
     }
 
 }
