@@ -207,7 +207,7 @@ class PaymentRecordRepository extends AbstractRepository
             'channel_payway_name'   => array_get($params, 'channel_payway_name'),
             'channel_sub_payway'    => array_get($params, 'channel_sub_payway'),
             'channel_trade_no'      => array_get($params, 'channel_trade_no'),
-            'channel_payment_list'  => array_get($params, 'channel_payment_list'),
+            'channel_payment_list'  => serialize(array_get($params, 'channel_payment_list')),
             'update_time'           => RC_Time::gmtime(),
         );
 
