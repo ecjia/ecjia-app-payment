@@ -60,9 +60,9 @@ class admin_payment_scancode_module extends api_admin implements api_interface
 
             $orderinfo = $this->quickpayOrderProcessHandler($record_model);
 
-        } elseif ($record_model->trade_type == 'deposit') {
+        } elseif ($record_model->trade_type == 'surplus') {
 
-            $orderinfo = $this->depositOrderProcessHandler($record_model);
+            $orderinfo = $this->surplusOrderProcessHandler($record_model);
 
         }
 
@@ -107,7 +107,7 @@ class admin_payment_scancode_module extends api_admin implements api_interface
      *
      * @param $record_model
      */
-    protected function depositOrderProcessHandler($record_model)
+    protected function surplusOrderProcessHandler($record_model)
     {
         /* 查询订单信息 */
         $orderinfo = RC_Api::api('finance', 'user_account_order_info', array('order_sn' => $record_model->order_sn));
