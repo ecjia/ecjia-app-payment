@@ -52,46 +52,112 @@ class admin_payment_scancode_module extends api_admin implements api_interface
         $plugin_handler = $payment_plugin->channel($record_model->pay_code);
         $plugin_handler->setPaymentRecord($paymentRecordRepository);
 
-        $plugin_config = $plugin_handler->getConfig();
-
         if ($record_model->trade_type == 'buy') {
-            /* 查询订单信息 */
-            $orderinfo = RC_Api::api('orders', 'order_info', array('order_sn' => $record_model->order_sn));
-            if (empty($orderinfo)) {
-                return new ecjia_error('order_dose_not_exist', $record_model->order_sn . '未找到该订单信息');
-            }
 
-            $order = new PayOrder();
-            $order->setClientSn($record_model->order_trade_no);
-            $order->setTotalAmount($record_model->total_fee * 100);
-            $order->setDynamicId($dynamic_code);
-            $order->setSubject($_SESSION['store_name'] . '商户的订单：' . $orderinfo['order_sn']);
-            $order->setOperator($_SESSION['staff_name']);
+            return $this->buyOrderProcessHandler($record_model, $plugin_handler, $dynamic_code);
 
-            try {
-                $config = config('shouqianba::pay.shouqianba');
-                $config['terminal_sn'] = $plugin_config['shouqianba_terminal_sn'];
-                $config['terminal_key'] = $plugin_config['shouqianba_terminal_key'];
-                $shouqianba = RC_Pay::shouqianba($config);
-                $result = $shouqianba->scan($order);
+        } elseif ($record_model->trade_type == 'quickpay') {
 
-                if ($result['result_code'] == 'PAY_SUCCESS') {
-                    //支付成功逻辑处理
-                    if ($result['data']['status'] = 'SUCCESS' && $result['data']['order_status'] == 'PAID') {
-                        $this->paySuccess($plugin_handler, $result);
-
-                        return $result;
-                    }
-                } else {
-                    return $this->payFail($plugin_handler, $result);
-                }
-
-            } catch (\Royalcms\Component\Pay\Exceptions\GatewayException $e) {
-                return new ecjia_error('shouqianba_api_request_error', $e->getMessage());
-            }
+            return $this->quickpayOrderProcessHandler($record_model, $plugin_handler, $dynamic_code);
 
         }
 
+    }
+
+    /**
+     * 买单订单支付处理
+     *
+     * @param $record_model
+     * @param $plugin_handler
+     * @param $dynamic_code
+     */
+    protected function quickpayOrderProcessHandler($record_model, $plugin_handler, $dynamic_code)
+    {
+        /* 查询订单信息 */
+        $orderinfo = RC_Api::api('quickpay', 'quickpay_order_info', array('order_sn' => $record_model->order_sn));
+        if (empty($orderinfo)) {
+            return new ecjia_error('order_dose_not_exist', $record_model->order_sn . '未找到该订单信息');
+        }
+
+        $plugin_config = $plugin_handler->getConfig();
+
+        $order = new PayOrder();
+        $order->setClientSn($record_model->order_trade_no);
+        $order->setTotalAmount($record_model->total_fee * 100);
+        $order->setDynamicId($dynamic_code);
+        $order->setSubject($_SESSION['store_name'] . '商户的订单：' . $orderinfo['order_sn']);
+        $order->setOperator($_SESSION['staff_name']);
+
+        try {
+            $config = config('shouqianba::pay.shouqianba');
+            $config['terminal_sn'] = $plugin_config['shouqianba_terminal_sn'];
+            $config['terminal_key'] = $plugin_config['shouqianba_terminal_key'];
+            $shouqianba = RC_Pay::shouqianba($config);
+            $result = $shouqianba->scan($order);
+
+            if ($result['result_code'] == 'PAY_SUCCESS') {
+                //支付成功逻辑处理
+                if ($result['data']['status'] = 'SUCCESS' && $result['data']['order_status'] == 'PAID') {
+                    $this->paySuccess($plugin_handler, $result);
+
+                    return $result;
+                }
+            } else {
+                return $this->payFail($plugin_handler, $result);
+            }
+
+        } catch (\Royalcms\Component\Pay\Exceptions\GatewayException $e) {
+            return new ecjia_error('shouqianba_api_request_error', $e->getMessage());
+        }
+    }
+
+    /**
+     * 普通订单支付处理
+     *
+     * @param $record_model
+     * @param $plugin_handler
+     * @param $dynamic_code
+     * @return ecjia_error
+     */
+    protected function buyOrderProcessHandler($record_model, $plugin_handler, $dynamic_code)
+    {
+
+        /* 查询订单信息 */
+        $orderinfo = RC_Api::api('orders', 'order_info', array('order_sn' => $record_model->order_sn));
+        if (empty($orderinfo)) {
+            return new ecjia_error('order_dose_not_exist', $record_model->order_sn . '未找到该订单信息');
+        }
+
+        $plugin_config = $plugin_handler->getConfig();
+
+        $order = new PayOrder();
+        $order->setClientSn($record_model->order_trade_no);
+        $order->setTotalAmount($record_model->total_fee * 100);
+        $order->setDynamicId($dynamic_code);
+        $order->setSubject($_SESSION['store_name'] . '商户的订单：' . $orderinfo['order_sn']);
+        $order->setOperator($_SESSION['staff_name']);
+
+        try {
+            $config = config('shouqianba::pay.shouqianba');
+            $config['terminal_sn'] = $plugin_config['shouqianba_terminal_sn'];
+            $config['terminal_key'] = $plugin_config['shouqianba_terminal_key'];
+            $shouqianba = RC_Pay::shouqianba($config);
+            $result = $shouqianba->scan($order);
+
+            if ($result['result_code'] == 'PAY_SUCCESS') {
+                //支付成功逻辑处理
+                if ($result['data']['status'] = 'SUCCESS' && $result['data']['order_status'] == 'PAID') {
+                    $this->paySuccess($plugin_handler, $result);
+
+                    return $result;
+                }
+            } else {
+                return $this->payFail($plugin_handler, $result);
+            }
+
+        } catch (\Royalcms\Component\Pay\Exceptions\GatewayException $e) {
+            return new ecjia_error('shouqianba_api_request_error', $e->getMessage());
+        }
     }
 
     /**
