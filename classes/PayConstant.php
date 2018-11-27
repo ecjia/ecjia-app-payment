@@ -128,7 +128,8 @@ class PayConstant
     const PAYMENT_RECORD_STATUS_PAYED       = 1; //支付完成
     const PAYMENT_RECORD_STATUS_PROGRESS    = 2; //支付进行中
     const PAYMENT_RECORD_STATUS_FAIL        = 11; //支付失败
-    const PAYMENT_RECORD_STATUS_REFUND      = 21; //订单退款
+    const PAYMENT_RECORD_STATUS_CANCEL      = 21; //订单撤消
+    const PAYMENT_RECORD_STATUS_REFUND      = 22; //订单退款
 
 
     protected static $payways = [
