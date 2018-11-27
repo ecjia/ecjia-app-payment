@@ -63,7 +63,28 @@ class CancelManager
             return new ecjia_error('payment_plugin_not_support__cancel_payment', $this->plugin_handler->getName().'支付方式不支持退款操作');
         }
 
-        return $this->plugin_handler->cancel($this->record_model->trade_no);
+        $result = $this->plugin_handler->cancel($this->record_model->trade_no);
+
+        return $this->updateRefundStatus($result);
+    }
+
+    /**
+     * 更新交易流水记录中的退款状态
+     *
+     * @param array $result
+     */
+    protected function updateRefundStatus($result)
+    {
+
+        if ($result['result_code'] == 'PAY_SUCCESS') {
+
+
+
+        } else {
+
+        }
+
+        return $result;
     }
 
 }

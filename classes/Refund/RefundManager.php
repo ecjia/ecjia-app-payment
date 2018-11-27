@@ -22,7 +22,7 @@ class RefundManager
 
     protected $payment_record;
 
-    public function __construct()
+    public function __construct($order_sn)
     {
 //        $this->pay_code = $pay_code;
 
@@ -30,7 +30,7 @@ class RefundManager
 
     }
 
-    public function cancel($trade_no)
+    public function refund($trade_no)
     {
 
         $paymentRecordRepository = new PaymentRecordRepository();
