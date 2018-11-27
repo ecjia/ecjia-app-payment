@@ -9,11 +9,12 @@
 namespace Ecjia\App\Payment\Query;
 
 use Ecjia\App\Payment\Contracts\FindPayment;
+use Ecjia\App\Payment\PaymentManagerAbstract;
 use Ecjia\App\Payment\Repositories\PaymentRecordRepository;
 use Ecjia\App\Payment\PaymentPlugin;
 use ecjia_error;
 
-class FindManager
+class FindManager extends PaymentManagerAbstract
 {
 
     protected $order_sn;
@@ -29,7 +30,7 @@ class FindManager
         $this->order_sn = $order_sn;
     }
 
-    public function refund($order_trade_no = null)
+    public function find($order_trade_no = null)
     {
         $paymentRecordRepository = new PaymentRecordRepository();
 
@@ -54,7 +55,7 @@ class FindManager
 
         $this->plugin_handler->setPaymentRecord($paymentRecordRepository);
 
-        return $this->refundPluginHandler();
+        return $this->pluginHandler();
     }
 
     /**
@@ -62,7 +63,7 @@ class FindManager
      *
      * @return array|ecjia_error
      */
-    protected function refundPluginHandler()
+    protected function pluginHandler()
     {
         if (! ($this->plugin_handler instanceof FindPayment)) {
             return new ecjia_error('payment_plugin_not_support__cancel_payment', $this->plugin_handler->getName().'支付方式不支持退款操作');

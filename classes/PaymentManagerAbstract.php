@@ -6,13 +6,13 @@
  * Time: 15:46
  */
 
-namespace Ecjia\App\Payment\Refund;
+namespace Ecjia\App\Payment;
 
 use Ecjia\App\Payment\Repositories\PaymentRecordRepository;
 use Ecjia\App\Payment\PaymentPlugin;
 use ecjia_error;
 
-abstract class RefundAbstract
+abstract class PaymentManagerAbstract
 {
 
     protected $order_sn;
@@ -28,11 +28,11 @@ abstract class RefundAbstract
         $this->order_sn = $order_sn;
     }
 
-    public function refund($order_trade_no = null)
+    public function initPaymentRecord($order_trade_no = null)
     {
         $paymentRecordRepository = new PaymentRecordRepository();
 
-        if (!is_null($order_trade_no)) {
+        if (is_null($order_trade_no)) {
             $this->record_model = $paymentRecordRepository->findBy('order_trade_no', $order_trade_no);
         } else {
             $this->record_model = $paymentRecordRepository->findBy('order_sn', $this->order_sn);
@@ -53,7 +53,7 @@ abstract class RefundAbstract
 
         $this->plugin_handler->setPaymentRecord($paymentRecordRepository);
 
-        return $this->refundPluginHandler();
+        return $this->pluginHandler();
     }
 
     /**
@@ -61,6 +61,6 @@ abstract class RefundAbstract
      *
      * @return mixed
      */
-    abstract protected function refundPluginHandler();
+    abstract protected function pluginHandler();
 
 }
