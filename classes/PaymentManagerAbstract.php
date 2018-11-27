@@ -9,7 +9,6 @@
 namespace Ecjia\App\Payment;
 
 use Ecjia\App\Payment\Repositories\PaymentRecordRepository;
-use Ecjia\App\Payment\PaymentPlugin;
 use ecjia_error;
 
 abstract class PaymentManagerAbstract
