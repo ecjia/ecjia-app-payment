@@ -32,16 +32,16 @@ abstract class PaymentManagerAbstract
         $paymentRecordRepository = new PaymentRecordRepository();
 
         if (! is_null($order_trade_no)) {
-            $this->record_model = $paymentRecordRepository->findBy('order_trade_no', $order_trade_no);
+            $this->payment_record = $paymentRecordRepository->findBy('order_trade_no', $order_trade_no);
         } else {
-            $this->record_model = $paymentRecordRepository->findBy('order_sn', $this->order_sn);
+            $this->payment_record = $paymentRecordRepository->findBy('order_sn', $this->order_sn);
         }
 
         if (empty($this->record_model)) {
             return new ecjia_error('payment_record_not_found', __('此笔交易记录未找到', 'app-payment'));
         }
 
-        $this->pay_code = $this->record_model->pay_code;
+        $this->pay_code = $this->payment_record->pay_code;
 
         $payment_plugin	= new PaymentPlugin();
         $this->plugin_handler = $payment_plugin->channel($this->pay_code);
