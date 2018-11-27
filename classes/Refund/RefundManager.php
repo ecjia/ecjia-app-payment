@@ -24,30 +24,7 @@ class RefundManager extends PaymentManagerAbstract
         $this->total_fee = $total_fee;
         $this->operator = $operator;
 
-        $paymentRecordRepository = new PaymentRecordRepository();
-
-        if (!is_null($order_trade_no)) {
-            $this->record_model = $paymentRecordRepository->findBy('order_trade_no', $order_trade_no);
-        } else {
-            $this->record_model = $paymentRecordRepository->findBy('order_sn', $this->order_sn);
-        }
-
-        if (empty($this->record_model)) {
-            return new ecjia_error('payment_record_not_found', __('此笔交易记录未找到', 'app-payment'));
-        }
-
-        $this->pay_code = $this->record_model->pay_code;
-
-        $payment_plugin	= new PaymentPlugin();
-        $this->plugin_handler = $payment_plugin->channel($this->pay_code);
-        if (is_ecjia_error($this->plugin_handler))
-        {
-            return $this->plugin_handler;
-        }
-
-        $this->plugin_handler->setPaymentRecord($paymentRecordRepository);
-
-        return $this->pluginHandler();
+        return $this->initPaymentRecord($order_trade_no);
     }
 
     /**
