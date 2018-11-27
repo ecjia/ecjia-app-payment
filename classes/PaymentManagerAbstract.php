@@ -37,7 +37,7 @@ abstract class PaymentManagerAbstract
             $this->payment_record = $paymentRecordRepository->findBy('order_sn', $this->order_sn);
         }
 
-        if (empty($this->record_model)) {
+        if (empty($this->payment_record)) {
             return new ecjia_error('payment_record_not_found', __('此笔交易记录未找到', 'app-payment'));
         }
 
