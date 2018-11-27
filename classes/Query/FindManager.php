@@ -10,8 +10,6 @@ namespace Ecjia\App\Payment\Query;
 
 use Ecjia\App\Payment\Contracts\FindPayment;
 use Ecjia\App\Payment\PaymentManagerAbstract;
-use Ecjia\App\Payment\Repositories\PaymentRecordRepository;
-use Ecjia\App\Payment\PaymentPlugin;
 use ecjia_error;
 
 class FindManager extends PaymentManagerAbstract
