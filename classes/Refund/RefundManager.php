@@ -19,7 +19,7 @@ class RefundManager extends PaymentManagerAbstract
 
     protected $operator;
 
-    public function refund($order_trade_no = null, $total_fee = null, $operator)
+    public function refund($order_trade_no, $total_fee, $operator)
     {
         $this->total_fee = $total_fee;
         $this->operator = $operator;
