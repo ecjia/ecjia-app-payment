@@ -38,13 +38,7 @@ class CancelManager extends RefundAbstract
     protected function updateRefundStatus($result)
     {
 
-        if ($result['result_code'] == 'PAY_SUCCESS') {
 
-
-
-        } else {
-
-        }
 
         return $result;
     }
