@@ -3,16 +3,17 @@
  * Created by PhpStorm.
  * User: royalwang
  * Date: 2018/11/27
- * Time: 15:46
+ * Time: 20:28
  */
 
-namespace Ecjia\App\Payment\Refund;
+namespace Ecjia\App\Payment\Query;
 
+use Ecjia\App\Payment\Contracts\FindPayment;
 use Ecjia\App\Payment\Repositories\PaymentRecordRepository;
 use Ecjia\App\Payment\PaymentPlugin;
 use ecjia_error;
 
-abstract class RefundAbstract
+class FindManager
 {
 
     protected $order_sn;
@@ -33,16 +34,16 @@ abstract class RefundAbstract
         $paymentRecordRepository = new PaymentRecordRepository();
 
         if (is_null($order_trade_no)) {
-            $this->payment_record = $paymentRecordRepository->findBy('order_trade_no', $order_trade_no);
+            $this->record_model = $paymentRecordRepository->findBy('order_trade_no', $order_trade_no);
         } else {
-            $this->payment_record = $paymentRecordRepository->findBy('order_sn', $this->order_sn);
+            $this->record_model = $paymentRecordRepository->findBy('order_sn', $this->order_sn);
         }
 
         if (empty($this->record_model)) {
             return new ecjia_error('payment_record_not_found', __('此笔交易记录未找到', 'app-payment'));
         }
 
-        $this->pay_code = $this->payment_record->pay_code;
+        $this->pay_code = $this->record_model->pay_code;
 
         $payment_plugin	= new PaymentPlugin();
         $this->plugin_handler = $payment_plugin->channel($this->pay_code);
@@ -57,10 +58,19 @@ abstract class RefundAbstract
     }
 
     /**
-     * 退款插件处理
+     * 插件查询订单处理
      *
-     * @return mixed
+     * @return array|ecjia_error
      */
-    abstract protected function refundPluginHandler();
+    protected function refundPluginHandler()
+    {
+        if (! ($this->plugin_handler instanceof FindPayment)) {
+            return new ecjia_error('payment_plugin_not_support__cancel_payment', $this->plugin_handler->getName().'支付方式不支持退款操作');
+        }
+
+        $result = $this->plugin_handler->find($this->record_model->order_trade_no);
+
+        return $result;
+    }
 
 }

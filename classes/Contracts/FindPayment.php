@@ -7,13 +7,13 @@
  */
 namespace Ecjia\App\Payment\Contracts;
 
-interface CancelPayment
+interface FindPayment
 {
 
     /**
-     * @param string $order_trade_no 交易号
+     * @param $order_trade_no 交易号
      * @return mixed
      */
-    public function cancel($order_trade_no);
+    public function find($order_trade_no);
 
 }

@@ -25,7 +25,7 @@ class RefundManager extends RefundAbstract
             return new ecjia_error('payment_plugin_not_support__cancel_payment', $this->plugin_handler->getName().'支付方式不支持退款操作');
         }
 
-        $result = $this->plugin_handler->refund($this->record_model->trade_no);
+        $result = $this->plugin_handler->refund($this->payment_record->order_trade_no, $this->payment_record->total_fee, $this->payment_record->operator);
 
         return $this->updateRefundStatus($result);
     }
