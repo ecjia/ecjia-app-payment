@@ -288,11 +288,14 @@ class PaymentRecordRepository extends AbstractRepository
     /**
      * 更新交易流水为退款状态
      */
-    public function updateOrderRefund($orderTradeNo)
+    public function updateOrderRefund($orderTradeNo, $requestNo, $refundAmount, $operator)
     {
         $attributes = array(
             'pay_status' => PayConstant::PAYMENT_RECORD_STATUS_REFUND,
             'refund_time' => RC_Time::gmtime(),
+            'refund_amount' => $refundAmount,
+            'refund_operator' => $operator,
+            'refund_request_no' => $requestNo,
         );
 
         /* 修改此次支付操作的状态为已退款 */
