@@ -12,6 +12,13 @@ namespace Ecjia\App\Payment\Contracts;
 interface RefundPayment
 {
 
-    public function refund($trade_no);
+    /**
+     * 确认退款
+     * @param string $trade_no 订单交易号
+     * @param float $refund_amount 退款金额
+     * @param string $operator 操作员
+     * @return ecjia_error | array
+     */
+    public function refund($trade_no, $refund_amount, $operator);
 
 }
