@@ -37,9 +37,6 @@ class CancelManager extends RefundAbstract
      */
     protected function updateRefundStatus($result)
     {
-
-
-
         return $result;
     }
 
