@@ -70,8 +70,6 @@ class admin_payment_scancode_module extends api_admin implements api_interface
             return new ecjia_error('order_dose_not_exist', $record_model->order_sn . '未找到该订单信息');
         }
 
-        //小票打印数据
-        $print_data = $this->_GetPrintData($record_model->trade_type, $orderinfo);
         
         $plugin_config = $plugin_handler->getConfig();
 
@@ -93,7 +91,24 @@ class admin_payment_scancode_module extends api_admin implements api_interface
                 //支付成功逻辑处理
                 if ($result['data']['status'] = 'SUCCESS' && $result['data']['order_status'] == 'PAID') {
                     $this->paySuccess($plugin_handler, $result);
-                    $result['print_data'] = $print_data;
+                    //小票打印数据
+                    if ($record_model->trade_type == 'buy') {
+                    
+                    	$order_info 	= $this->buyOrderProcessHandler($record_model);
+                    
+                    } elseif ($record_model->trade_type == 'quickpay') {
+                    
+                    	$order_info = $this->quickpayOrderProcessHandler($record_model);
+                    
+                    } elseif ($record_model->trade_type == 'surplus') {
+                    
+                    	$order_info = $this->surplusOrderProcessHandler($record_model);
+                    
+                    }
+                    
+                    $print_data = $this->_GetPrintData($record_model->trade_type, $order_info);
+                    
+                    $result['data']['print_data'] = $print_data;
                     return $result;
                 }
             } else {
@@ -269,7 +284,7 @@ class admin_payment_scancode_module extends api_admin implements api_interface
     				'order_sn' 						=> $order_info['order_sn'],
     				'trade_no'						=> empty($payment_record_info['trade_no']) ? '' : $payment_record_info['trade_no'],
     				'trade_type'					=> 'buy',
-    				'trade_type'					=> empty($order_info['pay_time']) ? '' : RC_Time::local_date(ecjia::config('time_format'), $order_info['pay_time']),
+    				'pay_time'						=> empty($order_info['pay_time']) ? '' : RC_Time::local_date(ecjia::config('time_format'), $order_info['pay_time']),
     				'goods_list'					=> $order_goods['list'],
     				'total_goods_number' 			=> $order_goods['total_goods_number'],
     				'total_goods_amount'			=> $order_goods['taotal_goods_amount'],
@@ -331,6 +346,7 @@ class admin_payment_scancode_module extends api_admin implements api_interface
     			'order_sn' 						=> $order_info['order_sn'],
     			'trade_no'						=> empty($payment_record_info['trade_no']) ? '' : $payment_record_info['trade_no'],
     			'trade_type'					=> 'quickpay',
+    			'pay_time'						=> empty($order_info['pay_time']) ? '' : RC_Time::local_date(ecjia::config('time_format'), $order_info['pay_time']),
     			'goods_list'					=> [],
     			'total_goods_number' 			=> 0,
     			'total_goods_amount'			=> $order_info['goods_amount'],
@@ -387,6 +403,7 @@ class admin_payment_scancode_module extends api_admin implements api_interface
     				'order_sn' 						=> trim($order_info['order_sn']),
     				'trade_no'						=> empty($payment_record_info['trade_no']) ? '' : $payment_record_info['trade_no'],
     				'trade_type'					=> 'surplus',
+    				'pay_time'						=> empty($order_info['paid_time']) ? '' : RC_Time::local_date(ecjia::config('time_format'), $order_info['paid_time']),
     				'goods_list'					=> [],
     				'total_goods_number' 			=> 0,
     				'total_goods_amount'			=> $order_info['amount'],
