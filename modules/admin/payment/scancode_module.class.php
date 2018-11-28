@@ -244,7 +244,11 @@ class admin_payment_scancode_module extends api_admin implements api_interface
     		$money_paid 			= $order_info['money_paid'] + $order_info['surplus'];
     		
     		//下单收银员
-    		$cashier_name = RC_DB::table('cashier_record as cr')->leftJoin('staff_user as su', RC_DB::raw('cr.staff_id'), '=', RC_DB::raw('su.user_id'))->where(RC_DB::raw('cr.order_id'), $order_info['order_id'])->pluck('name');
+    		$cashier_name = RC_DB::table('cashier_record as cr')
+    							->leftJoin('staff_user as su', RC_DB::raw('cr.staff_id'), '=', RC_DB::raw('su.user_id'))
+    							->where(RC_DB::raw('cr.order_id'), $order_info['order_id'])
+    							->whereIn('action', array('check_order', 'billing'))
+    							->pluck('name');
     		
     		$user_info = [];
     		//有没用户
@@ -302,7 +306,11 @@ class admin_payment_scancode_module extends api_admin implements api_interface
     		$money_paid 			= $order_info['order_amount'] + $order_info['surplus'];
     		
     		//下单收银员
-    		$cashier_name = RC_DB::table('cashier_record as cr')->leftJoin('staff_user as su', RC_DB::raw('cr.staff_id'), '=', RC_DB::raw('su.user_id'))->where(RC_DB::raw('cr.order_id'), $order_info['order_id'])->pluck('name');
+    		$cashier_name = RC_DB::table('cashier_record as cr')
+    						->leftJoin('staff_user as su', RC_DB::raw('cr.staff_id'), '=', RC_DB::raw('su.user_id'))
+    						->where(RC_DB::raw('cr.order_id'), $order_info['order_id'])
+    						->where('action', 'receipt')
+    						->pluck('name');
     		
     		$user_info = [];
     		//有没用户
@@ -378,7 +386,7 @@ class admin_payment_scancode_module extends api_admin implements api_interface
     		$surplus_print_data = array(
     				'order_sn' 						=> trim($order_info['order_sn']),
     				'trade_no'						=> empty($payment_record_info['trade_no']) ? '' : $payment_record_info['trade_no'],
-    				'trade_type'					=> 'quickpay',
+    				'trade_type'					=> 'surplus',
     				'goods_list'					=> [],
     				'total_goods_number' 			=> 0,
     				'total_goods_amount'			=> $order_info['amount'],
