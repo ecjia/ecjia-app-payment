@@ -27,7 +27,7 @@ class admin_payment_cancelpay_module extends api_admin implements api_interface
             return new ecjia_error('payment_cancelpay_content_not_empty', '撤销订单的流水号不能为空');
         }
 
-        $result = (new Ecjia\App\Payment\Refund\CancelManager(null))->cancel($trade_no);
+        $result = (new Ecjia\App\Payment\Refund\CancelManager(null, null, $trade_no))->cancel();
 
         return $result;
     }
