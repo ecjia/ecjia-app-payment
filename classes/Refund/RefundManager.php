@@ -35,7 +35,7 @@ class RefundManager extends PaymentManagerAbstract
     protected function pluginHandler()
     {
         if (! ($this->plugin_handler instanceof RefundPayment)) {
-            return new ecjia_error('payment_plugin_not_support__cancel_payment', $this->plugin_handler->getName().'支付方式不支持退款操作');
+            return new ecjia_error('payment_plugin_not_support_refund_payment', $this->plugin_handler->getName().'支付方式不支持退款操作');
         }
 
         $result = $this->plugin_handler->refund($this->payment_record->order_trade_no, $this->total_fee, $this->operator);
