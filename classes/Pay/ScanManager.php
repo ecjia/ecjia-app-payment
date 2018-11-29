@@ -17,7 +17,7 @@ class ScanManager extends PaymentManagerAbstract
 
     protected $dynamic_code;
 
-    public function scan($order_trade_no = null, $dynamic_code)
+    public function scan($dynamic_code)
     {
         $this->dynamic_code = $dynamic_code;
 

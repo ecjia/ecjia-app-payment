@@ -14,29 +14,37 @@ use ecjia_error;
 abstract class PaymentManagerAbstract
 {
 
-    protected $order_sn;
+    protected $orderSn;
 
-    protected $pay_code;
+    protected $payCode;
 
-    protected $plugin_handler;
+    /**
+     * @var \Ecjia\App\Payment\PaymentAbstract
+     */
+    protected $pluginHandler;
 
-    protected $payment_record;
+    protected $paymentRecord;
 
-    public function __construct($order_sn)
+    /**
+     * @var PaymentRecordRepository
+     */
+    protected $paymentRecordRepository;
+
+    public function __construct($order_sn, $order_trade_no = null)
     {
         $this->order_sn = $order_sn;
-    }
 
-    public function initPaymentRecord($order_trade_no = null)
-    {
-        $paymentRecordRepository = new PaymentRecordRepository();
+        $this->paymentRecordRepository = new PaymentRecordRepository();
 
         if (! is_null($order_trade_no)) {
-            $this->payment_record = $paymentRecordRepository->findBy('order_trade_no', $order_trade_no);
+            $this->payment_record = $this->paymentRecordRepository->findBy('order_trade_no', $order_trade_no);
         } else {
-            $this->payment_record = $paymentRecordRepository->findBy('order_sn', $this->order_sn);
+            $this->payment_record = $this->paymentRecordRepository->findBy('order_sn', $this->order_sn);
         }
+    }
 
+    public function initPaymentRecord()
+    {
         if (empty($this->payment_record)) {
             return new ecjia_error('payment_record_not_found', __('此笔交易记录未找到', 'app-payment'));
         }
@@ -44,22 +52,22 @@ abstract class PaymentManagerAbstract
         $this->pay_code = $this->payment_record->pay_code;
 
         $payment_plugin	= new PaymentPlugin();
-        $this->plugin_handler = $payment_plugin->channel($this->pay_code);
-        if (is_ecjia_error($this->plugin_handler))
+        $this->plugin_handler = $payment_plugin->channel($this->payCode);
+        if (is_ecjia_error($this->pluginHandler))
         {
-            return $this->plugin_handler;
+            return $this->pluginHandler;
         }
 
-        $this->plugin_handler->setPaymentRecord($paymentRecordRepository);
+        $this->pluginHandler->setPaymentRecord($this->paymentRecordRepository);
 
-        return $this->pluginHandler();
+        return $this->doPluginHandler();
     }
 
     /**
-     * 退款插件处理
+     * 转让插件处理
      *
      * @return mixed
      */
-    abstract protected function pluginHandler();
+    abstract protected function doPluginHandler();
 
 }
