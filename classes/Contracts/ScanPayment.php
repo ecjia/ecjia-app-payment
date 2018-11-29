@@ -13,9 +13,10 @@ interface ScanPayment
     /**
      * 扫码收款
      *
+     * @param string $order_trade_no 交易号
      * @param string $dynamic_code 动态条形码
      * @return array | \ecjia_error
      */
-    public function scan($dynamic_code);
+    public function scan($order_trade_no, $dynamic_code);
 
 }

@@ -15,9 +15,9 @@ use ecjia_error;
 class CancelManager extends PaymentManagerAbstract
 {
 
-    public function cancel($order_trade_no = null)
+    public function cancel()
     {
-        return $this->initPaymentRecord($order_trade_no);
+        return $this->initPaymentRecord();
     }
 
     /**
@@ -25,13 +25,13 @@ class CancelManager extends PaymentManagerAbstract
      *
      * @return array|ecjia_error
      */
-    protected function pluginHandler()
+    protected function doPluginHandler()
     {
-        if (! ($this->plugin_handler instanceof CancelPayment)) {
-            return new ecjia_error('payment_plugin_not_support_cancel_payment', $this->plugin_handler->getName().'支付方式不支持支付撤单操作');
+        if (! ($this->pluginHandler instanceof CancelPayment)) {
+            return new ecjia_error('payment_plugin_not_support_cancel_payment', $this->pluginHandler->getName().'支付方式不支持支付撤单操作');
         }
 
-        $result = $this->plugin_handler->cancel($this->payment_record->order_trade_no);
+        $result = $this->pluginHandler->cancel($this->paymentRecord->order_trade_no);
 
         return $this->updateRefundStatus($result);
     }

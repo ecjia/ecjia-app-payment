@@ -14,12 +14,11 @@ use ecjia_error;
 abstract class PaymentManagerAbstract
 {
 
-    protected $orderSn;
-
     protected $payCode;
 
     /**
      * @var \Ecjia\App\Payment\PaymentAbstract
+     * @var \Ecjia\App\Payment\Contracts\CancelPayment
      */
     protected $pluginHandler;
 
@@ -30,29 +29,30 @@ abstract class PaymentManagerAbstract
      */
     protected $paymentRecordRepository;
 
-    public function __construct($order_sn, $order_trade_no = null)
+    public function __construct($order_sn, $order_trade_no = null, $trade_no = null)
     {
-        $this->order_sn = $order_sn;
-
         $this->paymentRecordRepository = new PaymentRecordRepository();
 
-        if (! is_null($order_trade_no)) {
-            $this->payment_record = $this->paymentRecordRepository->findBy('order_trade_no', $order_trade_no);
+        if (! is_null($trade_no)) {
+            $this->paymentRecord = $this->paymentRecordRepository->findBy('trade_no', $order_trade_no);
+        }
+        elseif (! is_null($order_trade_no)) {
+            $this->paymentRecord = $this->paymentRecordRepository->findBy('order_trade_no', $order_trade_no);
         } else {
-            $this->payment_record = $this->paymentRecordRepository->findBy('order_sn', $this->order_sn);
+            $this->paymentRecord = $this->paymentRecordRepository->findBy('order_sn', $order_sn);
         }
     }
 
     public function initPaymentRecord()
     {
-        if (empty($this->payment_record)) {
+        if (empty($this->paymentRecord)) {
             return new ecjia_error('payment_record_not_found', __('此笔交易记录未找到', 'app-payment'));
         }
 
-        $this->pay_code = $this->payment_record->pay_code;
+        $this->payCode = $this->paymentRecord->pay_code;
 
         $payment_plugin	= new PaymentPlugin();
-        $this->plugin_handler = $payment_plugin->channel($this->payCode);
+        $this->pluginHandler = $payment_plugin->channel($this->payCode);
         if (is_ecjia_error($this->pluginHandler))
         {
             return $this->pluginHandler;

@@ -21,7 +21,7 @@ class ScanManager extends PaymentManagerAbstract
     {
         $this->dynamic_code = $dynamic_code;
 
-        return $this->initPaymentRecord($order_trade_no);
+        return $this->initPaymentRecord();
     }
 
     /**
@@ -29,13 +29,13 @@ class ScanManager extends PaymentManagerAbstract
      *
      * @return array|ecjia_error
      */
-    protected function pluginHandler()
+    protected function doPluginHandler()
     {
-        if (! ($this->plugin_handler instanceof ScanPayment)) {
-            return new ecjia_error('payment_plugin_not_support_scan_payment', $this->plugin_handler->getName().'支付方式不支持扫码收款操作');
+        if (! ($this->pluginHandler instanceof ScanPayment)) {
+            return new ecjia_error('payment_plugin_not_support_scan_payment', $this->pluginHandler->getName().'支付方式不支持扫码收款操作');
         }
 
-        $result = $this->plugin_handler->scan($this->payment_record->order_trade_no, $this->dynamic_code);
+        $result = $this->pluginHandler->scan($this->paymentRecord->order_trade_no, $this->dynamic_code);
 
         return $this->updateRefundStatus($result);
     }

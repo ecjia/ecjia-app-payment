@@ -19,12 +19,12 @@ class RefundManager extends PaymentManagerAbstract
 
     protected $operator;
 
-    public function refund($order_trade_no, $total_fee, $operator)
+    public function refund($total_fee, $operator)
     {
         $this->total_fee = $total_fee;
         $this->operator = $operator;
 
-        return $this->initPaymentRecord($order_trade_no);
+        return $this->initPaymentRecord();
     }
 
     /**
@@ -32,13 +32,13 @@ class RefundManager extends PaymentManagerAbstract
      *
      * @return array|ecjia_error
      */
-    protected function pluginHandler()
+    protected function doPluginHandler()
     {
-        if (! ($this->plugin_handler instanceof RefundPayment)) {
-            return new ecjia_error('payment_plugin_not_support_refund_payment', $this->plugin_handler->getName().'支付方式不支持退款操作');
+        if (! ($this->pluginHandler instanceof RefundPayment)) {
+            return new ecjia_error('payment_plugin_not_support_refund_payment', $this->pluginHandler->getName().'支付方式不支持退款操作');
         }
 
-        $result = $this->plugin_handler->refund($this->payment_record->order_trade_no, $this->total_fee, $this->operator);
+        $result = $this->pluginHandler->refund($this->paymentRecord->order_trade_no, $this->total_fee, $this->operator);
 
         return $this->updateRefundStatus($result);
     }
