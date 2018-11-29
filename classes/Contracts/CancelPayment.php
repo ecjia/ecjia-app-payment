@@ -11,9 +11,8 @@ interface CancelPayment
 {
 
     /**
-     * @param string $order_trade_no 交易号
-     * @return mixed
+     * @return array | \ecjia_error
      */
-    public function cancel($order_trade_no);
+    public function cancel();
 
 }

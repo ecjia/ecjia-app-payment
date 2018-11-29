@@ -11,9 +11,8 @@ interface FindPayment
 {
 
     /**
-     * @param $order_trade_no 交易号
-     * @return mixed
+     * @return array | \ecjia_error
      */
-    public function find($order_trade_no);
+    public function find();
 
 }
