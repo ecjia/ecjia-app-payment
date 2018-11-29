@@ -68,9 +68,7 @@ class admin_payment_scancode_module extends api_admin implements api_interface
         }
 
         //小票打印数据
-        $print_data = $this->_GetPrintData($record_model->trade_type, $orderinfo);
-
-//        $result['print_data'] = $print_data;
+        $print_data = $this->_GetPrintData($record_model, $orderinfo, $result);
 
         return $print_data;
     }
@@ -120,16 +118,16 @@ class admin_payment_scancode_module extends api_admin implements api_interface
     /**
      * 获取小票打印数据
      */
-    private function _GetPrintData($trade_type = '', $order_info)
+    private function _GetPrintData($record_model, $order_info, $result)
     {
     	$printdata = [];
-    	if (!empty($trade_type) && !empty($order_info)) {
-    		if ($trade_type == 'buy' ) {
-    			$printdata = $this->get_buy_printdata($order_info);
-    		} elseif ($trade_type == 'quickpay') {
-    			$printdata = $this->get_quickpay_printdata($order_info);
-    		} elseif ($trade_type == 'surplus') {
-    			$printdata = $this->get_surplus_printdata($order_info);
+    	if (!empty($record_model->trade_type) && !empty($order_info)) {
+    		if ($record_model->trade_type == 'buy' ) {
+    			$printdata = $this->get_buy_printdata($record_model, $order_info, $result);
+    		} elseif ($record_model->trade_type == 'quickpay') {
+    			$printdata = $this->get_quickpay_printdata($record_model, $order_info, $result);
+    		} elseif ($record_model->trade_type == 'surplus') {
+    			$printdata = $this->get_surplus_printdata($record_model, $order_info, $result);
     		}
     	}
     	return $printdata;
@@ -138,11 +136,10 @@ class admin_payment_scancode_module extends api_admin implements api_interface
     /**
      * 获取消费订单打印数据
      */
-    private function get_buy_printdata($order_info = array())
+    private function get_buy_printdata($record_model, $order_info = array(), $result)
     {
     	$buy_print_data = array();
     	if (!empty($order_info)) {
-    		$payment_record_info 	= $this->_payment_record_info($order_info['order_sn'], 'buy');
     		$order_goods 			= $this->get_order_goods($order_info['order_id']);
     		$total_discount 		= $order_info['discount'] + $order_info['integral_money'] + $order_info['bonus'];
     		$money_paid 			= $order_info['money_paid'] + $order_info['surplus'];
@@ -171,7 +168,8 @@ class admin_payment_scancode_module extends api_admin implements api_interface
     		
     		$buy_print_data = array(
     				'order_sn' 						=> $order_info['order_sn'],
-    				'trade_no'						=> empty($payment_record_info['trade_no']) ? '' : $payment_record_info['trade_no'],
+    				'trade_no'						=> $record_model->trade_no ? $record_model->trade_no : '',
+    				'order_trade_no'				=> $record_model->order_trade_no ? $record_model->order_trade_no : '',
     				'trade_type'					=> 'buy',
     				'pay_time'						=> empty($order_info['pay_time']) ? '' : RC_Time::local_date(ecjia::config('time_format'), $order_info['pay_time']),
     				'goods_list'					=> $order_goods['list'],
@@ -186,7 +184,7 @@ class admin_payment_scancode_module extends api_admin implements api_interface
     				'integral_money'				=> $order_info['integral_money'],
     				'formatted_integral_money'		=> $order_info['integral_money'] > 0 ? price_format($order_info['integral_money'], false) : '',
     				'pay_name'						=> !empty($order_info['pay_name']) ? $order_info['pay_name'] : '',
-    				'payment_account'				=> '',
+    				'payment_account'				=> $result['data']['payer_login'] ? $result['data']['payer_login'] : '',
     				'user_info'						=> $user_info,
     				'refund_sn'						=> '',
     				'refund_total_amount'			=> 0,
@@ -201,11 +199,10 @@ class admin_payment_scancode_module extends api_admin implements api_interface
     /**
      * 获取快捷收款买单订单打印数据
      */
-    private function get_quickpay_printdata($order_info = array()) 
+    private function get_quickpay_printdata($record_model, $order_info = array(), $result) 
     {
     	$quickpay_print_data = [];
     	if ($order_info) {
-    		$payment_record_info 	= $this->_payment_record_info($order_info['order_sn'], 'quickpay');
     		$total_discount 		= $order_info['discount'] + $order_info['integral_money'] + $order_info['bonus'];
     		$money_paid 			= $order_info['order_amount'] + $order_info['surplus'];
     		
@@ -233,7 +230,8 @@ class admin_payment_scancode_module extends api_admin implements api_interface
     		
     		$quickpay_print_data = array(
     			'order_sn' 						=> $order_info['order_sn'],
-    			'trade_no'						=> empty($payment_record_info['trade_no']) ? '' : $payment_record_info['trade_no'],
+    			'trade_no'						=> $record_model->trade_no ? $record_model->trade_no : '',
+    			'order_trade_no'				=> $record_model->order_trade_no ? $record_model->order_trade_no : '',
     			'trade_type'					=> 'quickpay',
     			'pay_time'						=> empty($order_info['pay_time']) ? '' : RC_Time::local_date(ecjia::config('time_format'), $order_info['pay_time']),
     			'goods_list'					=> [],
@@ -248,7 +246,7 @@ class admin_payment_scancode_module extends api_admin implements api_interface
     			'integral_money'				=> $order_info['integral_money'],
     			'formatted_integral_money'		=> $order_info['integral_money'] > 0 ? price_format($order_info['integral_money'], false) : '',
     			'pay_name'						=> !empty($order_info['pay_name']) ? $order_info['pay_name'] : '',
-    			'payment_account'				=> '',
+    			'payment_account'				=> $result['data']['payer_login'] ? $result['data']['payer_login'] : '',
     			'user_info'						=> $user_info,
     			'refund_sn'						=> '',
     			'refund_total_amount'			=> 0,
@@ -263,11 +261,10 @@ class admin_payment_scancode_module extends api_admin implements api_interface
     /**
      * 获取充值订单打印数据
      */
-    private function get_surplus_printdata($order_info = array())
+    private function get_surplus_printdata($record_model, $order_info = array(), $result)
     {
     	$surplus_print_data = [];
     	if (!empty($order_info)) {
-    		$payment_record_info 	= $this->_payment_record_info($order_info['order_sn'], 'surplus');
     		$pay_name				= RC_DB::table('payment')->where('pay_code', $order_info['payment'])->pluck('pay_name');
     		
     		$user_info = [];
@@ -290,7 +287,8 @@ class admin_payment_scancode_module extends api_admin implements api_interface
     		
     		$surplus_print_data = array(
     				'order_sn' 						=> trim($order_info['order_sn']),
-    				'trade_no'						=> empty($payment_record_info['trade_no']) ? '' : $payment_record_info['trade_no'],
+    				'trade_no'						=> $record_model->trade_no ? $record_model->trade_no : '',
+    				'order_trade_no'				=> $record_model->order_trade_no ? $record_model->order_trade_no : '',
     				'trade_type'					=> 'surplus',
     				'pay_time'						=> empty($order_info['paid_time']) ? '' : RC_Time::local_date(ecjia::config('time_format'), $order_info['paid_time']),
     				'goods_list'					=> [],
@@ -305,7 +303,7 @@ class admin_payment_scancode_module extends api_admin implements api_interface
     				'integral_money'				=> '',
     				'formatted_integral_money'		=> '',
     				'pay_name'						=> empty($pay_name) ? '' : $pay_name,
-    				'payment_account'				=> '',
+    				'payment_account'				=> $result['data']['payer_login'] ? $result['data']['payer_login'] : '',
     				'user_info'						=> $user_info,
     				'refund_sn'						=> '',
     				'refund_total_amount'			=> 0,
@@ -315,21 +313,6 @@ class admin_payment_scancode_module extends api_admin implements api_interface
     	}
     	
     	return $surplus_print_data;
-    }
-    
-    /**
-     * 支付交易记录信息
-     * @param string $order_sn
-     * @param string $trade_type
-     * @return array
-     */
-    private function _payment_record_info($order_sn = '', $trade_type = '')
-    {
-    	$payment_revord_info = [];
-    	if (!empty($order_sn) && !empty($trade_type)) {
-    		$payment_revord_info = RC_DB::table('payment_record')->where('order_sn', $order_sn)->where('trade_type', $trade_type)->first();
-    	}
-    	return $payment_revord_info;
     }
     
     /**
