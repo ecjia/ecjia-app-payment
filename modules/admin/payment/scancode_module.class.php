@@ -37,8 +37,6 @@ class admin_payment_scancode_module extends api_admin implements api_interface
             return new ecjia_error('payment_scancode_content_not_empty', '扫码支付的二维码内容不能为空');
         }
 
-        $result = (new Ecjia\App\Payment\Refund\CancelManager(null))->cancel($trade_no);
-
         $paymentRecordRepository = new Ecjia\App\Payment\Repositories\PaymentRecordRepository();
 
         $record_model = $paymentRecordRepository->find($record_id);
@@ -46,13 +44,10 @@ class admin_payment_scancode_module extends api_admin implements api_interface
             return new ecjia_error('payment_record_not_found', '此笔交易记录未找到');
         }
 
-        if ($record_model->pay_code != 'pay_shouqianba') {
-            return new ecjia_error('payment_order_not_match', '此笔订单支付方式不匹配');
+        $result = (new Ecjia\App\Payment\Pay\ScanManager($record_model->order_sn))->scan($dynamic_code);
+        if (is_ecjia_error($result)) {
+            return $result;
         }
-
-        $payment_plugin	= new Ecjia\App\Payment\PaymentPlugin();
-        $plugin_handler = $payment_plugin->channel($record_model->pay_code);
-        $plugin_handler->setPaymentRecord($paymentRecordRepository);
 
         if ($record_model->trade_type == 'buy') {
 
@@ -72,21 +67,12 @@ class admin_payment_scancode_module extends api_admin implements api_interface
             return new ecjia_error('order_dose_not_exist', $record_model->order_sn . '未找到该订单信息');
         }
 
-
         //小票打印数据
         $print_data = $this->_GetPrintData($record_model->trade_type, $orderinfo);
 
+//        $result['print_data'] = $print_data;
 
-        $result = (new Ecjia\App\Payment\Pay\ScanManager(null))->scan($trade_no, $dynamic_code);
-        if (is_ecjia_error($result)) {
-            return $result;
-        }
-
-
-        $result['print_data'] = $print_data;
-
-
-        return $result;
+        return $print_data;
     }
 
     /**
