@@ -37,6 +37,8 @@ class admin_payment_scancode_module extends api_admin implements api_interface
             return new ecjia_error('payment_scancode_content_not_empty', '扫码支付的二维码内容不能为空');
         }
 
+        $result = (new Ecjia\App\Payment\Refund\CancelManager(null))->cancel($trade_no);
+
         $paymentRecordRepository = new Ecjia\App\Payment\Repositories\PaymentRecordRepository();
 
         $record_model = $paymentRecordRepository->find($record_id);
@@ -72,37 +74,15 @@ class admin_payment_scancode_module extends api_admin implements api_interface
 
         //小票打印数据
         $print_data = $this->_GetPrintData($record_model->trade_type, $orderinfo);
-        
-        $plugin_config = $plugin_handler->getConfig();
 
-        $order = new PayOrder();
-        $order->setClientSn($record_model->order_trade_no);
-        $order->setTotalAmount($record_model->total_fee * 100);
-        $order->setDynamicId($dynamic_code);
-        $order->setSubject($_SESSION['store_name'] . '商户的订单：' . $orderinfo['order_sn']);
-        $order->setOperator($_SESSION['staff_name']);
-
-        try {
-            $config = config('shouqianba::pay.shouqianba');
-            $config['terminal_sn'] = $plugin_config['shouqianba_terminal_sn'];
-            $config['terminal_key'] = $plugin_config['shouqianba_terminal_key'];
-            $shouqianba = RC_Pay::shouqianba($config);
-            $result = $shouqianba->scan($order);
-
-            if ($result['result_code'] == 'PAY_SUCCESS') {
-                //支付成功逻辑处理
-                if ($result['data']['status'] = 'SUCCESS' && $result['data']['order_status'] == 'PAID') {
-                    $this->paySuccess($plugin_handler, $result);
-                    $result['print_data'] = $print_data;
-                    return $result;
-                }
-            } else {
-                return $this->payFail($plugin_handler, $result);
-            }
-
-        } catch (\Royalcms\Component\Pay\Exceptions\GatewayException $e) {
-            return new ecjia_error('shouqianba_api_request_error', $e->getMessage());
+        $result = (new Ecjia\App\Payment\Pay\ScanManager(null))->scan($trade_no, $dynamic_code);
+        if (is_ecjia_error($result)) {
+            return $result;
         }
+
+        $result['print_data'] = $print_data;
+
+        return $result;
     }
 
     /**
@@ -145,73 +125,7 @@ class admin_payment_scancode_module extends api_admin implements api_interface
         return $orderinfo;
     }
 
-    /**
-     * 支付成功处理
-     *
-     * @param $handler
-     * @param $result
-     */
-    protected function paySuccess($handler, $result)
-    {
-        $data = array_get($result, 'data');
 
-        $handler->updateOrderPaid($data['client_sn'], $data['total_amount']/100, $data['sn']);
-
-        $paymentRecord = $handler->getPaymentRecord();
-        $paymentRecord->updateChannelPayment($data['client_sn'], [
-            'payer_uid'             => $data['payer_uid'],
-            'payer_login'           => $data['payer_login'],
-            'subject'               => $data['subject'],
-            'operator'              => $data['operator'],
-            'channel_payway'        => $data['payway'],
-            'channel_payway_name'   => $data['payway_name'],
-            'channel_sub_payway'    => $data['sub_payway'],
-            'channel_trade_no'      => $data['trade_no'],
-            'channel_payment_list'  => $data['payment_list'],
-        ]);
-    }
-
-    /**
-     * 支付失败处理
-     *
-     * @param $handler
-     * @param $result
-     */
-    protected function payFail($handler, $result)
-    {
-        $paymentRecord = $handler->getPaymentRecord();
-
-        $error = array_get($result, 'error_message');
-        $data = array_get($result, 'data');
-
-        if ($result['status'] = 'IN_PROG' && $data['order_status'] == 'CREATED') {
-            $paymentRecord->updateOrderPayFail($data['client_sn'], [
-                'trade_no'              => $data['sn'],
-                'channel_trade_no'      => $data['trade_no'],
-                'last_error_message'    => $error,
-                'last_error_time'       => RC_Time::gmtime(),
-                'pay_status'            => \Ecjia\App\Payment\PayConstant::PAYMENT_RECORD_STATUS_PROGRESS,
-            ]);
-
-            return new ecjia_error('shouqianba_pay_progress', '扫码支付交易进行中');
-        }
-        elseif ($data['status'] = 'FAIL_CANCELED' && $data['order_status'] == 'PAY_CANCELED') {
-            $paymentRecord->updateOrderPayFail($data['client_sn'], [
-                'trade_no'              => $data['sn'],
-                'channel_payway'        => $data['payway'],
-                'channel_payway_name'   => \Ecjia\App\Payment\PayConstant::getPayway($data['payway']),
-                'channel_sub_payway'    => $data['sub_payway'],
-                'last_error_message'    => $error,
-                'last_error_time'       => RC_Time::gmtime(),
-                'pay_status'            => \Ecjia\App\Payment\PayConstant::PAYMENT_RECORD_STATUS_FAIL,
-            ]);
-
-            return new ecjia_error('shouqianba_pay_fail', $error);
-        } else {
-
-            return new ecjia_error('shouqianba_pay_fail', $error);
-        }
-    }
 	
     /**
      * 获取小票打印数据
