@@ -34,7 +34,7 @@ abstract class PaymentManagerAbstract
         $this->paymentRecordRepository = new PaymentRecordRepository();
 
         if (! is_null($trade_no)) {
-            $this->paymentRecord = $this->paymentRecordRepository->findBy('trade_no', $order_trade_no);
+            $this->paymentRecord = $this->paymentRecordRepository->findBy('trade_no', $trade_no);
         }
         elseif (! is_null($order_trade_no)) {
             $this->paymentRecord = $this->paymentRecordRepository->findBy('order_trade_no', $order_trade_no);
