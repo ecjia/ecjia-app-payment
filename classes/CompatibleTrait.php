@@ -161,7 +161,7 @@ trait CompatibleTrait
      */
     public function return_url($url, $type = 'notify')
     {
-        return \RC_Hook::apply_filters('payment_callback_url_filter', \RC_Uri::site_url() . $url, $type, $this->getCode());
+        return \RC_Hook::apply_filters('payment_return_url_filter', \RC_Uri::site_url() . $url, $type, $this->getCode());
     }
     
     /**
