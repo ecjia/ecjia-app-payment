@@ -66,16 +66,17 @@ class admin_payment_scancode_module extends api_admin implements api_interface
         if (empty($orderinfo)) {
             return new ecjia_error('order_dose_not_exist', $record_model->order_sn . '未找到该订单信息');
         }
-
-        //上面各项处理已经更新了数据表的数据，为防止脏数据，重新更新数据模型的数据
-        $record_model = $paymentRecordRepository->find($record_id);
-        //小票打印数据
-        $print_data = $this->_GetPrintData($record_model, $orderinfo, $result);
 		
 		//收银台订单流程；默认订单自动发货，至完成状态
         if ($orderinfo['extension_code'] == 'cashdesk') {
         	$ordership = $this->processOrdership($orderinfo);
 		}
+		
+		//上面各项处理已经更新了数据表的数据，为防止脏数据，重新更新数据模型的数据
+		$record_model = $paymentRecordRepository->find($record_id);
+		//小票打印数据
+		$print_data = $this->_GetPrintData($record_model, $orderinfo, $result);
+		
         return $print_data;
     }
 
