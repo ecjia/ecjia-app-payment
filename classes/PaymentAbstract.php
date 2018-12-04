@@ -246,7 +246,8 @@ abstract class PaymentAbstract extends AbstractPlugin
         
         \RC_Logger::getLogger('pay')->info($result);
         if (! is_ecjia_error($result)) {
-            RC_Hook::do_action('order_payed_do_something', $item['order_sn']); 
+            $order_info = RC_Api::api('orders', 'order_info', array('order_sn' => $item['order_sn']));
+            RC_Hook::do_action('order_payed_do_something', $order_info); 
         }
         
         return $result;
