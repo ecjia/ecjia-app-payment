@@ -56,7 +56,13 @@ class PayConstant
      * @var string
      */
     const PAY_ORDER = 'buy';
-    
+
+    /**
+     * 分单订单支付
+     * @var string
+     */
+    const PAY_SEPARATE_ORDER = 'separate';
+
     /**
      * 会员预付款
      * @var string
