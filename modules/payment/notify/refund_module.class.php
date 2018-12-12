@@ -47,10 +47,10 @@
 defined('IN_ECJIA') or exit('No permission resources.');
 
 /**
- * 支付通知确认撤消
- * Class payment_notify_pay_module
+ * 支付通知确认退款
+ * Class payment_notify_refund_module
  */
-class payment_notify_cancel_module extends api_front implements api_interface {
+class payment_notify_refund_module extends api_front implements api_interface {
 
     public function handleRequest(\Royalcms\Component\HttpKernel\Request $request) {	
     	
@@ -61,10 +61,14 @@ class payment_notify_cancel_module extends api_front implements api_interface {
     	if ($user_id < 1 ) {
     		return new ecjia_error(100, 'Invalid session');
     	}
-		
-    	$record_id 	= $this->requestData('record_id');
 
-    	
+        $pay_code 	= $this->requestData('pay_code');
+        $notify_data 	= $this->requestData('notify_data');
+
+        //写业务逻辑
+        $result = (new Ecjia\App\Payment\Refund\CancelManager(null, null, $trade_no))->setNotifyData($notify_data)->cancel();
+
+        return $result;
     }
 }
 

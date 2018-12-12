@@ -46,8 +46,12 @@
 //
 defined('IN_ECJIA') or exit('No permission resources.');
 
-//余额支付
-class payment_pay_balance_module extends api_front implements api_interface {
+/**
+ * 支付通知确认支付
+ * Class payment_notify_pay_module
+ */
+class payment_notify_pay_module extends api_front implements api_interface {
+
     public function handleRequest(\Royalcms\Component\HttpKernel\Request $request) {	
     	
     	$this->authSession();
@@ -57,43 +61,11 @@ class payment_pay_balance_module extends api_front implements api_interface {
     	if ($user_id < 1 ) {
     		return new ecjia_error(100, 'Invalid session');
     	}
-		
-    	$record_id 	= $this->requestData('record_id');
-    	$paypasword = $this->requestData('paypassword');
-    	
-    	if (empty($record_id) || empty($paypasword)) {
-    		return new ecjia_error( 'invalid_parameter', RC_Lang::get ('system::system.invalid_parameter' ));
-    	}
-		
-    	//支付密码检验
-    	if (!empty($paypasword)) {
-    		//用户信息
-    		$user_info = RC_Api::api('user', 'user_info', array('user_id' => $user_id));
-    		if (!empty($user_info['ec_salt'])) {
-    			$md5Paypassword =  md5($paypasword);
-    			$md5_pay_password = md5($md5Paypassword.$user_info['ec_salt']);
-    		} else {
-    			$md5_pay_password = md5(md5($paypasword));
-    		}
-    		if ($md5_pay_password != $user_info['pay_password']) {
-    			return new ecjia_error( 'pay_password_error', '支付密码错误！');
-    		}
-    	}
-    	
-    	$paymentRecordRepository = new Ecjia\App\Payment\Repositories\PaymentRecordRepository();
-    	
-    	$record_model = $paymentRecordRepository->find($record_id);
-    	if (empty($record_model)) {
-    		return new ecjia_error('payment_record_not_found', '此笔交易记录未找到');
-    	}
-    	
-    	$result = (new Ecjia\App\Payment\Pay\PayManager($record_model->order_sn))->pay($record_id);
-    	
-    	if (is_ecjia_error($result)) {
-    		return $result;
-    	}
-    	
-        return $result;
+
+        $pay_code 	= $this->requestData('pay_code');
+        $notify_data 	= $this->requestData('notify_data');
+
+        //写业务逻辑
     }
 }
 

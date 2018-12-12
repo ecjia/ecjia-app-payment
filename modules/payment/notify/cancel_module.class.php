@@ -47,10 +47,10 @@
 defined('IN_ECJIA') or exit('No permission resources.');
 
 /**
- * 支付通知确认支付
- * Class payment_notify_pay_module
+ * 支付通知确认撤消
+ * Class payment_notify_cancel_module
  */
-class payment_notify_pay_module extends api_front implements api_interface {
+class payment_notify_cancel_module extends api_front implements api_interface {
 
     public function handleRequest(\Royalcms\Component\HttpKernel\Request $request) {	
     	
@@ -62,9 +62,10 @@ class payment_notify_pay_module extends api_front implements api_interface {
     		return new ecjia_error(100, 'Invalid session');
     	}
 		
-    	$record_id 	= $this->requestData('record_id');
+    	$pay_code 	= $this->requestData('pay_code');
+    	$notify_data 	= $this->requestData('notify_data');
 
-    	
+    	//写业务逻辑
     }
 }
 
