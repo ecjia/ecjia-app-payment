@@ -65,7 +65,12 @@ class payment_notify_pay_module extends api_front implements api_interface {
         $pay_code 	= $this->requestData('pay_code');
         $notify_data 	= $this->requestData('notify_data');
 
+        $out_trade_no = ''; // 在这里$notify_data，商家订单号
+
         //写业务逻辑
+        $result = (new Ecjia\App\Payment\Pay\PayManager(null, $out_trade_no))->setNotifyData($notify_data)->pay();
+
+        return $result;
     }
 }
 

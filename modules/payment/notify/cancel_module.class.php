@@ -65,7 +65,12 @@ class payment_notify_cancel_module extends api_front implements api_interface {
     	$pay_code 	= $this->requestData('pay_code');
     	$notify_data 	= $this->requestData('notify_data');
 
+
+
     	//写业务逻辑
+        $result = (new Ecjia\App\Payment\Refund\CancelManager(null, null, $trade_no))->setNotifyData($notify_data)->cancel();
+
+        return $result;
     }
 }
 
