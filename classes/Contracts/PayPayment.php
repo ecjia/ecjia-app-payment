@@ -12,7 +12,6 @@ interface PayPayment
 
     /**
      * @param string $order_trade_no 交易号
-     * @param int $record_id 交易记录id
      * @return array | \ecjia_error
      */
     public function pay($order_trade_no);
