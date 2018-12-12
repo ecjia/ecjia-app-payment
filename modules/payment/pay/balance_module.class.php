@@ -87,7 +87,7 @@ class payment_pay_balance_module extends api_front implements api_interface {
     		return new ecjia_error('payment_record_not_found', '此笔交易记录未找到');
     	}
     	
-    	$result = (new Ecjia\App\Payment\Pay\PayManager($record_model->order_sn))->pay($record_id);
+    	$result = (new Ecjia\App\Payment\Pay\PayManager($record_model->order_sn))->pay();
     	
     	if (is_ecjia_error($result)) {
     		return $result;
