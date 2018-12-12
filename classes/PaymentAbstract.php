@@ -80,6 +80,24 @@ abstract class PaymentAbstract extends AbstractPlugin
      * @var string
      */
     protected $orderType = PayConstant::PAY_ORDER;
+
+    /**
+     * 支付结果数据
+     *
+     * @var array
+     */
+    protected $notifyData = [];
+
+    public function setNotifyData($notifyData)
+    {
+        $this->notifyData = $notifyData;
+        return $this;
+    }
+
+    public function getNotifyData()
+    {
+        return $this->notifyData;
+    }
     
     public function setOrderType($orderType)
     {
