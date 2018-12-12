@@ -50,17 +50,20 @@ defined('IN_ECJIA') or exit('No permission resources.');
  * 支付通知确认撤消
  * Class payment_notify_cancel_module
  */
-class payment_notify_cancel_module extends api_front implements api_interface {
+class admin_payment_notify_cancel_module extends api_admin implements api_interface
+{
 
+    /**
+     * @param string $pay_code 支付方式code
+     * @param array $notify_data 通知数据
+     *
+     * @param \Royalcms\Component\Http\Request $request
+     */
     public function handleRequest(\Royalcms\Component\HttpKernel\Request $request) {	
     	
-    	$this->authSession();
-    	
-    	$user_id = $_SESSION['user_id'];
-    	 
-    	if ($user_id < 1 ) {
-    		return new ecjia_error(100, 'Invalid session');
-    	}
+    	if ($_SESSION['admin_id'] <= 0 && $_SESSION['staff_id'] <= 0) {
+            return new ecjia_error(100, 'Invalid session');
+        }
 		
     	$pay_code 	= $this->requestData('pay_code');
     	$notify_data 	= $this->requestData('notify_data');
