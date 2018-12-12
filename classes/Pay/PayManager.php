@@ -15,8 +15,9 @@ use ecjia_error;
 class PayManager extends PaymentManagerAbstract
 {
 
-    public function pay()
+    public function pay($record_id)
     {
+    	$this->record_id = $record_id;
         return $this->initPaymentRecord();
     }
 
@@ -31,7 +32,7 @@ class PayManager extends PaymentManagerAbstract
             return new ecjia_error('payment_plugin_not_support_pay_payment', $this->pluginHandler->getName().'支付方式不支持付款操作');
         }
 
-        $result = $this->pluginHandler->pay($this->paymentRecord->order_trade_no);
+        $result = $this->pluginHandler->pay($this->paymentRecord->order_trade_no, $this->record_id);
 
         return $result;
     }
