@@ -54,22 +54,22 @@ class admin_payment_notify_refund_module extends api_admin implements api_interf
 {
 
     /**
-     * @param string $pay_code 支付方式code
+     * @param string $order_trade_no 
      * @param array $notify_data 通知数据
      *
      * @param \Royalcms\Component\Http\Request $request
      */
     public function handleRequest(\Royalcms\Component\HttpKernel\Request $request) {	
     	
-    	if ($_SESSION['admin_id'] <= 0 && $_SESSION['staff_id'] <= 0) {
+    	if ($_SESSION['staff_id'] <= 0) {
     		return new ecjia_error(100, 'Invalid session');
     	}
     	
-        $pay_code 	= $this->requestData('pay_code');
-        $notify_data 	= $this->requestData('notify_data');
+        $order_trade_no 	= $this->requestData('order_trade_no');
+        $notify_data 		= $this->requestData('notify_data');
 
         //写业务逻辑
-        $result = (new Ecjia\App\Payment\Refund\CancelManager(null, null, $trade_no))->setNotifyData($notify_data)->cancel();
+        $result = (new Ecjia\App\Payment\Refund\CancelManager(null, $order_trade_no, null))->setNotifyData($notify_data)->cancel();
 
         return $result;
     }
