@@ -47,29 +47,35 @@
 defined('IN_ECJIA') or exit('No permission resources.');
 
 /**
- * 支付通知确认撤消
- * Class payment_notify_cancel_module
+ * 支付通知确认支付
+ * Class payment_notify_pay_module
  */
-class payment_notify_cancel_module extends api_front implements api_interface {
+class admin_payment_notify_pay_module extends api_admin implements api_interface
+{
 
+    /**
+     * @param string $order_trade_no 
+     * @param array $notify_data 通知数据
+     *
+     * @param \Royalcms\Component\Http\Request $request
+     */
     public function handleRequest(\Royalcms\Component\HttpKernel\Request $request) {	
     	
-    	$this->authSession();
-    	
-    	$user_id = $_SESSION['user_id'];
-    	 
-    	if ($user_id < 1 ) {
-    		return new ecjia_error(100, 'Invalid session');
-    	}
-		
-    	$pay_code 	= $this->requestData('pay_code');
-    	$notify_data 	= $this->requestData('notify_data');
+    	if ($_SESSION['staff_id'] <= 0) {
+            return new ecjia_error(100, 'Invalid session');
+        }
 
+        $order_trade_no 	= $this->requestData('order_trade_no');
+        $notify_data 		= $this->requestData('notify_data');
 
+        $order_sn = $notify_data['orderNo']; // 在这里$notify_data，订单编号
 
-    	//写业务逻辑
-        $result = (new Ecjia\App\Payment\Refund\CancelManager(null, null, $trade_no))->setNotifyData($notify_data)->cancel();
-
+        //写业务逻辑
+        $result = (new Ecjia\App\Payment\Pay\PayManager(null, $order_trade_no, null))->setNotifyData($notify_data)->pay();
+		if (is_ecjia_error()) {
+			
+		}
+        
         return $result;
     }
 }
