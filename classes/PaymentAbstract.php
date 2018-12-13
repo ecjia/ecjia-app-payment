@@ -317,7 +317,6 @@ abstract class PaymentAbstract extends AbstractPlugin
      */
     abstract public function callbackUrl();
     
-    
     /**
      * 支付服务器异步回调通知 POST方式
      */
@@ -327,6 +326,11 @@ abstract class PaymentAbstract extends AbstractPlugin
      * 支付服务器同步回调响应 GET方式
     */
     abstract public function response();
+
+    /**
+     * 统一下单方法
+     */
+    abstract public function unifiedOrder();
    
 }
 
