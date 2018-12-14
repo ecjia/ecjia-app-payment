@@ -92,9 +92,14 @@ class admin_payment_notify_cancel_module extends api_admin implements api_interf
        		
        		//防止数据有更新，重新获取交易记录信息
        		$record_model = $paymentRecordRepository->getPaymentRecord($order_trade_no);
+       		
+       		$trade_apps = [
+       		'buy'       => 'orders',
+       		];
+       		
+       		$paidOrderOrocess = RC_Api::api($trade_apps[$record_model->trade_type], 'payment_paid_process', ['record_model' => $record_model]);
        			
-       		$orderinfo 	= Ecjia\App\Cashier\CashierPaidProcessOrder::GetDiffTypeOrderInfo($record_model->trade_type, $record_model->order_sn);
-       			
+       		$orderinfo 	= $paidOrderOrocess->getOrderInfo();
        		if (empty($orderinfo)) {
        			return new ecjia_error('order_dose_not_exist', $record_model->order_sn . '未找到该订单信息');
        		}
