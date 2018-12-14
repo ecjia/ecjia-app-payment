@@ -128,7 +128,7 @@ class admin_payment_notify_cancel_module extends api_admin implements api_interf
     /**
      * 退款步骤，原路退回
      */
-    private function processOrderRefund($order_info = array(), $device = array())
+    private function processOrderRefund($order_info, $device)
     {
     	/**
     	 * 退款步骤
@@ -139,7 +139,7 @@ class admin_payment_notify_cancel_module extends api_admin implements api_interf
     	 */
     	
     	//生成退款申请单
-    	$refundOrderInfo = $this->GenerateRefundOrder($order_info);
+    	$refundOrderInfo = $this->GenerateRefundOrder($order_info, $device);
     	if (is_ecjia_error($refundOrderInfo)) {
     		return $refundOrderInfo;
     	}
@@ -160,7 +160,7 @@ class admin_payment_notify_cancel_module extends api_admin implements api_interf
     	
     	//商家确认收货
     	if ($refund_returnway_shop) {
-    		$refund_merchant_confirm = $this->RefundMerchantConfirm();
+    		$refund_merchant_confirm = $this->RefundMerchantConfirm($refundOrderInfo);
     	}
     	if (is_ecjia_error($refund_merchant_confirm)) {
     		return $refund_merchant_confirm;
@@ -226,6 +226,43 @@ class admin_payment_notify_cancel_module extends api_admin implements api_interf
     		return $refund_agree;
     	}
     	return $refund_agree;
+    }
+    
+    /**
+     * 买家退货给商家
+     */
+    private function RefundReturnWayShop($refundOrderInfo)
+    {
+    	$returnway_shop_options = array(
+    			'refund_id' => $refundOrderInfo['refund_id'],
+    	);
+    	$refund_returnway_shop = RC_Api::api('refund', 'refund_returnway_shop', $returnway_shop_options);
+    	if (is_ecjia_error($refund_returnway_shop)) {
+    		return $refund_returnway_shop;
+    	}
+    	return $refund_returnway_shop;
+    }
+    
+    /**
+     * 商家确认收货
+     */
+    private function RefundMerchantConfirm($refundOrderInfo)
+    {
+    	$merchant_confirm_options = array(
+    			'refund_id' 		=> $refundOrderInfo['refund_id'],
+    			'action_note' 		=> '审核通过',
+    			'store_id' 			=> $_SESSION['store_id'],
+    			'staff_id' 			=> $_SESSION['staff_id'],
+    			'staff_name' 		=> $_SESSION['staff_name'],
+    			'refund_way' 		=> 'original',
+    	);
+    	 
+    	//商家确认收货
+    	$refund_merchant_confirm = RC_Api::api('refund', 'merchant_confirm', $merchant_confirm_options);
+    	if (is_ecjia_error($refund_merchant_confirm)) {
+    		return $refund_merchant_confirm;
+    	}
+    	return $refund_merchant_confirm;
     }
     
     /**

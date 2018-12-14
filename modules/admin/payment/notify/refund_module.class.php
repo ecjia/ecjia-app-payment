@@ -70,7 +70,7 @@ class admin_payment_notify_refund_module extends api_admin implements api_interf
 
         //传参判断
         if (empty($order_trade_no) || empty($notify_data)) {
-        	return new ecjia_error( 'invalid_parameter', RC_Lang::get ('system::system.invalid_parameter' ));
+        	return new ecjia_error( 'invalid_parameter', 'admin_payment_notify_refund_module接口参数无效');
         }
          
         //查找交易记录
@@ -89,7 +89,24 @@ class admin_payment_notify_refund_module extends api_admin implements api_interf
 			return $result;
 		}
 		
-		
+		//退款成功
+		if ($result['refund_status'] == 'success') {
+			//防止数据有更新，重新获取交易记录信息
+			$record_model = $paymentRecordRepository->getPaymentRecord($order_trade_no);
+			 
+			$trade_apps = [
+			'buy'       => 'orders',
+			];
+			
+			$paidOrderOrocess = RC_Api::api($trade_apps[$record_model->trade_type], 'payment_paid_process', ['record_model' => $record_model]);
+			
+			$orderinfo 	= $paidOrderOrocess->getOrderInfo();
+			if (empty($orderinfo)) {
+				return new ecjia_error('order_dose_not_exist', $record_model->order_sn . '未找到该订单信息');
+			}
+			
+			
+		}
        
     }
 }
