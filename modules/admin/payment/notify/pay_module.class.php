@@ -54,7 +54,7 @@ class admin_payment_notify_pay_module extends api_admin implements api_interface
 {
 
     /**
-     * @param string $order_trade_no 
+     * @param string $order_trade_no 内部订单交易流水号
      * @param array $notify_data 通知数据
      *
      * @param \Royalcms\Component\Http\Request $request
@@ -66,16 +66,52 @@ class admin_payment_notify_pay_module extends api_admin implements api_interface
         }
 
         $order_trade_no 	= $this->requestData('order_trade_no');
-        $notify_data 		= $this->requestData('notify_data');
-
-        $order_sn = $notify_data['orderNo']; // 在这里$notify_data，订单编号
-
+        $notify_data 		= $this->requestData('notify_data', array());
+        
+        //传参判断
+        if (empty($order_trade_no) || empty($notify_data)) {
+        	return new ecjia_error( 'invalid_parameter', RC_Lang::get ('system::system.invalid_parameter' ));
+        }
+        
+        //查找交易记录
+        $paymentRecordRepository = new Ecjia\App\Payment\Repositories\PaymentRecordRepository();
+        $record_model = $paymentRecordRepository->getPaymentRecord($order_trade_no);
+        if (empty($record_model)) {
+        	return new ecjia_error('payment_record_not_found', '此笔交易记录未找到');
+        }
+        
         //写业务逻辑
         $result = (new Ecjia\App\Payment\Pay\PayManager(null, $order_trade_no, null))->setNotifyData($notify_data)->pay();
-		if (is_ecjia_error()) {
-			
+		if (is_ecjia_error($result)) {
+			return $result;
 		}
         
+		/*支付成功*/
+		if ($result['pay_status'] == 'success') {
+			
+			//防止数据有更新
+			$record_model = $paymentRecordRepository->getPaymentRecord($order_trade_no);
+			
+			$orderinfo 	= Ecjia\App\Cashier\CashierPaidProcessOrder::GetDiffTypeOrderInfo($record_model->trade_type, $record_model->order_sn);
+			
+			if (empty($orderinfo)) {
+				return new ecjia_error('order_dose_not_exist', $record_model->order_sn . '未找到该订单信息');
+			}
+			
+			//收银台消费订单流程；默认订单自动发货，至完成状态
+			if ($orderinfo['extension_code'] == 'cashdesk' && $record_model->trade_type == 'buy') {
+				$ordership = Ecjia\App\Cashier\CashierPaidProcessOrder::processOrderDefaultship($orderinfo);
+			}
+			
+			//支付成功返回数据
+			$payment_data = Ecjia\App\Cashier\CashierPaidProcessOrder::GetPaymentData($record_model, $orderinfo);
+			
+			//打印数据
+			$print_data = Ecjia\App\Cashier\GetDiffOrderPrintData::Get_printData($record_model, $orderinfo, $notify_data);
+			
+			$result = array('payment' => $payment_data, 'print_data' => $print_data);
+		}
+		
         return $result;
     }
 }
