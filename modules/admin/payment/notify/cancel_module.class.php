@@ -114,7 +114,6 @@ class admin_payment_notify_cancel_module extends api_admin implements api_interf
        		if (!empty($refund_result)) {
        			$refund_result['back_type'] 	= 'original';
        			$refund_result['refund_way'] 	= 'original';
-       			$refund_result['notify_data']	= $notify_data;
        			$refund_result['is_cashdesk']	= 1;
        			$print_data = $this->ProcessRefundUpdateData($refund_result);
        		}
