@@ -78,7 +78,7 @@ abstract class PaymentManagerAbstract
 
         $this->pluginHandler->setPaymentRecord($this->paymentRecordRepository);
 
-        if (empty($this->notifyData)) {
+        if (! empty($this->notifyData)) {
             $this->pluginHandler->setNotifyData($this->notifyData);
         }
 
