@@ -136,15 +136,6 @@ class PayConstant
     const PAYMENT_RECORD_STATUS_FAIL        = 11; //支付失败
     const PAYMENT_RECORD_STATUS_CANCEL      = 21; //订单撤消
     const PAYMENT_RECORD_STATUS_REFUND      = 22; //订单退款
-    
-    
-    /**
-     * 酷云交易结果
-     */
-    const KOOLYUN_TRADE_RESULT_FAIL        	= 0; //交易失败
-    const KOOLYUN_TRADE_RESULT_SUCCESS_PART = 1; //表示部分交易成功
-    const KOOLYUN_TRADE_RESULT_SUCCESS     	= 2; //交易成功
-    const KOOLYUN_TRADE_RESULT_UNKNOW      	= 3; //表示交易结果目前未知，需要第三方调用transQuery接口交易状态
 
     
     protected static $payways = [
