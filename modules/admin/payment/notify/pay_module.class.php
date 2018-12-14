@@ -70,7 +70,7 @@ class admin_payment_notify_pay_module extends api_admin implements api_interface
         
         //传参判断
         if (empty($order_trade_no) || empty($notify_data)) {
-        	return new ecjia_error( 'invalid_parameter', RC_Lang::get ('system::system.invalid_parameter' ));
+        	return new ecjia_error( 'invalid_parameter', 'admin_payment_notify_pay_module接口参数无效');
         }
         
         //查找交易记录
@@ -91,29 +91,32 @@ class admin_payment_notify_pay_module extends api_admin implements api_interface
 			
 			//防止数据有更新
 			$record_model = $paymentRecordRepository->getPaymentRecord($order_trade_no);
+
+			$trade_apps = [
+			    'buy'       => 'orders',
+			    'quickbuy'  => 'quickbuy',
+			    'surplus'   => 'finance',
+            ];
+
+			$paidOrderOrocess = RC_Api::api($trade_apps[$record_model->trade_type], 'payment_paid_process', ['record_model' => $record_model]);
 			
-			$orderinfo 	= Ecjia\App\Cashier\CashierPaidProcessOrder::GetDiffTypeOrderInfo($record_model->trade_type, $record_model->order_sn);
-			
+			$orderinfo 	= $paidOrderOrocess->getOrderInfo();
 			if (empty($orderinfo)) {
 				return new ecjia_error('order_dose_not_exist', $record_model->order_sn . '未找到该订单信息');
 			}
-			
-			//收银台消费订单流程；默认订单自动发货，至完成状态
-			if ($orderinfo['extension_code'] == 'cashdesk' && $record_model->trade_type == 'buy') {
-				$ordership = Ecjia\App\Cashier\CashierPaidProcessOrder::processOrderDefaultship($orderinfo);
-			}
-			
+
 			//支付成功返回数据
-			$payment_data = Ecjia\App\Cashier\CashierPaidProcessOrder::GetPaymentData($record_model, $orderinfo);
+			$payment_data = $paidOrderOrocess->getPaymentData();
 			
 			//打印数据
-			$print_data = Ecjia\App\Cashier\GetDiffOrderPrintData::Get_printData($record_model, $orderinfo, $notify_data);
+			$print_data = $paidOrderOrocess->getPrintData();
 			
 			$result = array('payment' => $payment_data, 'print_data' => $print_data);
 		}
 		
         return $result;
     }
+
 }
 
 // end
