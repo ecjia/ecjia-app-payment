@@ -68,10 +68,29 @@ class admin_payment_notify_refund_module extends api_admin implements api_interf
         $order_trade_no 	= $this->requestData('order_trade_no');
         $notify_data 		= $this->requestData('notify_data');
 
+        //传参判断
+        if (empty($order_trade_no) || empty($notify_data)) {
+        	return new ecjia_error( 'invalid_parameter', RC_Lang::get ('system::system.invalid_parameter' ));
+        }
+         
+        //查找交易记录
+        $paymentRecordRepository = new Ecjia\App\Payment\Repositories\PaymentRecordRepository();
+        $record_model = $paymentRecordRepository->getPaymentRecord($order_trade_no);
+        if (empty($record_model)) {
+        	return new ecjia_error('payment_record_not_found', '此笔交易记录未找到');
+        }
+        
+        $refund_amount 	= $record_model->total_fee;
+        $operator 		= $_SESSION['staff_name'];
+        
         //写业务逻辑
-        $result = (new Ecjia\App\Payment\Refund\CancelManager(null, $order_trade_no, null))->setNotifyData($notify_data)->cancel();
-
-        return $result;
+        $result = (new Ecjia\App\Payment\Refund\RefundManager(null, $order_trade_no, null))->setNotifyData($notify_data)->refund($refund_amount, $operator);
+		if (is_ecjia_error($result)) {
+			return $result;
+		}
+		
+		
+       
     }
 }
 

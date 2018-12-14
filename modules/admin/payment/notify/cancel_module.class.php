@@ -68,12 +68,172 @@ class admin_payment_notify_cancel_module extends api_admin implements api_interf
     	$order_trade_no 	= $this->requestData('order_trade_no');
     	$notify_data 		= $this->requestData('notify_data');
 
-
-
+    	$device 			=  $this->device;
+    	
+    	//传参判断
+    	if (empty($order_trade_no) || empty($notify_data)) {
+    		return new ecjia_error( 'invalid_parameter', RC_Lang::get ('system::system.invalid_parameter' ));
+    	}
+    	
+    	//查找交易记录
+    	$paymentRecordRepository = new Ecjia\App\Payment\Repositories\PaymentRecordRepository();
+    	$record_model = $paymentRecordRepository->getPaymentRecord($order_trade_no);
+    	if (empty($record_model)) {
+    		return new ecjia_error('payment_record_not_found', '此笔交易记录未找到');
+    	}
+    	
     	//写业务逻辑
         $result = (new Ecjia\App\Payment\Refund\CancelManager(null, $order_trade_no, null))->setNotifyData($notify_data)->cancel();
-
-        return $result;
+		if (is_ecjia_error($result)) {
+			return $result;
+		}
+		//撤销成功
+       	if ($result['cancel_status'] == 'success') {
+       		
+       		//防止数据有更新，重新获取交易记录信息
+       		$record_model = $paymentRecordRepository->getPaymentRecord($order_trade_no);
+       			
+       		$orderinfo 	= Ecjia\App\Cashier\CashierPaidProcessOrder::GetDiffTypeOrderInfo($record_model->trade_type, $record_model->order_sn);
+       			
+       		if (empty($orderinfo)) {
+       			return new ecjia_error('order_dose_not_exist', $record_model->order_sn . '未找到该订单信息');
+       		}
+       		
+       		//退款步骤；原路退回
+       		$refund_result = $this->processOrderRefund($orderinfo, $device);
+       		if (is_ecjia_error($refund_result)) {
+       			return $refund_result;
+       		}
+       		
+       		//退款步骤完成；更新各项数据
+       		if (!empty($refund_result)) {
+       			$refund_result['back_type'] 	= 'original';
+       			$refund_result['refund_way'] 	= 'original';
+       			$refund_result['notify_data']	= $notify_data;
+       			$refund_result['is_cashdesk']	= 1;
+       			$print_data = $this->ProcessRefundUpdateData($refund_result);
+       		}
+       		if (is_ecjia_error($print_data)) {
+       			return $print_data;
+       		}
+       		return $print_data;
+       	}
+    }
+    
+    
+    /**
+     * 退款步骤，原路退回
+     */
+    private function processOrderRefund($order_info = array(), $device = array())
+    {
+    	/**
+    	 * 退款步骤
+    	 * 1、生成退款申请单 GenerateRefundOrder()
+    	 * 2、商家同意退款申请 RefundAgree()
+    	 * 3、买家退货给商家 RefundReturnWayShop()
+    	 * 4、商家确认收货 RefundMerchantConfirm()
+    	 */
+    	
+    	//生成退款申请单
+    	$refundOrderInfo = $this->GenerateRefundOrder($order_info);
+    	if (is_ecjia_error($refundOrderInfo)) {
+    		return $refundOrderInfo;
+    	}
+    	
+    	//商家同意退款申请
+    	$refund_agree = $this->RefundAgree($refundOrderInfo);
+    	if (is_ecjia_error($refund_agree)) {
+    		return $refund_agree;
+    	}
+    	
+    	//买家退货给商家
+    	if ($refund_agree) {
+    		$refund_returnway_shop = $this->RefundReturnWayShop($refundOrderInfo);
+    	}
+    	if (is_ecjia_error($refund_returnway_shop)) {
+    		return $refund_returnway_shop;
+    	}
+    	
+    	//商家确认收货
+    	if ($refund_returnway_shop) {
+    		$refund_merchant_confirm = $this->RefundMerchantConfirm();
+    	}
+    	if (is_ecjia_error($refund_merchant_confirm)) {
+    		return $refund_merchant_confirm;
+    	}
+    	
+    	$data = array(
+    			'refund_order_info' 		=> $refundOrderInfo, 
+    			'refund_payrecord_info' 	=> $refund_merchant_confirm, 
+    			'order_info'				=> $order_info,
+    			'staff_id'					=> $_SESSION['staff_id'],
+    			'staff_name'				=> $_SESSION['staff_name'],
+    	);
+    	
+    	return $data;
+    }
+    
+    /**
+     * 生成退款单
+     * @param array $order_info
+     * @return array | ecjia_error
+     */
+    private function GenerateRefundOrder($order_info = array(), $device = array())
+    {
+    	//生成退款申请单
+    	$reasons = RC_Loader::load_app_config('refund_reasons', 'refund');
+    	$auto_refuse = $reasons['cashier_refund'];
+    	$refund_reason = $auto_refuse['0']['reason_id'];
+    	$refund_content = $auto_refuse['0']['reason_name'];
+    	
+    	$options = array(
+            'refund_type' 			=> 'return',
+            'refund_content'		=> $refund_content,
+            'device'				=> $device,
+            'refund_reason'			=> $refund_reason,
+            'order_id'				=> $order_info['order_id'],
+            'order_info'			=> $order_info,
+            'is_cashdesk'			=> 1,
+            'refund_way'            => 'original'
+		);
+    	$refundOrderInfo = RC_Api::api('refund', 'refund_apply', $options);
+    	 
+    	if (is_ecjia_error($refundOrderInfo)) {
+    		return $refundOrderInfo;
+    	}
+    	
+    	return $refundOrderInfo;
+    }
+    
+    
+    /**
+     * 商家同意退款
+     */
+    private function RefundAgree($refundOrderInfo)
+    {
+    	//商家同意退款申请
+    	$agree_options = array(
+    			'refund_id' => $refundOrderInfo['refund_id'],
+    			'staff_id'	=> $_SESSION['staff_id'],
+    			'staff_name'=> $_SESSION['staff_name']
+    	);
+    	$refund_agree = RC_Api::api('refund', 'refund_agree', $agree_options);
+    	if (is_ecjia_error($refund_agree)) {
+    		return $refund_agree;
+    	}
+    	return $refund_agree;
+    }
+    
+    /**
+     * 退款完成，更新各项数据
+     */
+    private function ProcessRefundUpdateData($refund_result = array())
+    {
+    	$update_result = array();
+    	if (!empty($refund_result['order_info']) && !empty($refund_result['refund_payrecord_info']) && !empty($refund_result['refund_order_info'])) {
+    		$update_result = Ecjia\App\Refund\HandleRefundedUpdateData::updateRefundedData($refund_result);
+    	}
+    	return $update_result;
     }
 }
 
