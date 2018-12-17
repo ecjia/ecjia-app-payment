@@ -72,7 +72,7 @@ class admin_payment_notify_cancel_module extends api_admin implements api_interf
     	
     	//传参判断
     	if (empty($order_trade_no) || empty($notify_data)) {
-    		return new ecjia_error( 'invalid_parameter', RC_Lang::get ('system::system.invalid_parameter' ));
+    		return new ecjia_error('invalid_parameter', '请求admin_payment_notify_cancel_module接口参数无效！');
     	}
     	
     	//查找交易记录
