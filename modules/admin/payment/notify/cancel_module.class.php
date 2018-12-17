@@ -237,10 +237,6 @@ class admin_payment_notify_cancel_module extends api_admin implements api_interf
     			'refund_id' => $refundOrderInfo['refund_id'],
     	);
     	
-    	RC_Logger::getLogger('error')->info('test111');
-    	RC_Logger::getLogger('error')->info($refundOrderInfo);
-    	RC_Logger::getLogger('error')->info('test222');
-    	
     	$refund_returnway_shop = RC_Api::api('refund', 'refund_returnway_shop', $returnway_shop_options);
     	if (is_ecjia_error($refund_returnway_shop)) {
     		return $refund_returnway_shop;
