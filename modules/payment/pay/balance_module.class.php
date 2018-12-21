@@ -69,12 +69,8 @@ class payment_pay_balance_module extends api_front implements api_interface {
     	if (!empty($paypasword)) {
     		//用户信息
     		$user_info = RC_Api::api('user', 'user_info', array('user_id' => $user_id));
-    		if (!empty($user_info['ec_salt'])) {
-    			$md5Paypassword =  md5($paypasword);
-    			$md5_pay_password = md5($md5Paypassword.$user_info['ec_salt']);
-    		} else {
-    			$md5_pay_password = md5(md5($paypasword));
-    		}
+    		$md5PayPassword =  md5($paypasword);
+    		$md5_pay_password = md5($md5PayPassword.$user_id);
     		if ($md5_pay_password != $user_info['pay_password']) {
     			return new ecjia_error( 'pay_password_error', '支付密码错误！');
     		}
