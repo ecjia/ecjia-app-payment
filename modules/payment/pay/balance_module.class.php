@@ -46,7 +46,12 @@
 //
 defined('IN_ECJIA') or exit('No permission resources.');
 
-//余额支付
+/**
+ * 余额支付
+ * @param Y integer record_id 支付记录id（order/pay 接口可获得）
+ * @param Y string paypassword 支付密码（6位数字）
+ */
+
 class payment_pay_balance_module extends api_front implements api_interface {
     public function handleRequest(\Royalcms\Component\HttpKernel\Request $request) {	
     	
