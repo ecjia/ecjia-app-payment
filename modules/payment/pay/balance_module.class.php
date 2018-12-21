@@ -67,7 +67,7 @@ class payment_pay_balance_module extends api_front implements api_interface {
     	$paypasword = $this->requestData('paypassword');
     	
     	if (empty($record_id) || empty($paypasword)) {
-    		return new ecjia_error( 'invalid_parameter', RC_Lang::get ('system::system.invalid_parameter' ));
+    		return new ecjia_error( 'invalid_parameter', '调用接口payment_pay_balance_module参数错误！');
     	}
 		
     	//支付密码检验
