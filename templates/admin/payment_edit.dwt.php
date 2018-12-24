@@ -50,7 +50,7 @@
 							<!-- {elseif $config.type == "textarea"} -->
 							<textarea class="w350" id="cfg_value[]" name="cfg_value[]" cols="80" rows="5">{$config.value}</textarea>
 							<!-- {elseif $config.type == "select"} -->
-							<select class="w350" id="cfg_value[]" name="cfg_value[]"  >
+							<select class="w350" id="cfg_value[]" name="cfg_value[]">
 								<!-- {html_options options=$config.range selected=$config.value} -->
 							</select>
                             <!-- {elseif $config.type == "file"} -->
@@ -59,9 +59,10 @@
                             <div class="m_t5 ecjiaf-wwb">文件地址：{$config.value}</div>
                             <a class="ecjiafc-red cursor_pointer" data-toggle="ajaxremove" data-msg="{t}您确定要删除此文件吗？{/t}"
                                data-href='{RC_Uri::url("payment/admin_plugin/delete_file", "pay_code={$pay.pay_code}&code={$config.name}")}' data-removefile="true">{t}删除文件{/t}</a>
-                            <input type="hidden" name="cfg_value[]" value="{$config.value}"/>
+                            <input type="hidden" name="cfg_value[]" value="{$config.value}" />
                             {else}
-                            <div data-provides="fileupload" class="fileupload fileupload-new"><input type="hidden" value="" name="">
+                            <div data-provides="fileupload" class="fileupload fileupload-new">
+                                <input type="hidden" name="cfg_value[]" value="" />
                                 <span class="btn btn-file">
                                     <span class="fileupload-new">浏览</span>
                                     <span class="fileupload-exists">修改</span>
