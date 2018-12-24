@@ -10,7 +10,7 @@
 <!-- {block name="main_content"} -->
 {if $pay.enabled neq 1}
 <div class="alert alert-error">
-	<strong>温馨提示：</strong>该支付方式已经禁用，如果您需要使用，请点击<a class="switch" href="javascript:;" data-url='{RC_Uri::url("payment/admin/enable", "code={$pay.pay_code}&from=edit")}' title="{lang key='payment::payment.enable'}">启用</a>。
+	<strong>温馨提示：</strong>该支付方式已经禁用，如果您需要使用，请点击<a class="switch" href="javascript:;" data-url='{RC_Uri::url("payment/admin_plugin/enable", "code={$pay.pay_code}&from=edit")}' title="{lang key='payment::payment.enable'}">启用</a>。
 </div>
 {/if}
 
