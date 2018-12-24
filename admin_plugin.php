@@ -237,16 +237,22 @@ class admin_plugin extends ecjia_admin {
 			}
 		}
 
+        $refresh_url = RC_Uri::url('payment/admin_plugin/edit', array('code' => $code));
+
         if (!empty($_FILES)) {
             $payment_handle = with(new Ecjia\App\Payment\PaymentPlugin)->channel($code);
             foreach ($_FILES as $k => $v) {
                 $form = $payment_handle->getForm($k);
                 $upload = RC_Upload::uploader('image', array('save_path' => $form['dir'], 'auto_sub_dirs' => false));
+                $upload->allowed_type($form['file_ext']);
+                $upload->allowed_mime($form['file_mime']);
                 $image_info = $upload->upload($v);
 
                 $image_url = '';
                 if (!empty($image_info)) {
                     $image_url	= $upload->get_position($image_info);
+                } else {
+                    return $this->showmessage($upload->error(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR, array('pjaxurl' => $refresh_url));
                 }
                 $pay_config[] = array(
                     'name'  => $form['name'],
@@ -259,8 +265,6 @@ class admin_plugin extends ecjia_admin {
 		$pay_config = serialize($pay_config);
 		/* 取得和验证支付手续费 */
 		$pay_fee = empty($_POST['pay_fee']) ? 0: intval($_POST['pay_fee']);
-
-        $refresh_url = RC_Uri::url('payment/admin_plugin/edit', array('code' => $code));
 
 		if ($_POST['pay_id']) {
 			/* 编辑 */
