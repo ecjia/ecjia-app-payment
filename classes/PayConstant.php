@@ -155,7 +155,9 @@ class PayConstant
      */
     const PAYMENT_REFUND_STATUS_CREATE      = 0; //创建退款请求
     const PAYMENT_REFUND_STATUS_REFUND      = 1; //确认退款
+    const PAYMENT_REFUND_STATUS_PROGRESS    = 1; //退款处理中
     const PAYMENT_REFUND_STATUS_FAIL        = 11; //退款失败
+    const PAYMENT_REFUND_STATUS_CLOSE       = 12; //退款失败
 
     
     protected static $payways = [

@@ -7,7 +7,6 @@
  */
 namespace Ecjia\App\Payment\Callback;
 
-use Royalcms\Component\Http\Request;
 use Ecjia\App\Payment\PaymentPlugin;
 use Ecjia\App\Payment\Repositories\PaymentRecordRepository;
 
@@ -16,13 +15,10 @@ class RefundCallback
 
     protected $pay_code;
 
-    protected $request;
-
-    public function __construct($pay_code, Request $request)
+    public function __construct($pay_code)
     {
         $this->pay_code = $pay_code;
 
-        $this->request = $request;
     }
 
     /**
@@ -51,7 +47,7 @@ class RefundCallback
         /**
          * 退款回调确认
          */
-        return $payment_handler->refundCallback($this->request);
+        return $payment_handler->refundCallback();
     }
 
 

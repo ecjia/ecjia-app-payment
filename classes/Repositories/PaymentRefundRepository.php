@@ -68,13 +68,61 @@ class PaymentRefundRepository extends AbstractRepository
      * @param string $refund_out_no 退款商户号
      * @param string $error_message
      */
-    public function refundFailedRecord($refund_out_no, $error_message)
+    public function refundErrorRecord($refund_out_no, $error_message)
     {
         $model = $this->findWhere(['refund_out_no' => $refund_out_no, 'refund_status' => ['refund_status', '<>', PayConstant::PAYMENT_REFUND_STATUS_REFUND]]);
         if (!empty($model)) {
             $model->refund_status = PayConstant::PAYMENT_REFUND_STATUS_FAIL;
             $model->last_error_message = $error_message;
             $model->last_error_time = \RC_Time::gmtime();
+            $model->save();
+        }
+    }
+
+    /**
+     * 退款失败记录
+     *
+     * @param string $refund_out_no 退款商户号
+     * @param string $error_message
+     */
+    public function refundFailedRecord($refund_out_no, $refund_trade_no, array $refund_info)
+    {
+        $model = $this->findWhere(['refund_out_no' => $refund_out_no, 'refund_status' => ['refund_status', '<>', PayConstant::PAYMENT_REFUND_STATUS_REFUND]]);
+        if (!empty($model)) {
+            //处理refund_info是否有数据，如果有数据，合并后存入
+            $refund_info_data = unserialize($model->refund_info);
+            if (! empty($refund_info_data)) {
+                $refund_info = array_merge($refund_info_data, $refund_info);
+            }
+
+            $model->refund_trade_no = $refund_trade_no;
+            $model->refund_status = PayConstant::PAYMENT_REFUND_STATUS_FAIL;
+            $model->refund_info = serialize($refund_info);
+            $model->save();
+        }
+    }
+
+    /**
+     * 退款关闭记录
+     *
+     * @param string $refund_out_no 退款商户号
+     * @param string $error_message
+     */
+    public function refundClosedRecord($refund_out_no, $refund_trade_no, array $refund_info)
+    {
+        $model = $this->findWhere(['refund_out_no' => $refund_out_no, 'refund_status' => ['refund_status', '<>', PayConstant::PAYMENT_REFUND_STATUS_REFUND]]);
+        if (!empty($model)) {
+            //处理refund_info是否有数据，如果有数据，合并后存入
+            $refund_info_data = unserialize($model->refund_info);
+            if (! empty($refund_info_data)) {
+                $refund_info = array_merge($refund_info_data, $refund_info);
+            }
+
+            $model->refund_trade_no = $refund_trade_no;
+            $model->refund_status = PayConstant::PAYMENT_REFUND_STATUS_REFUND;
+            $model->refund_info = serialize($refund_info);
+            $model->last_error_message = null;
+            $model->last_error_time = null;
             $model->save();
         }
     }
