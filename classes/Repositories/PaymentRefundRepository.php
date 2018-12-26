@@ -26,19 +26,23 @@ class PaymentRefundRepository extends AbstractRepository
      */
     public function createRefundRecord(array $data)
     {
-        $insertData['refund_out_no']        = array_get($data, 'refund_out_no');
-        $insertData['refund_fee']           = array_get($data, 'refund_fee');
-        $insertData['refund_status']        = PayConstant::PAYMENT_REFUND_STATUS_CREATE;
-        $insertData['refund_create_time']   = array_get($data, 'refund_create_time');
-        $insertData['order_sn']             = array_get($data, 'order_sn');
-        $insertData['order_type']           = array_get($data, 'order_type');
-        $insertData['order_trade_no']       = array_get($data, 'order_trade_no');
-        $insertData['order_total_fee']      = array_get($data, 'order_total_fee');
-        $insertData['pay_trade_no']         = array_get($data, 'pay_trade_no');
-        $insertData['pay_code']             = array_get($data, 'pay_code');
-        $insertData['pay_name']             = array_get($data, 'pay_name');
+        $model = $this->findRefundOutNo(array_get($data, 'refund_out_no'));
+        if (empty($model)) {
+            $insertData['refund_out_no']        = array_get($data, 'refund_out_no');
+            $insertData['refund_fee']           = array_get($data, 'refund_fee');
+            $insertData['refund_status']        = PayConstant::PAYMENT_REFUND_STATUS_CREATE;
+            $insertData['refund_create_time']   = array_get($data, 'refund_create_time');
+            $insertData['order_sn']             = array_get($data, 'order_sn');
+            $insertData['order_type']           = array_get($data, 'order_type');
+            $insertData['order_trade_no']       = array_get($data, 'order_trade_no');
+            $insertData['order_total_fee']      = array_get($data, 'order_total_fee');
+            $insertData['pay_trade_no']         = array_get($data, 'pay_trade_no');
+            $insertData['pay_code']             = array_get($data, 'pay_code');
+            $insertData['pay_name']             = array_get($data, 'pay_name');
 
-        $model = $this->getModel()->create($insertData);
+            $model = $this->getModel()->create($insertData);
+        }
+
         return $model;
     }
 
