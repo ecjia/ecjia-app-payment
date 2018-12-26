@@ -52,6 +52,11 @@ class PayConstant
 {
 
     /**
+     * =======================================
+     * 常见支付订单类型
+     * =======================================
+     */
+    /**
      * 订单支付
      * @var string
      */
@@ -74,15 +79,22 @@ class PayConstant
      * @var string
      */
     const PAY_QUICKYPAY = 'quickpay';
-    
-    
+
+
+    /**
+     * ====================================
+     * 废弃支付类型
+     * ====================================
+     */
     /**
      * 会员充值提现
      * @var string
      */
     const PAY_DEPOSIT = 'deposit';
     const PAY_WITHDRAW = 'withdraw';
-    
+    //@end
+
+
     /**
      * PC平台
      * @var number
@@ -136,6 +148,14 @@ class PayConstant
     const PAYMENT_RECORD_STATUS_FAIL        = 11; //支付失败
     const PAYMENT_RECORD_STATUS_CANCEL      = 21; //订单撤消
     const PAYMENT_RECORD_STATUS_REFUND      = 22; //订单退款
+
+
+    /**
+     * 退款流水状态
+     */
+    const PAYMENT_REFUND_STATUS_CREATE      = 0; //创建退款请求
+    const PAYMENT_REFUND_STATUS_REFUND      = 1; //确认退款
+    const PAYMENT_REFUND_STATUS_FAIL        = 11; //退款失败
 
     
     protected static $payways = [
