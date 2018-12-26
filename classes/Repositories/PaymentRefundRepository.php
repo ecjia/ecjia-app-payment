@@ -54,7 +54,7 @@ class PaymentRefundRepository extends AbstractRepository
      */
     public function refundSuccessfulRecord($refund_out_no, $refund_trade_no, array $refund_info)
     {
-        $model = $this->findWhere(['refund_out_no' => $refund_out_no, 'refund_status' => ['refund_status', '<>', PayConstant::PAYMENT_REFUND_STATUS_REFUND]]);
+        $model = $this->findUnSuccessfulRefundOutNo($refund_out_no);
         if (!empty($model)) {
             $model->refund_trade_no = $refund_trade_no;
             $model->refund_status = PayConstant::PAYMENT_REFUND_STATUS_REFUND;
@@ -74,7 +74,7 @@ class PaymentRefundRepository extends AbstractRepository
      */
     public function refundErrorRecord($refund_out_no, $error_message)
     {
-        $model = $this->findWhere(['refund_out_no' => $refund_out_no, 'refund_status' => ['refund_status', '<>', PayConstant::PAYMENT_REFUND_STATUS_REFUND]]);
+        $model = $this->findUnSuccessfulRefundOutNo($refund_out_no);
         if (!empty($model)) {
             $model->refund_status = PayConstant::PAYMENT_REFUND_STATUS_FAIL;
             $model->last_error_message = $error_message;
@@ -91,7 +91,7 @@ class PaymentRefundRepository extends AbstractRepository
      */
     public function refundFailedRecord($refund_out_no, $refund_trade_no, array $refund_info)
     {
-        $model = $this->findWhere(['refund_out_no' => $refund_out_no, 'refund_status' => ['refund_status', '<>', PayConstant::PAYMENT_REFUND_STATUS_REFUND]]);
+        $model = $this->findUnSuccessfulRefundOutNo($refund_out_no);
         if (!empty($model)) {
             //处理refund_info是否有数据，如果有数据，合并后存入
             $refund_info_data = unserialize($model->refund_info);
@@ -114,7 +114,7 @@ class PaymentRefundRepository extends AbstractRepository
      */
     public function refundClosedRecord($refund_out_no, $refund_trade_no, array $refund_info)
     {
-        $model = $this->findWhere(['refund_out_no' => $refund_out_no, 'refund_status' => ['refund_status', '<>', PayConstant::PAYMENT_REFUND_STATUS_REFUND]]);
+        $model = $this->findUnSuccessfulRefundOutNo($refund_out_no);
         if (!empty($model)) {
             //处理refund_info是否有数据，如果有数据，合并后存入
             $refund_info_data = unserialize($model->refund_info);
@@ -138,6 +138,16 @@ class PaymentRefundRepository extends AbstractRepository
     public function findRefundOutNo($refund_out_no)
     {
         $model = $this->findBy('refund_out_no', $refund_out_no);
+        return $model;
+    }
+
+    /**
+     * 查找未成功退款记录
+     * @param string $refund_out_no 退款商户号
+     */
+    public function findUnSuccessfulRefundOutNo($refund_out_no)
+    {
+        $model = $this->findWhere(['refund_out_no' => $refund_out_no, 'refund_status' => ['refund_status', '<>', PayConstant::PAYMENT_REFUND_STATUS_REFUND]])->first();
         return $model;
     }
 
