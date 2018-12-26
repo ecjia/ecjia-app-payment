@@ -52,6 +52,25 @@ class PaymentRefundRepository extends AbstractRepository
      * @param string $refund_trade_no 退款流水号
      * @param array $refund_info 退款信息，序列化存储
      */
+    public function refundProcessRecord($refund_out_no, $refund_trade_no, array $refund_info)
+    {
+        $model = $this->findUnSuccessfulRefundOutNo($refund_out_no);
+        if (!empty($model)) {
+            $model->refund_trade_no = $refund_trade_no;
+            $model->refund_status = PayConstant::PAYMENT_REFUND_STATUS_PROGRESS;
+            $model->refund_info = serialize($refund_info);
+            $model->last_error_message = null;
+            $model->last_error_time = null;
+            $model->save();
+        }
+    }
+
+    /**
+     * 退款成功记录
+     * @param string $refund_out_no 退款商户号
+     * @param string $refund_trade_no 退款流水号
+     * @param array $refund_info 退款信息，序列化存储
+     */
     public function refundSuccessfulRecord($refund_out_no, $refund_trade_no, array $refund_info)
     {
         $model = $this->findUnSuccessfulRefundOutNo($refund_out_no);
