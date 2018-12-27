@@ -7,8 +7,10 @@
  */
 namespace Ecjia\App\Payment\Callback;
 
+use Ecjia\App\Payment\Contracts\RefundCallbackPayment;
 use Ecjia\App\Payment\PaymentPlugin;
 use Ecjia\App\Payment\Repositories\PaymentRecordRepository;
+use ecjia_error;
 
 class RefundCallback
 {
@@ -34,13 +36,17 @@ class RefundCallback
         });
 
         if (empty($plugin)) {
-            return new \ecjia_error('payment_not_found', '插件未找到或已经被禁用！');
+            return new ecjia_error('payment_not_found', '插件未找到或已经被禁用！');
         }
 
         $payment_handler = $payment_plugin->channel($plugin['pay_code']);
         /* 检查插件文件是否存在，如果存在则验证支付是否成功，否则则返回失败信息 */
         if (is_ecjia_error($payment_handler)) {
             return $payment_handler;
+        }
+
+        if (! ($payment_handler instanceof RefundCallbackPayment)) {
+            return new ecjia_error('payment_plugin_not_support_refund_callbakc', $payment_handler->getName().'支付方式不支持退款回调操作');
         }
 
         $payment_handler->setPaymentRecord(new PaymentRecordRepository());
