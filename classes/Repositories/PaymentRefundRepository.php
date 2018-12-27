@@ -81,6 +81,9 @@ class PaymentRefundRepository extends AbstractRepository
             $model->last_error_message = null;
             $model->last_error_time = null;
             $model->save();
+
+            //消费订单退款成功后续处理
+            (new \Ecjia\App\Refund\RefundProcess\BuyOrderRefundProcess(null, $refund_trade_no))->run();
         }
 
     }
