@@ -103,6 +103,7 @@
 						<input class="w350" name="pay_fee" type="text" value="{$pay.pay_fee|default:0}" {if $pay.enabled neq 1}disabled{/if}/>
 						{/if}
 					</div>
+					<div class="controls help-block">设置方式1：固定手续费，如：5<br>设置方式2：比例手续费，如：5%</div>
 				</div>
 				<!-- 货到付款 -->
 				<div class="control-group formSep">
