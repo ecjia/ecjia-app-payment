@@ -264,7 +264,7 @@ class admin_plugin extends ecjia_admin {
 
 		$pay_config = serialize($pay_config);
 		/* 取得和验证支付手续费 */
-		$pay_fee = empty($_POST['pay_fee']) ? 0: intval($_POST['pay_fee']);
+		$pay_fee = empty($_POST['pay_fee']) ? 0: trim($_POST['pay_fee']);
 
 		if ($_POST['pay_id']) {
 			/* 编辑 */
