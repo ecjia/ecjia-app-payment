@@ -86,7 +86,7 @@
 					        		{if $refund_order.refund_status eq '0'}
 					        			无打款请求
 					        		{elseif  $refund_order.refund_status eq '1'}
-					        			待退款
+					        			待处理
 					        		{else}
 					        			已退款
 					        		{/if}
@@ -102,7 +102,7 @@
 					            <td><div align="right"><strong>发票税额</strong></div></td>
 					            <td>{$refund_order.inv_tax}</td>
 					            <td><div align="right"><strong>应退款总金额</strong></div></td>
-					            <td>{$refund_order.money_paid + $refund_order.surplus}</td>
+					            <td>{$refund_order.should_refund_amount}</td>
 					        </tr>
 					        <tr>
 					            <td><div align="right"><strong>配送费用</strong></div></td>
@@ -112,7 +112,7 @@
 					        </tr>
 					        <tr>
 					            <td><div align="right"><strong>保价费用</strong></div></td>
-					            <td>{if $exist_real_goods}{else}0{/if}</td>
+					            <td>{$refund_order.insure_fee}</td>
 					            <td><div align="right"><strong>使用余额</strong></div></td>
 					            <td>{$refund_order.surplus}</td>
 					        <tr>
@@ -124,8 +124,8 @@
 					        <tr>
 					            <td><div align="right"><strong>包装费用</strong></div></td>
 					            <td>{$refund_order.pack_fee}</td>
-					            <td><div align="right"><strong>{if $order.order_amount >= 0} 应付款金额 {else} 应退款金额 {/if}</strong></div></td>
-					            <td>{$order.formated_order_amount}</td>
+					            <td><div align="right"><strong>实际退款金额</strong></div></td>
+					            <td>{$refund_payrecord.back_money_total}</td>
 					        </tr>
 				        </tbody>
 				    </table>

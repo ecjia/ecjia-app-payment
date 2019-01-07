@@ -119,13 +119,14 @@ class admin_payment_refund extends ecjia_admin {
 	
 		//获取退款单信息
 		$refund_order = RC_DB::table('refund_order')->where('order_sn', $payment_refund_info['order_sn'])->where('status', '<>', 10)->first();
+		$refund_order['should_refund_amount'] =  sprintf("%.2f", $refund_order['money_paid'] + $refund_order['surplus']); //应退款金额
 		
-	
+		//打款单信息
+		$refund_payrecord = RC_DB::table('refund_payrecord')->where('refund_id', $refund_order['refund_id'])->first();
+		
 		$this->assign('payment_refund_info', $payment_refund_info);
 		$this->assign('refund_order', $refund_order);
-		$this->assign('os', RC_Lang::get('orders::order.os'));
-		$this->assign('ps', RC_Lang::get('orders::order.ps'));
-		$this->assign('ss', RC_Lang::get('orders::order.ss'));
+		$this->assign('refund_payrecord', $refund_payrecord);
 	
 		$this->display('payment_refund_info.dwt');
 	}
