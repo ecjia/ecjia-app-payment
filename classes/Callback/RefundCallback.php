@@ -50,6 +50,7 @@ class RefundCallback
         }
 
         $payment_handler->setPaymentRecord(new PaymentRecordRepository());
+
         /**
          * 退款回调确认
          */
