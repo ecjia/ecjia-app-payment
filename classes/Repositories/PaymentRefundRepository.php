@@ -83,7 +83,7 @@ class PaymentRefundRepository extends AbstractRepository
             $model->save();
 
             //消费订单退款成功后续处理
-            (new \Ecjia\App\Refund\RefundProcess\BuyOrderRefundProcess(null, $refund_trade_no))->run();
+            (new \Ecjia\App\Refund\RefundProcess\BuyOrderRefundProcess(null, $refund_out_no))->run();
         }
 
     }
