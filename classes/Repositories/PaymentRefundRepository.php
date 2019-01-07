@@ -73,11 +73,8 @@ class PaymentRefundRepository extends AbstractRepository
      */
     public function refundSuccessfulRecord($refund_out_no, $refund_trade_no, array $refund_info)
     {
-    	\RC_Logger::getLogger('error')->info('test111');
-    	
         $model = $this->findUnSuccessfulRefundOutNo($refund_out_no);
         if (!empty($model)) {
-        	\RC_Logger::getLogger('error')->info('test222');
             $model->refund_trade_no = $refund_trade_no;
             $model->refund_status = PayConstant::PAYMENT_REFUND_STATUS_REFUND;
             $model->refund_info = serialize($refund_info);
