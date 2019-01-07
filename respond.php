@@ -47,17 +47,19 @@
 defined('IN_ECJIA') or exit('No permission resources.');
 
 /**
- *  支付响应页面
+ *  支付通知回调控制器
  */
-class respond extends ecjia_front {
+class respond extends ecjia_front
+{
 
-	public function __construct() {
+	public function __construct()
+    {
 		parent::__construct();
 	}
 	
 	public function init()
     {
-	    
+	    //Not nothing...
 	}
 
     /**
@@ -193,7 +195,7 @@ class respond extends ecjia_front {
             return '';
         }
 
-        $result = (new \Ecjia\App\Payment\Callback\RefundCallback($pay_code, $this->request))->callback();
+        $result = (new \Ecjia\App\Payment\Callback\RefundCallback($pay_code))->callback();
 
         if (is_ecjia_error($result)) {
             RC_Logger::getLogger('refund')->debug(sprintf("refund fail: %s %s", $pay_code, $result->get_error_message()));
@@ -203,7 +205,8 @@ class respond extends ecjia_front {
         return $result;
     }
 	
-	public function _default_response_template($respondContent, $msg, $info) {
+	public function _default_response_template($respondContent, $msg, $info)
+    {
 	    $this->assign('msg', $msg);
 	    $this->assign('info', $info);
 	    
