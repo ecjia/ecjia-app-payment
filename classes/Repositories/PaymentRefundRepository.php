@@ -155,6 +155,16 @@ class PaymentRefundRepository extends AbstractRepository
 
     /**
      * 查找退款记录
+     * @param string $refund_out_no 退款流水号ID
+     */
+    public function findPaymentRefundId($refund_id)
+    {
+        $model = $this->findBy('id', $refund_id);
+        return $model;
+    }
+
+    /**
+     * 查找退款记录
      * @param string $refund_out_no 退款商户号
      */
     public function findRefundOutNo($refund_out_no)

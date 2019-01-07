@@ -136,13 +136,31 @@ class admin_payment_refund extends ecjia_admin {
         /* 检查权限 */
         $this->admin_priv('payrecord_manage', ecjia::MSGTYPE_JSON);
 
-        $result = [];
+        /* 初始化 */
+        $id = $this->request->input('id');
 
-        if (is_ecjia_error($result)) {
-            return $this->showmessage($result->get_error_message(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+        try {
+
+            /* 查询当前的预付款信息 */
+            $account = (new Ecjia\App\Payment\Repositories\PaymentRefundRepository())->findPaymentRefundId($id);
+
+            //到款状态不能再次修改
+            if (empty($account)) {
+                return $this->showmessage('该退款流水记录不存在', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+            }
+
+            $result = (new \Ecjia\App\Payment\Refund\RefundQueryManager($account['order_sn']))->refundQuery();
+
+            if (is_ecjia_error($result)) {
+                return $this->showmessage($result->get_error_message(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
+            }
+
+            return $this->showmessage('与支付机构对账成功，状态正常', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS);
+
+        } catch (\Royalcms\Component\Database\QueryException $e) {
+            return $this->showmessage($e->getMessage(), ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_ERROR);
         }
 
-        return $this->showmessage('与支付机构对账成功，状态正常', ecjia::MSGTYPE_JSON | ecjia::MSGSTAT_SUCCESS);
     }
 	
 	/**
