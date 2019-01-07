@@ -35,7 +35,7 @@
                             <td><div align="right"><strong>退款状态</strong></div></td>
                             <td>
                                 {$payment_refund_info.label_refund_status}
-                                <a class="btn m_l5 payrecord_query" href="javascript:;" data-url="{RC_Uri::url('refund/admin_payment_refund/query')}&id={$payment_refund_info.id}">对账查询</a>
+                                <a class="btn m_l5 payrecord_query" href="javascript:;" data-url="{RC_Uri::url('payment/admin_payment_refund/query')}&id={$payment_refund_info.id}">对账查询</a>
                             </td>
                         </tr>
                         <tr>
