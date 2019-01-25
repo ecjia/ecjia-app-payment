@@ -105,17 +105,19 @@ class order_pay_module extends api_front implements api_interface {
     		'pay_name'		 => $handler->getName(),
 		    'trade_type'	 => Ecjia\App\Payment\PayConstant::PAY_ORDER,
 		]);
-		
+        RC_Logger::getLogger('info')->info(__LINE__);
 		$handler->set_orderinfo($order);
 		$handler->set_mobile($is_mobile);
 		$handler->setPaymentRecord(new Ecjia\App\Payment\Repositories\PaymentRecordRepository());
-		
+        RC_Logger::getLogger('info')->info(__LINE__);
 		$result = $handler->get_code(Ecjia\App\Payment\PayConstant::PAYCODE_PARAM);
+        RC_Logger::getLogger('info')->info(__LINE__);
         if (is_ecjia_error($result)) {
             return $result;
         } else {
             $order['payment'] = $result;
         }
+        RC_Logger::getLogger('info')->info(__LINE__);
 
         //增加支付状态
         $order['payment']['order_pay_status'] = $order['pay_status'];//0 未付款，1付款中，2已付款
@@ -139,7 +141,7 @@ class order_pay_module extends api_front implements api_interface {
         }
         
         $payment_list = RC_Api::api('payment', 'available_payments', array('store_id' => $order['store_id'], 'cod_fee' => $cod_fee));
-
+        RC_Logger::getLogger('info')->info(__LINE__);
         $other = collect($payment_list)->flatMap(function ($item) use ($order) {
             if ($item['pay_id'] == $order['pay_id']) {
                 return array();
@@ -147,7 +149,7 @@ class order_pay_module extends api_front implements api_interface {
             
             return array($item);
         })->all();
-
+        RC_Logger::getLogger('info')->info(__LINE__);
         return array('payment' => $order['payment'], 'others' => $other);
 	}
 }
