@@ -65,7 +65,7 @@ class order_pay_module extends api_front implements api_interface {
 		$wxpay_open_id = $this->requestData('wxpay_open_id', null);
 		
 		if (!$order_id) {
-			return new ecjia_error('invalid_parameter', RC_Lang::get('orders::order.invalid_parameter'));
+			return new ecjia_error('invalid_parameter', __('参数无效', 'payment'));
 		}
 		
 		/* 订单详情 */
@@ -83,7 +83,7 @@ class order_pay_module extends api_front implements api_interface {
 		
 		//订单都不存在
 		if (empty($order)) {
-			return new ecjia_error(__('订单不存在', 'payment'));
+			return new ecjia_error('not_exist_order', __('订单不存在', 'payment'));
 		}
 		
 		$order_type = $this->transform_order_sn($order['order_sn']);
