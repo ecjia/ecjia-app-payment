@@ -195,7 +195,7 @@ class admin_payment_scancode_module extends api_admin implements api_interface
     				'refund_total_amount'			=> 0,
     				'formatted_refund_total_amount' => '',
     				'cashier_name'					=> empty($cashier_name) ? '' : $cashier_name,
-    				'pay_fee'						=> $order_info['pay_fee'],
+    				'pay_fee'						=> $order_info['pay_fee'] > 0 ? $order_info['pay_fee'] : 0,
     				'formatted_pay_fee'				=> ecjia_price_format($order_info['pay_fee'], false)
     		);
     	}
@@ -259,7 +259,7 @@ class admin_payment_scancode_module extends api_admin implements api_interface
     			'refund_total_amount'			=> 0,
     			'formatted_refund_total_amount' => '',
     			'cashier_name'					=> empty($cashier_name) ? '' : $cashier_name,
-    			'pay_fee'						=> '', //买单订单目前还未做支付手续费
+    			'pay_fee'						=> 0, //买单订单目前还未做支付手续费
     			'formatted_pay_fee'				=> '',
     		);
     	}
@@ -318,7 +318,7 @@ class admin_payment_scancode_module extends api_admin implements api_interface
     				'refund_total_amount'			=> 0,
     				'formatted_refund_total_amount' => '',
     				'cashier_name'					=> $cashier_name,
-    				'pay_fee'						=> '', //充值订单目前还未做支付手续费
+    				'pay_fee'						=> 0, //充值订单目前还未做支付手续费
     				'formatted_pay_fee'				=> '',
     		);
     	}
