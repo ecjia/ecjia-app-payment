@@ -196,7 +196,7 @@ class PayConstant
      */
     public static function getPayway($payway)
     {
-        return array_get(self::$payways, $payway, '未知');
+        return array_get(self::$payways, $payway, __('未知', 'payment'));
     }
 
 
@@ -208,7 +208,7 @@ class PayConstant
      */
     public static function getSubPayway($sub_payway)
     {
-        return array_get(self::$sub_payways, $sub_payway, '未知');
+        return array_get(self::$sub_payways, $sub_payway, __('未知', 'payment'));
     }
 
 

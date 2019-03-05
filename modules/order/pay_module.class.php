@@ -99,7 +99,7 @@ class order_pay_module extends api_front implements api_interface {
 		}
 		
 		if ($_SESSION['user_id'] != $order['user_id']) {
-			return new ecjia_error('error_order_detail', RC_Lang::get('orders::order.error_order_detail'));
+			return new ecjia_error('error_order_detail', __('订单不属于该用户', 'payment'));
 		}
 		
 		//添加微信支付需要的OPEN_ID

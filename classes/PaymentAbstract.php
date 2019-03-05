@@ -244,14 +244,14 @@ abstract class PaymentAbstract extends AbstractPlugin
         
         /* 检查支付的金额是否相符 */
         if (!$this->paymentRecord->checkMoney($orderTradeNo, $amount)) {
-            return new ecjia_error('check_money_fail', __('支付的金额有误'));
+            return new ecjia_error('check_money_fail', __('支付的金额有误', 'payment'));
         }
 
         $this->paymentRecord->updateOrderPaid($orderTradeNo, $amount, $tradeNo);
         
         $item = $this->parseOrderTradeNo($orderTradeNo);
         if (!$item) {
-            return new ecjia_error('parse_order_trade_no_error', __('解析订单号时失败'));
+            return new ecjia_error('parse_order_trade_no_error', __('解析订单号时失败', 'payment'));
         }
         
         if ($this->orderType == PayConstant::PAY_ORDER) {
