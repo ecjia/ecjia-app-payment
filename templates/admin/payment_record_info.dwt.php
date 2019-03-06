@@ -34,7 +34,7 @@
                             <td><div align="right"><strong>{t domain="payment"}商城订单编号{/t}</strong></div></td>
                             <td>
 	                            {if $modules.trade_type eq 'buy'}
-	                            	<a target="__blank" href='{url path="orders/admin/info" args="order_id={$order.order_id}"}'>{$modules.order_sn}</a>
+	                            	<a target="_blank" href='{url path="orders/admin/info" args="order_id={$order.order_id}"}'>{$modules.order_sn}</a>
 	                            {elseif $modules.trade_type eq 'quickpay'}
 	                            	<a target="_blank" href='{url path="quickpay/admin_order/order_info" args="order_id={$quickpay_order.order_id}"}'>{$modules.order_sn}</a>
 	                            {else}
