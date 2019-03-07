@@ -59,7 +59,7 @@ class admin_payment_refund extends ecjia_admin {
 		RC_Script::enqueue_script('smoke');		
 		
 		
-		RC_Script::enqueue_script('payment_refund', RC_App::apps_url('statics/js/payment_refund.js',__FILE__),array(), false, true);
+		RC_Script::enqueue_script('payment_refund', RC_App::apps_url('statics/js/payment_refund.js',__FILE__),array(), false, 1);
 		RC_Script::enqueue_script('bootstrap-editable.min', RC_Uri::admin_url('statics/lib/x-editable/bootstrap-editable/js/bootstrap-editable.min.js'));
 		RC_Style::enqueue_style('bootstrap-editable', RC_Uri::admin_url('statics/lib/x-editable/bootstrap-editable/css/bootstrap-editable.css'));
 	
