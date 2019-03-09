@@ -47,10 +47,10 @@ class PayEnum extends Enum
     protected function __statusMap()
     {
         return [
-            self::PAY_ORDER             => __('普通订单'),
-            self::PAY_SEPARATE_ORDER    => __('分割订单'),
-            self::PAY_SURPLUS           => __('充值订单'),
-            self::PAY_QUICKYPAY         => __('闪付订单'),
+            self::PAY_ORDER             => __('普通订单', 'payment'),
+            self::PAY_SEPARATE_ORDER    => __('分割订单', 'payment'),
+            self::PAY_SURPLUS           => __('充值订单', 'payment'),
+            self::PAY_QUICKYPAY         => __('闪付订单', 'payment'),
         ];
     }
 }

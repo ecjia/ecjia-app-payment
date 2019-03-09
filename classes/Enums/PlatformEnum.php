@@ -42,10 +42,10 @@ class PlatformEnum extends Enum
     protected function __statusMap()
     {
         return [
-            self::PLATFORM_PC       => __('PC平台'),
-            self::PLATFORM_APP      => __('手机APP平台'),
-            self::PLATFORM_H5       => __('H5平台'),
-            self::PLATFORM_WEAPP    => __('微信小程序平台'),
+            self::PLATFORM_PC       => __('PC平台', 'payment'),
+            self::PLATFORM_APP      => __('手机APP平台', 'payment'),
+            self::PLATFORM_H5       => __('H5平台', 'payment'),
+            self::PLATFORM_WEAPP    => __('微信小程序平台', 'payment'),
         ];
     }
 

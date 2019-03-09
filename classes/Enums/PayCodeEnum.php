@@ -38,10 +38,10 @@ class PayCodeEnum extends Enum
     {
 
         return [
-            self::PAYCODE_FORM      => __('表单'),
-            self::PAYCODE_STRING    => __('链接'),
-            self::PAYCODE_PARAM     => __('数组'),
-            self::PAYCODE_ARRAY     => __('数组'),
+            self::PAYCODE_FORM      => __('表单', 'payment'),
+            self::PAYCODE_STRING    => __('链接', 'payment'),
+            self::PAYCODE_PARAM     => __('数组', 'payment'),
+            self::PAYCODE_ARRAY     => __('数组', 'payment'),
         ];
 
     }

@@ -27,11 +27,11 @@ class PaymentRefundEnum extends Enum
     protected function __statusMap()
     {
         return [
-            self::PAYMENT_REFUND_STATUS_CREATE      => __('创建退款请求'),
-            self::PAYMENT_REFUND_STATUS_REFUND      => __('确认退款'),
-            self::PAYMENT_REFUND_STATUS_PROGRESS    => __('退款处理中'),
-            self::PAYMENT_REFUND_STATUS_FAIL        => __('退款失败'),
-            self::PAYMENT_REFUND_STATUS_CLOSE       => __('退款关闭'),
+            self::PAYMENT_REFUND_STATUS_CREATE      => __('创建退款请求', 'payment'),
+            self::PAYMENT_REFUND_STATUS_REFUND      => __('确认退款', 'payment'),
+            self::PAYMENT_REFUND_STATUS_PROGRESS    => __('退款处理中', 'payment'),
+            self::PAYMENT_REFUND_STATUS_FAIL        => __('退款失败', 'payment'),
+            self::PAYMENT_REFUND_STATUS_CLOSE       => __('退款关闭', 'payment'),
         ];
     }
 
