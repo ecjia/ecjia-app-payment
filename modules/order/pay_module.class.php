@@ -88,9 +88,9 @@ class order_pay_module extends api_front implements api_interface {
 		
 		$order_type = $this->transform_order_sn($order['order_sn']);
 		if($order_type == \Ecjia\System\Business\Orders\OrderSnGeneration::ORDER_BUY) {
-			$order_type_pay = Ecjia\App\Payment\PayConstant::PAY_ORDER;
+			$order_type_pay = \Ecjia\App\Payment\Enums\PayEnum::PAY_ORDER;
 		} else if($order_type == \Ecjia\System\Business\Orders\OrderSnGeneration::ORDER_SEPARATE) {
-			$order_type_pay = Ecjia\App\Payment\PayConstant::PAY_SEPARATE_ORDER;
+			$order_type_pay = \Ecjia\App\Payment\Enums\PayEnum::PAY_SEPARATE_ORDER;
 		}
 		
 		//判断是否是管理员登录

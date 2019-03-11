@@ -65,7 +65,7 @@ class PaymentRecordRepository extends AbstractRepository
      * @param number $isPaid    是否已支付
      * @return int
      */
-    public function addOrUpdatePaymentRecord($orderSn, $amount, $type = PayConstant::PAY_ORDER, $callback = null)
+    public function addOrUpdatePaymentRecord($orderSn, $amount, $type = \Ecjia\App\Payment\Enums\PayEnum::PAY_ORDER, $callback = null)
     {
         $where = array(
         	'order_sn'      => $orderSn,
@@ -104,7 +104,7 @@ class PaymentRecordRepository extends AbstractRepository
      * @param number $isPaid    是否已支付
      * @return int
      */
-    public function addPaymentRecord($orderSn, $amount, $type = PayConstant::PAY_ORDER, $callback = null)
+    public function addPaymentRecord($orderSn, $amount, $type = \Ecjia\App\Payment\Enums\PayEnum::PAY_ORDER, $callback = null)
     {
         $attributes = array(
             'order_sn' => $orderSn,
