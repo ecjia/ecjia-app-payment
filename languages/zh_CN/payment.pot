@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ecjia App payment 1.28.0\n"
 "Report-Msgid-Bugs-To: https://make.ecjia.com/polyglots/\n"
-"POT-Creation-Date: 2019-03-06 09:04:41+00:00\n"
+"POT-Creation-Date: 2019-03-13 05:24:28+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -58,11 +58,13 @@ msgstr ""
 msgid "付款成功"
 msgstr ""
 
-#: admin_payment_record.php:151 functions/global.func.php:164
+#: admin_payment_record.php:151 classes/Enums/PaymentRecordEnum.php:34
+#: functions/global.func.php:164
 msgid "订单撤消"
 msgstr ""
 
-#: admin_payment_record.php:153 functions/global.func.php:166
+#: admin_payment_record.php:153 classes/Enums/PaymentRecordEnum.php:35
+#: functions/global.func.php:166
 msgid "订单退款"
 msgstr ""
 
@@ -111,15 +113,15 @@ msgstr ""
 msgid "已退款"
 msgstr ""
 
-#: admin_payment_refund.php:249
+#: admin_payment_refund.php:249 classes/Enums/PaymentRefundEnum.php:32
 msgid "退款处理中"
 msgstr ""
 
-#: admin_payment_refund.php:251
+#: admin_payment_refund.php:251 classes/Enums/PaymentRefundEnum.php:33
 msgid "退款失败"
 msgstr ""
 
-#: admin_payment_refund.php:253
+#: admin_payment_refund.php:253 classes/Enums/PaymentRefundEnum.php:34
 msgid "退款关闭"
 msgstr ""
 
@@ -259,6 +261,74 @@ msgstr ""
 msgid "支付方式不支持退款回调操作"
 msgstr ""
 
+#: classes/Enums/PayCodeEnum.php:41
+msgid "表单"
+msgstr ""
+
+#: classes/Enums/PayCodeEnum.php:42
+msgid "链接"
+msgstr ""
+
+#: classes/Enums/PayCodeEnum.php:43 classes/Enums/PayCodeEnum.php:44
+msgid "数组"
+msgstr ""
+
+#: classes/Enums/PayEnum.php:50
+msgid "普通订单"
+msgstr ""
+
+#: classes/Enums/PayEnum.php:51
+msgid "分割订单"
+msgstr ""
+
+#: classes/Enums/PayEnum.php:52
+msgid "充值订单"
+msgstr ""
+
+#: classes/Enums/PayEnum.php:53
+msgid "闪付订单"
+msgstr ""
+
+#: classes/Enums/PaymentRecordEnum.php:30
+msgid "等待支付"
+msgstr ""
+
+#: classes/Enums/PaymentRecordEnum.php:31
+msgid "支付完成"
+msgstr ""
+
+#: classes/Enums/PaymentRecordEnum.php:32
+msgid "支付进行中"
+msgstr ""
+
+#: classes/Enums/PaymentRecordEnum.php:33
+msgid "支付失败"
+msgstr ""
+
+#: classes/Enums/PaymentRefundEnum.php:30
+msgid "创建退款请求"
+msgstr ""
+
+#: classes/Enums/PaymentRefundEnum.php:31
+msgid "确认退款"
+msgstr ""
+
+#: classes/Enums/PlatformEnum.php:45
+msgid "PC平台"
+msgstr ""
+
+#: classes/Enums/PlatformEnum.php:46
+msgid "手机APP平台"
+msgstr ""
+
+#: classes/Enums/PlatformEnum.php:47
+msgid "H5平台"
+msgstr ""
+
+#: classes/Enums/PlatformEnum.php:48
+msgid "微信小程序平台"
+msgstr ""
+
 #: classes/Pay/PayManager.php:31
 msgid "支付方式不支持付款操作"
 msgstr ""
@@ -267,7 +337,7 @@ msgstr ""
 msgid "支付方式不支持扫码收款操作"
 msgstr ""
 
-#: classes/PayConstant.php:199 classes/PayConstant.php:211
+#: classes/PayConstant.php:90 classes/PayConstant.php:102
 msgid "未知"
 msgstr ""
 
