@@ -71,7 +71,16 @@ class respond extends ecjia_front
 		/* 支付方式代码 */
 		$pay_code = !empty($_GET['code']) ? trim($_GET['code']) : '';
 		unset($_GET['code']);
-		
+
+        RC_Logger::getlogger('info')->info([
+            'file' => __FILE__,
+            'line' => __LINE__,
+            '$GLOBALS HTTP_RAW_POST_DATA' => $GLOBALS['HTTP_RAW_POST_DATA'],
+            '$_GET' => $_GET,
+            'POST' => $_POST,
+            'php://input' => file_get_contents('php://input')
+        ]);
+
 		$order_type = '';
 		
 		/* 参数是否为空 */
