@@ -137,12 +137,6 @@ class order_pay_module extends api_front implements api_interface {
         } else {
             $order['payment'] = $result;
         }
-        RC_Logger::getlogger('info')->info([
-            'file' => __FILE__,
-            'line' => __LINE__,
-            '$result' => $result,
-        ]);
-
 
         //增加支付状态
         $order['payment']['order_pay_status'] = $order['pay_status'];//0 未付款，1付款中，2已付款
