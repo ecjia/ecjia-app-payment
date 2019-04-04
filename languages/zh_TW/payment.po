@@ -4,90 +4,94 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ecjia App payment 1.28.0\n"
 "Report-Msgid-Bugs-To: https://make.ecjia.com/polyglots/\n"
-"POT-Creation-Date: 2019-03-20 07:33:53+00:00\n"
+"POT-Creation-Date: 2019-04-03 18:55+0800\n"
+"PO-Revision-Date: 2019-04-03 18:56+0800\n"
+"Last-Translator: \n"
+"Language-Team: LANGUAGE <ecjia@ecjia.com>\n"
+"Language: zh_TW\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2019-03-27 10:22+0800\n"
-"Language-Team: LANGUAGE <ecjia@ecjia.com>\n"
-"X-Generator: Poedit 2.2\n"
-"Last-Translator: \n"
+"X-Generator: Poedit 1.8.7\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"Language: zh_TW\n"
 
 #: admin_payment_record.php:87 admin_payment_record.php:102
-#: admin_payment_record.php:113 admin_payment_record.php:214
+#: admin_payment_record.php:113 admin_payment_record.php:243
 #: apis/payment_admin_purview_api.class.php:59
 #: apis/payment_tool_menu_api.class.php:59
 #: classes/hooks/admin_payment.class.php:52
 msgid "交易流水"
 msgstr "交易流水"
 
-#: admin_payment_record.php:114 admin_payment_record.php:213
+#: admin_payment_record.php:114 admin_payment_record.php:242
 msgid "查看交易流水"
 msgstr "查看交易流水"
 
-#: admin_payment_record.php:132 admin_payment_refund.php:114
+#: admin_payment_record.php:147 admin_payment_refund.php:114
 #: functions/global.func.php:169
 msgid "消费"
 msgstr "消費"
 
-#: admin_payment_record.php:135 functions/global.func.php:171
+#: admin_payment_record.php:150 functions/global.func.php:171
 msgid "退款"
 msgstr "退款"
 
-#: admin_payment_record.php:137 functions/global.func.php:173
-#: functions/global.func.php:312
+#: admin_payment_record.php:152 functions/global.func.php:173
+#: functions/global.func.php:315
 msgid "充值"
 msgstr "充值"
 
-#: admin_payment_record.php:139 functions/global.func.php:175
+#: admin_payment_record.php:154 functions/global.func.php:175
 msgid "提现"
 msgstr "提現"
 
-#: admin_payment_record.php:141 functions/global.func.php:177
+#: admin_payment_record.php:156 functions/global.func.php:177
 msgid "会员充值"
 msgstr "會員充值"
 
-#: admin_payment_record.php:143 functions/global.func.php:179
+#: admin_payment_record.php:158 functions/global.func.php:179
 msgid "优惠买单"
 msgstr "優惠買單"
 
-#: admin_payment_record.php:147 functions/global.func.php:160
+#: admin_payment_record.php:160 functions/global.func.php:181
+msgid "分单支付"
+msgstr "分單支付"
+
+#: admin_payment_record.php:164 functions/global.func.php:160
 msgid "等待付款"
 msgstr "等待付款"
 
-#: admin_payment_record.php:149 functions/global.func.php:162
+#: admin_payment_record.php:166 functions/global.func.php:162
 msgid "付款成功"
 msgstr "付款成功"
 
-#: admin_payment_record.php:151 classes/Enums/PaymentRecordEnum.php:34
+#: admin_payment_record.php:168 classes/Enums/PaymentRecordEnum.php:34
 #: functions/global.func.php:164
 msgid "订单撤消"
 msgstr "訂單撤消"
 
-#: admin_payment_record.php:153 classes/Enums/PaymentRecordEnum.php:35
+#: admin_payment_record.php:170 classes/Enums/PaymentRecordEnum.php:35
 #: functions/global.func.php:166
 msgid "订单退款"
 msgstr "訂單退款"
 
-#: admin_payment_record.php:166
+#: admin_payment_record.php:183
 msgid "未完成"
 msgstr "未完成"
 
-#: admin_payment_record.php:168
+#: admin_payment_record.php:185
 msgid "已完成"
 msgstr "已完成"
 
-#: admin_payment_record.php:170
+#: admin_payment_record.php:187
 msgid "已取消"
 msgstr "已取消"
 
-#: admin_payment_record.php:228
+#: admin_payment_record.php:257
 msgid "订单支付记录信息不存在！"
 msgstr "訂單支付記錄信息不存在！"
 
-#: admin_payment_record.php:241
+#: admin_payment_record.php:270
 msgid "修复订单状态成功！"
 msgstr "修復訂單狀態成功！"
 
@@ -374,7 +378,7 @@ msgstr "支付方式不支持查詢操作"
 msgid "支付方式不支持支付撤单操作"
 msgstr "支付方式不支持支​​付撤單操作"
 
-#: classes/Refund/RefundManager.php:38 classes/Refund/RefundQueryManager.php:35
+#: classes/Refund/RefundManager.php:58 classes/Refund/RefundQueryManager.php:35
 msgid "支付方式不支持退款操作"
 msgstr "支付方式不支持退款操作"
 
@@ -410,15 +414,15 @@ msgstr ""
 "（如：支付寶，財付通），商家可以點擊一鍵安裝插件，並可以對指定的支付方式進行"
 "啟用、停用、費用編輯等。"
 
-#: functions/global.func.php:254 functions/global.func.php:283
+#: functions/global.func.php:257 functions/global.func.php:286
 msgid "买家"
 msgstr "買家"
 
-#: functions/global.func.php:289
+#: functions/global.func.php:292
 msgid "订单 %s赠送的积分"
 msgstr "訂單 %s贈送的積分"
 
-#: functions/global.func.php:343
+#: functions/global.func.php:346
 msgid "商品已发货，详情请到用户中心订单详情查看"
 msgstr "商品已發貨，詳情請到用戶中心訂單詳情查看"
 
@@ -677,7 +681,7 @@ msgstr "訂單退款流水號 / 支付公司退款流水號"
 
 #: content/apps/payment/templates/admin/payment_refund_list.dwt.php:56
 #: content/apps/payment/templates/admin/payment_record_list.dwt.php:54
-#: content/apps/payment/templates/admin/payment_record_info.dwt.php:56
+#: content/apps/payment/templates/admin/payment_record_info.dwt.php:58
 #: content/apps/payment/templates/admin/payment_refund_info.dwt.php:50
 msgid "支付名称"
 msgstr "支付名稱"
@@ -721,7 +725,7 @@ msgid "商城订单编号"
 msgstr "商城訂單編號"
 
 #: content/apps/payment/templates/admin/payment_record_list.dwt.php:52
-#: content/apps/payment/templates/admin/payment_record_info.dwt.php:48
+#: content/apps/payment/templates/admin/payment_record_info.dwt.php:50
 msgid "交易类型"
 msgstr "交易類型"
 
@@ -730,7 +734,7 @@ msgid "支付订单号 / 流水号"
 msgstr "支付訂單號 / 流水號"
 
 #: content/apps/payment/templates/admin/payment_record_list.dwt.php:55
-#: content/apps/payment/templates/admin/payment_record_info.dwt.php:60
+#: content/apps/payment/templates/admin/payment_record_info.dwt.php:62
 msgid "支付金额"
 msgstr "支付金額"
 
@@ -739,7 +743,7 @@ msgid "创建时间 / 付款时间"
 msgstr "創建時間 / 付款時間"
 
 #: content/apps/payment/templates/admin/payment_record_list.dwt.php:57
-#: content/apps/payment/templates/admin/payment_record_info.dwt.php:44
+#: content/apps/payment/templates/admin/payment_record_info.dwt.php:46
 msgid "交易状态"
 msgstr "交易狀態"
 
@@ -783,99 +787,101 @@ msgstr "修復訂單狀態"
 msgid "资金流水记录"
 msgstr "資金流水記錄"
 
-#: content/apps/payment/templates/admin/payment_record_info.dwt.php:50
+#: content/apps/payment/templates/admin/payment_record_info.dwt.php:52
 msgid "流水号"
 msgstr "流水號"
 
-#: content/apps/payment/templates/admin/payment_record_info.dwt.php:62
+#: content/apps/payment/templates/admin/payment_record_info.dwt.php:64
 #: content/apps/payment/templates/admin/payment_refund_info.dwt.php:60
 msgid "创建时间"
 msgstr "創建時間"
 
-#: content/apps/payment/templates/admin/payment_record_info.dwt.php:66
+#: content/apps/payment/templates/admin/payment_record_info.dwt.php:68
 msgid "修改更新时间"
 msgstr "修改更新時間"
 
-#: content/apps/payment/templates/admin/payment_record_info.dwt.php:68
+#: content/apps/payment/templates/admin/payment_record_info.dwt.php:70
 msgid "支付成功时间"
 msgstr "支付成功時間"
 
-#: content/apps/payment/templates/admin/payment_record_info.dwt.php:72
+#: content/apps/payment/templates/admin/payment_record_info.dwt.php:74
 msgid "支付订单号："
 msgstr "支付訂單號："
 
-#: content/apps/payment/templates/admin/payment_record_info.dwt.php:82
+#: content/apps/payment/templates/admin/payment_record_info.dwt.php:84
 msgid "订单信息"
 msgstr "訂單信息"
 
-#: content/apps/payment/templates/admin/payment_record_info.dwt.php:90
-#: content/apps/payment/templates/admin/payment_record_info.dwt.php:124
+#: content/apps/payment/templates/admin/payment_record_info.dwt.php:92
+#: content/apps/payment/templates/admin/payment_record_info.dwt.php:99
+#: content/apps/payment/templates/admin/payment_record_info.dwt.php:133
 msgid "订单总金额："
 msgstr "訂單總金額："
 
-#: content/apps/payment/templates/admin/payment_record_info.dwt.php:92
-#: content/apps/payment/templates/admin/payment_record_info.dwt.php:105
-#: content/apps/payment/templates/admin/payment_record_info.dwt.php:112
+#: content/apps/payment/templates/admin/payment_record_info.dwt.php:94
+#: content/apps/payment/templates/admin/payment_record_info.dwt.php:101
+#: content/apps/payment/templates/admin/payment_record_info.dwt.php:114
+#: content/apps/payment/templates/admin/payment_record_info.dwt.php:121
 msgid "订单状态："
 msgstr "訂單狀態："
 
-#: content/apps/payment/templates/admin/payment_record_info.dwt.php:97
+#: content/apps/payment/templates/admin/payment_record_info.dwt.php:106
 msgid "买单消费总金额："
 msgstr "買單消費總金額："
 
-#: content/apps/payment/templates/admin/payment_record_info.dwt.php:99
+#: content/apps/payment/templates/admin/payment_record_info.dwt.php:108
 msgid "买单优惠总金额："
 msgstr "買單優惠總金額："
 
-#: content/apps/payment/templates/admin/payment_record_info.dwt.php:103
+#: content/apps/payment/templates/admin/payment_record_info.dwt.php:112
 msgid "买单实付金额："
 msgstr "買單實付金額："
 
-#: content/apps/payment/templates/admin/payment_record_info.dwt.php:116
+#: content/apps/payment/templates/admin/payment_record_info.dwt.php:125
 msgid "商品总金额："
 msgstr "商品總金額："
 
-#: content/apps/payment/templates/admin/payment_record_info.dwt.php:118
+#: content/apps/payment/templates/admin/payment_record_info.dwt.php:127
 msgid "折扣："
 msgstr "折扣："
 
-#: content/apps/payment/templates/admin/payment_record_info.dwt.php:122
+#: content/apps/payment/templates/admin/payment_record_info.dwt.php:131
 msgid "发票税额："
 msgstr "發票稅額："
 
-#: content/apps/payment/templates/admin/payment_record_info.dwt.php:128
+#: content/apps/payment/templates/admin/payment_record_info.dwt.php:137
 msgid "配送费用："
 msgstr "配送費用："
 
-#: content/apps/payment/templates/admin/payment_record_info.dwt.php:130
+#: content/apps/payment/templates/admin/payment_record_info.dwt.php:139
 msgid "已付款金额："
 msgstr "已付款金額："
 
-#: content/apps/payment/templates/admin/payment_record_info.dwt.php:134
+#: content/apps/payment/templates/admin/payment_record_info.dwt.php:143
 msgid "保价费用："
 msgstr "保價費用："
 
-#: content/apps/payment/templates/admin/payment_record_info.dwt.php:136
+#: content/apps/payment/templates/admin/payment_record_info.dwt.php:145
 msgid "使用余额："
 msgstr "使用餘額："
 
-#: content/apps/payment/templates/admin/payment_record_info.dwt.php:139
+#: content/apps/payment/templates/admin/payment_record_info.dwt.php:148
 msgid "支付费用："
 msgstr "支付費用："
 
-#: content/apps/payment/templates/admin/payment_record_info.dwt.php:141
+#: content/apps/payment/templates/admin/payment_record_info.dwt.php:150
 msgid "贺卡费用："
 msgstr "賀卡費用："
 
-#: content/apps/payment/templates/admin/payment_record_info.dwt.php:145
+#: content/apps/payment/templates/admin/payment_record_info.dwt.php:154
 msgid "包装费用："
 msgstr "包裝費用："
 
-#: content/apps/payment/templates/admin/payment_record_info.dwt.php:147
+#: content/apps/payment/templates/admin/payment_record_info.dwt.php:156
 msgid "应付款金额："
 msgstr "應付款金額："
 
-#: content/apps/payment/templates/admin/payment_record_info.dwt.php:147
+#: content/apps/payment/templates/admin/payment_record_info.dwt.php:156
 msgid "应退款金额："
 msgstr "應付款金額："
 
