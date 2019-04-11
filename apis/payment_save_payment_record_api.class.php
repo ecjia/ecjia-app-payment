@@ -57,7 +57,10 @@ class payment_save_payment_record_api extends Component_Event_Api {
      * total_fee 订单金额
      * pay_code 支付代号
      * pay_name 支付名称
-     * trade_type   交易类型： buy 购买， deposit 充值， withdraw 提现
+     * trade_type   交易类型： Ecjia\App\Payment\Enums\PayEnum::PAY_ORDER 消费订单
+     *                        Ecjia\App\Payment\Enums\PayEnum::PAY_SEPARATE_ORDER 分单订单
+     *                        Ecjia\App\Payment\Enums\PayEnum::PAY_SURPLUS 会员预付款
+     *                        Ecjia\App\Payment\Enums\PayEnum::PAY_QUICKYPAY 闪付订单
      * @return array | bool | ecjia_error
      */
 	public function call(&$options) {	
@@ -65,7 +68,7 @@ class payment_save_payment_record_api extends Component_Event_Api {
 			return new ecjia_error('invalid_parameter', __(sprintf('%s缺少必要参数', __CLASS__), 'payment'));
 		}
 		
-		$trade_type = array_get($options, 'trade_type', 'buy');
+		$trade_type = array_get($options, 'trade_type', Ecjia\App\Payment\Enums\PayEnum::PAY_ORDER);
         $pay_code = array_get($options, 'pay_code');
 
         if (array_has($options, 'pay_code') && array_has($options, 'pay_name')) {
