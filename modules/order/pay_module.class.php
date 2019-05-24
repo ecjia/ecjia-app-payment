@@ -111,13 +111,13 @@ class order_pay_module extends api_front implements api_interface {
 		RC_Logger::getLogger('info')->info('order-pay');
 		RC_Logger::getLogger('info')->info(json_encode($order));
 		
-		if ($order['order_amount'] <= 0) {
-			$pay_id = 'pay_balance';
-		} else {
-			$pay_id = intval($order['pay_id']);
-		}
+// 		if ($order['order_amount'] <= 0) {
+// 			$pay_id = 'pay_balance';
+// 		} else {
+// 			$pay_id = intval($order['pay_id']);
+// 		}
 		
-		$handler = with(new Ecjia\App\Payment\PaymentPlugin)->channel($pay_id);
+		$handler = with(new Ecjia\App\Payment\PaymentPlugin)->channel(intval($order['pay_id']));
 		if (is_ecjia_error($handler)) {
 		    return $handler;
 		}
@@ -175,12 +175,12 @@ class order_pay_module extends api_front implements api_interface {
             return array($item);
         })->all();
 
-        if ($order['order_amount'] <= 0) {
-        	$result = (new Ecjia\App\Payment\Pay\PayManager($order['order_sn']))->pay();
-        	if (is_ecjia_error($result)) {
-        		return $result;
-        	}
-        }
+//         if ($order['order_amount'] <= 0) {
+//         	$result = (new Ecjia\App\Payment\Pay\PayManager($order['order_sn']))->pay();
+//         	if (is_ecjia_error($result)) {
+//         		return $result;
+//         	}
+//         }
         return array('payment' => $order['payment'], 'others' => $other);
 	}
 	
