@@ -72,12 +72,31 @@ class order_pay_module extends api_front implements api_interface {
 		$order = RC_Api::api('orders', 'order_info', array('order_id' => $order_id));
 		if (is_ecjia_error($order)) {
 			return $order;
+		} 
+		if (!empty($order)) {
+			$pay_balance_info = RC_DB::table('payment')->where('pay_code', 'pay_balance')->first();
+			if ($order['order_amount'] <= 0) {
+				if (empty($pay_balance_info)) {
+					return new ecjia_error('pay_balance_plugin_error', __('0元订单暂不支持该支付方式！', 'payment'));
+				}
+				RC_DB::table('order_info')->where('order_id', $order['order_id'])->update(array('pay_id' => $pay_balance_info['pay_id'], 'pay_name' => $pay_balance_info['pay_name']));
+				$order['pay_id'] = $pay_balance_info['pay_id'];
+			}
 		}
 		if (empty($order)) {
 			//订单id是否是分单主订单id
 			$order = RC_Api::api('orders', 'separate_order_info', array('order_id' => $order_id));
 			if (is_ecjia_error($order)) {
 				return $order;
+			}
+		}  else {
+			$pay_balance_info = RC_DB::table('payment')->where('pay_code', 'pay_balance')->first();
+			if ($order['order_amount'] <= 0) {
+				if (empty($pay_balance_info)) {
+					return new ecjia_error('pay_balance_plugin_error', __('0元订单暂不支持该支付方式！', 'payment'));
+				}
+				RC_DB::table('separate_order_info')->where('order_id', $order['order_id'])->update(array('pay_id' => $pay_balance_info['pay_id'], 'pay_name' => $pay_balance_info['pay_name']));
+				$order['pay_id'] = $pay_balance_info['pay_id'];
 			}
 		}
 		
@@ -111,15 +130,7 @@ class order_pay_module extends api_front implements api_interface {
 		RC_Logger::getLogger('info')->info('order-pay');
 		RC_Logger::getLogger('info')->info(json_encode($order));
 		
-		if ($order['order_amount'] <= 0) {
-			$pay_id = 'pay_balance';
-			$pay_balance_id = RC_DB::table('payment')->where('pay_code', 'pay_balance')->pluck('pay_id');
-// 			$order['pay_id'] = $pay_balance_id;
-		} else {
-			$pay_id = intval($order['pay_id']);
-		}
-		
-		$handler = with(new Ecjia\App\Payment\PaymentPlugin)->channel($pay_id);
+		$handler = with(new Ecjia\App\Payment\PaymentPlugin)->channel(intval($order['pay_id']));
 		if (is_ecjia_error($handler)) {
 		    return $handler;
 		}
@@ -177,12 +188,6 @@ class order_pay_module extends api_front implements api_interface {
             return array($item);
         })->all();
 
-        if ($order['order_amount'] <= 0) {
-        	$result = (new Ecjia\App\Payment\Pay\PayManager($order['order_sn']))->pay();
-        	if (is_ecjia_error($result)) {
-        		return $result;
-        	}
-        }
         return array('payment' => $order['payment'], 'others' => $other);
 	}
 	
