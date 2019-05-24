@@ -119,7 +119,7 @@ class order_pay_module extends api_front implements api_interface {
 			$pay_id = intval($order['pay_id']);
 		}
 		
-		$handler = with(new Ecjia\App\Payment\PaymentPlugin)->channel(intval($order['pay_id']));
+		$handler = with(new Ecjia\App\Payment\PaymentPlugin)->channel($pay_id);
 		if (is_ecjia_error($handler)) {
 		    return $handler;
 		}
