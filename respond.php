@@ -118,6 +118,7 @@ class respond extends ecjia_front
 		
 		$callback_url = RC_Cookie::get('pay_callback_url');
 		if(!empty($callback_url)) {
+            RC_Cookie::delete('pay_callback_url');
 		    return $this->redirect($callback_url);
 		}
 		
