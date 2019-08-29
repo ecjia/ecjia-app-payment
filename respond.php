@@ -131,7 +131,7 @@ class respond extends ecjia_front
 		);
 
 		if (! RC_Hook::has_filter('payment_respond_template')) {
-            RC_Hook::add_filter('payment_respond_template', array($this, '_default_response_template'), 10, 3);
+            RC_Hook::add_filter('payment_respond_template', array($this, 'default_response_template'), 10, 3);
         }
 
         return RC_Hook::apply_filters( 'payment_respond_template', '', $msg, $info);
@@ -207,7 +207,7 @@ class respond extends ecjia_front
         return $result;
     }
 	
-	public function _default_response_template($respondContent, $msg, $info)
+	public function default_response_template($respondContent, $msg, $info)
     {
 	    $this->assign('msg', $msg);
 	    $this->assign('info', $info);
