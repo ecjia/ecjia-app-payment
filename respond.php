@@ -130,13 +130,11 @@ class respond extends ecjia_front
 		    'pay_status' => $pay_status,
 		);
 
-		$function = RC_Hook::apply_filters( 'payment_respond_template', array($this, '_default_response_template') );
-		
-		$respondContent = '';
-		
-        $respondContent = call_user_func($function, $respondContent, $msg, $info);
+		if (! RC_Hook::has_filter('payment_respond_template')) {
+            RC_Hook::add_filter('payment_respond_template', array($this, '_default_response_template'), 10, 3);
+        }
 
-		return $this->displayContent($respondContent);
+        return RC_Hook::apply_filters( 'payment_respond_template', '', $msg, $info);
 	}
 
     /**
@@ -218,7 +216,7 @@ class respond extends ecjia_front
 	    $url['order'] = RC_Cookie::get('pay_response_order');
 	    $this->assign('url', $url);
 	    
-	    return $this->fetch('response.dwt');
+	    return $this->display('response.dwt');
 	}
 	
 }
